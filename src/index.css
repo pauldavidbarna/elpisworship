@@ -1,0 +1,136 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Elpis Worship Design System
+   Modern & Dramatic - Turquoise accents with dark contrast
+*/
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600&display=swap');
+
+@layer base {
+  :root {
+    /* Core palette */
+    --background: 210 20% 98%; /* #f8f9fa - light gray */
+    --foreground: 0 0% 0%; /* #000 - black */
+
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 0%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 0%;
+
+    /* Primary - Turquoise/Cyan accent */
+    --primary: 183 100% 40%; /* #00c2cc */
+    --primary-foreground: 0 0% 100%;
+
+    /* Secondary - Dark for contrast */
+    --secondary: 0 0% 10%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 210 20% 94%;
+    --muted-foreground: 0 0% 40%;
+
+    --accent: 183 100% 40%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 210 20% 90%;
+    --input: 210 20% 90%;
+    --ring: 183 100% 40%;
+
+    --radius: 0.5rem;
+
+    /* Custom colors for Elpis */
+    --elpis-cyan: 183 100% 40%;
+    --elpis-cyan-light: 183 80% 50%;
+    --elpis-cyan-dark: 183 100% 30%;
+    --elpis-dark: 0 0% 8%;
+    --elpis-light: 210 20% 98%;
+
+    /* Sidebar */
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 183 100% 40%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 183 100% 40%;
+  }
+
+  .dark {
+    --background: 0 0% 5%;
+    --foreground: 0 0% 98%;
+
+    --card: 0 0% 8%;
+    --card-foreground: 0 0% 98%;
+
+    --popover: 0 0% 8%;
+    --popover-foreground: 0 0% 98%;
+
+    --primary: 183 100% 45%;
+    --primary-foreground: 0 0% 0%;
+
+    --secondary: 0 0% 15%;
+    --secondary-foreground: 0 0% 98%;
+
+    --muted: 0 0% 15%;
+    --muted-foreground: 0 0% 65%;
+
+    --accent: 183 100% 45%;
+    --accent-foreground: 0 0% 0%;
+
+    --destructive: 0 62% 30%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 0 0% 20%;
+    --input: 0 0% 20%;
+    --ring: 183 100% 45%;
+
+    --sidebar-background: 0 0% 8%;
+    --sidebar-foreground: 0 0% 95%;
+    --sidebar-primary: 183 100% 45%;
+    --sidebar-primary-foreground: 0 0% 0%;
+    --sidebar-accent: 0 0% 15%;
+    --sidebar-accent-foreground: 0 0% 95%;
+    --sidebar-border: 0 0% 20%;
+    --sidebar-ring: 183 100% 45%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-family: 'Inter', sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Montserrat', sans-serif;
+    @apply font-bold tracking-tight;
+  }
+}
+
+@layer utilities {
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/70;
+  }
+
+  .hero-gradient {
+    background: linear-gradient(135deg, hsl(var(--elpis-dark)) 0%, hsl(0 0% 15%) 100%);
+  }
+
+  .glow-effect {
+    box-shadow: 0 0 30px hsl(var(--primary) / 0.3);
+  }
+
+  .dramatic-shadow {
+    box-shadow: 0 25px 50px -12px hsl(0 0% 0% / 0.5);
+  }
+}

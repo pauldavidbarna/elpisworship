@@ -1,0 +1,84 @@
+{
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "play": "Elpis Play",
+    "donate": "Donate",
+    "shop": "Shop",
+    "resources": "Resources",
+    "contact": "Contact"
+  },
+  "play": {
+    "title": "Elpis Play",
+    "subtitle": "Listen to our worship songs and experience hope through music",
+    "open_youtube": "Open Full Playlist",
+    "subscribe_text": "Subscribe to our YouTube channel for new releases!",
+    "subscribe": "Subscribe on YouTube"
+  },
+  "hero": {
+    "title": "Made to Worship",
+    "subtitle": "Bringing hope through Christian music in Greece",
+    "cta_primary": "Know Us",
+    "cta_secondary": "Support Us"
+  },
+  "home": {
+    "who_we_are_title": "Who We Are",
+    "who_we_are_text": "Elpis Worship is a Christian worship band born in Athens, dedicated to serving Greece through music that brings hope, encouragement, and inspiration.",
+    "read_more": "Read More",
+    "upcoming_events": "Upcoming Events",
+    "view_all_events": "View All Events"
+  },
+  "about": {
+    "title": "About Us",
+    "who_we_are": "Who We Are",
+    "who_we_are_text": "We were born and raised in Athens. We are members of the Romanian church in Kallithea. We started music as children - first in children's choirs, then at conservatories. About ten years ago, an orchestra was formed in our church. During the lockdown, the need for a worship band was born, and we realized that God has called us to serve Greece through Christian music.",
+    "our_name": "Our Name - \"Elpis\"",
+    "our_name_text": "We wanted a Greek name, melodic and meaningful. One day, our eyes fell on a stained glass window in our church with the word \"elpis\" (hope). Through our music, we want to bring hope to people!",
+    "our_mission": "Our Mission",
+    "mission_1": "Evangelism - to spread the message of salvation",
+    "mission_2": "Encouragement - to bring hope to believers and churches",
+    "mission_3": "Inspiration - to inspire young people to create bands for His glory!",
+    "what_we_believe": "What We Believe",
+    "motto": "Everything for His glory!",
+    "meet_the_team": "Meet the Team"
+  },
+  "donate": {
+    "title": "Support Our Ministry",
+    "subtitle": "Help us continue bringing hope through worship",
+    "message": "Our church trusted and invested in our vision. None of us does this full-time - we all work or study. Your support helps us continue bringing hope!",
+    "cta": "Buy Us a Coffee"
+  },
+  "shop": {
+    "title": "Shop",
+    "products": "Products",
+    "size": "Size",
+    "color": "Color",
+    "add_to_cart": "Add to Cart",
+    "buy_now": "Buy Now",
+    "in_stock": "In Stock",
+    "few_left": "Few Left",
+    "out_of_stock": "Out of Stock"
+  },
+  "contact": {
+    "title": "Contact Us",
+    "name": "Name",
+    "email": "Email",
+    "subject": "Subject",
+    "message": "Message",
+    "send": "Send Message",
+    "follow_us": "Follow Us"
+  },
+  "resources": {
+    "title": "Resources",
+    "photos": "Photo Gallery",
+    "videos": "Videos",
+    "events": "Events",
+    "announcements": "Announcements",
+    "upcoming": "Upcoming Events",
+    "past": "Past Events"
+  },
+  "footer": {
+    "copyright": "© 2025 Elpis Worship. All rights reserved.",
+    "tagline": "Everything for His glory!"
+  }
+}
