@@ -1,31 +1,32 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  const token = process.env.INSTAGRAM_ACCESS_TOKEN;
-  if (!token) {
-    return res.status(500).json({ error: 'Instagram access token not configured' });
-  }
-
   try {
-    const url = `https://graph.instagram.com/me/media?fields=id,media_type,media_url,thumbnail_url,permalink,timestamp&limit=9&access_token=${token}`;
-    const response = await fetch(url);
+    const response = await fetch('https://feeds.behold.so/WjyyJ4QM1kPwV0kF3UoD');
     const data = await response.json();
 
-    if (!response.ok || data.error) {
-      throw new Error(data.error?.message || `HTTP ${response.status}`);
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
     }
 
-    const posts = (data.data as Array<{
+    const raw = data as { posts?: Array<{
       id: string;
-      media_type: string;
-      media_url?: string;
-      thumbnail_url?: string;
+      mediaType: string;
+      sizes: { medium?: { mediaUrl: string } };
       permalink: string;
-      timestamp: string;
-    }>).map((p) => ({
+    }> } | Array<{
+      id: string;
+      mediaType: string;
+      sizes: { medium?: { mediaUrl: string } };
+      permalink: string;
+    }>;
+
+    const items = Array.isArray(raw) ? raw : (raw.posts ?? []);
+
+    const posts = items.slice(0, 9).map((p) => ({
       id: p.id,
-      mediaType: p.media_type,
-      imageUrl: p.media_type === 'VIDEO' ? p.thumbnail_url : p.media_url,
+      mediaType: p.mediaType,
+      imageUrl: p.sizes?.medium?.mediaUrl,
       permalink: p.permalink,
     })).filter((p) => p.imageUrl);
 
