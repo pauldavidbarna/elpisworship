@@ -8,13 +8,6 @@
     "resources": "Resources",
     "contact": "Contact"
   },
-  "play": {
-    "title": "Elpis Play",
-    "subtitle": "Listen to our worship songs and experience hope through music",
-    "open_youtube": "Open Full Playlist",
-    "subscribe_text": "Subscribe to our YouTube channel for new releases!",
-    "subscribe": "Subscribe on YouTube"
-  },
   "hero": {
     "title": "Made to Worship",
     "subtitle": "Bringing hope through Christian music in Greece",
@@ -71,6 +64,8 @@
   "resources": {
     "title": "Resources",
     "photos": "Photo Gallery",
+    "photo": "photo",
+    "photos_count": "photos",
     "videos": "Videos",
     "events": "Events",
     "announcements": "Announcements",
@@ -79,6 +74,20 @@
   },
   "footer": {
     "copyright": "© 2026 Elpis Worship. All rights reserved.",
-    "tagline": "Everything for His glory!"
+    "tagline": "Everything for His glory!",
+    "quick_links": "Quick Links"
+  },
+  "not_found": {
+    "title": "Page not found",
+    "message": "The page does not exist.",
+    "back_home": "Back to Home"
+  },
+  "play": {
+    "title": "Elpis Play",
+    "subtitle": "Listen to our worship songs and experience hope through music",
+    "description": "All our videos — worship sessions, live recordings and more.",
+    "open_youtube": "Open on YouTube",
+    "subscribe_text": "Subscribe to our YouTube channel for new releases!",
+    "subscribe": "Subscribe on YouTube"
   }
 }

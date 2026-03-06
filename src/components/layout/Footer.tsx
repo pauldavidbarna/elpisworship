@@ -36,7 +36,7 @@ const Footer = () => {
 
           {/* Quick Links */}
           <div>
-            <h4 className="font-display font-semibold mb-4">Quick Links</h4>
+            <h4 className="font-display font-semibold mb-4">{t('footer.quick_links')}</h4>
             <nav className="grid grid-cols-2 gap-2">
               {quickLinks.map((link) => (
                 <Link

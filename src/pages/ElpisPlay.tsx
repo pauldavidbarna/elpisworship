@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { usePageMeta } from '@/hooks/usePageMeta';
+import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { Play, X, ExternalLink } from 'lucide-react';
 import { Layout } from '@/components/layout';
@@ -23,6 +24,7 @@ async function fetchPlaylistVideos(): Promise<YTVideo[]> {
 
 const ElpisPlay = () => {
   usePageMeta('Elpis Play', 'Watch and listen to Elpis Worship music — worship sessions, live recordings and more.');
+  const { t } = useTranslation();
 
   const [videos, setVideos] = useState<YTVideo[]>([]);
   const [loading, setLoading] = useState(true);
@@ -42,13 +44,13 @@ const ElpisPlay = () => {
       <section className="py-20 md:py-28 hero-gradient text-white text-center">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="container mx-auto px-4">
           <Play className="h-14 w-14 mx-auto mb-4 text-primary" />
-          <h1 className="font-display text-4xl md:text-6xl font-bold mb-4">Elpis Play</h1>
+          <h1 className="font-display text-4xl md:text-6xl font-bold mb-4">{t('play.title')}</h1>
           <p className="text-white/70 text-lg max-w-xl mx-auto mb-6">
-            All our videos — worship sessions, live recordings and more.
+            {t('play.description')}
           </p>
           <Button asChild className="bg-white text-black hover:bg-white/90">
             <a href={`https://www.youtube.com/playlist?list=${PLAYLIST_ID}`} target="_blank" rel="noopener noreferrer">
-              <ExternalLink className="mr-2 h-4 w-4" /> Open on YouTube
+              <ExternalLink className="mr-2 h-4 w-4" /> {t('play.open_youtube')}
             </a>
           </Button>
         </motion.div>

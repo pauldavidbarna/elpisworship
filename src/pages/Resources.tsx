@@ -110,7 +110,7 @@ const Resources = () => {
                       </div>
                       <CardContent className="p-4">
                         <h3 className="font-display font-semibold">{gallery.title}</h3>
-                        <p className="text-sm text-muted-foreground mb-3">{gallery.images.length} {gallery.images.length === 1 ? 'photo' : 'photos'}</p>
+                        <p className="text-sm text-muted-foreground mb-3">{gallery.images.length} {gallery.images.length === 1 ? t('resources.photo') : t('resources.photos_count')}</p>
                         {/* Thumbnail strip */}
                         {gallery.images.length > 0 && (
                           <div className="grid grid-cols-4 gap-1">

@@ -11,7 +11,8 @@
   "play": {
     "title": "Elpis Play",
     "subtitle": "Ακούστε τα τραγούδια λατρείας μας και ζήστε την ελπίδα μέσω της μουσικής",
-    "open_youtube": "Άνοιγμα Πλήρους Playlist",
+    "description": "Όλα τα βίντεό μας — sessions λατρείας, ζωντανές ηχογραφήσεις και άλλα.",
+    "open_youtube": "Άνοιγμα στο YouTube",
     "subscribe_text": "Εγγραφείτε στο κανάλι μας στο YouTube για νέες κυκλοφορίες!",
     "subscribe": "Εγγραφή στο YouTube"
   },
@@ -71,6 +72,8 @@
   "resources": {
     "title": "Πόροι",
     "photos": "Φωτογραφίες",
+    "photo": "φωτογραφία",
+    "photos_count": "φωτογραφίες",
     "videos": "Βίντεο",
     "events": "Events",
     "announcements": "Ανακοινώσεις",
@@ -79,6 +82,12 @@
   },
   "footer": {
     "copyright": "© 2026 Elpis Worship. Με επιφύλαξη παντός δικαιώματος.",
-    "tagline": "Τα πάντα για τη δόξα Του!"
+    "tagline": "Τα πάντα για τη δόξα Του!",
+    "quick_links": "Γρήγοροι Σύνδεσμοι"
+  },
+  "not_found": {
+    "title": "Η σελίδα δεν βρέθηκε",
+    "message": "Η σελίδα δεν υπάρχει.",
+    "back_home": "Επιστροφή στην Αρχική"
   }
 }
