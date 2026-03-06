@@ -7,6 +7,8 @@ import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import "@/i18n";
 import { loadFromSupabase } from "@/lib/supabase";
 import { saveResourcesData } from "@/lib/resourcesData";
+import { ThemeProvider } from "@/contexts/ThemeContext";
+import SplashScreen from "@/components/SplashScreen";
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -28,6 +30,11 @@ const queryClient = new QueryClient();
 
 const App = () => {
   const [ready, setReady] = useState(false);
+  const [splashDone, setSplashDone] = useState(() => {
+    if (sessionStorage.getItem('splash-shown')) return true;
+    sessionStorage.setItem('splash-shown', '1');
+    return false;
+  });
 
   useEffect(() => {
     loadFromSupabase().then((data) => {
@@ -38,17 +45,26 @@ const App = () => {
     });
   }, []);
 
+  if (!splashDone) {
+    return (
+      <ThemeProvider>
+        <SplashScreen onDone={() => setSplashDone(true)} />
+      </ThemeProvider>
+    );
+  }
+
   if (!ready) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <div className="flex flex-col items-center gap-4">
+      <ThemeProvider>
+        <div className="min-h-screen flex items-center justify-center bg-background">
           <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin" />
         </div>
-      </div>
+      </ThemeProvider>
     );
   }
 
   return (
+  <ThemeProvider>
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <Toaster />
@@ -76,6 +92,7 @@ const App = () => {
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
+  </ThemeProvider>
   );
 };
 

@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import LanguageSwitch from './LanguageSwitch';
+import ThemeToggle from './ThemeToggle';
 import logo from '@/assets/logo.svg';
 
 const Header = () => {
@@ -56,12 +57,14 @@ const Header = () => {
           </nav>
 
           {/* Desktop Right Side */}
-          <div className="hidden md:flex items-center gap-4">
+          <div className="hidden md:flex items-center gap-2">
+            <ThemeToggle />
             <LanguageSwitch />
           </div>
 
           {/* Mobile Menu Button */}
           <div className="flex md:hidden items-center gap-2">
+            <ThemeToggle />
             <LanguageSwitch />
             <Button
               variant="ghost"
