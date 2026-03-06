@@ -18,7 +18,7 @@ const Footer = () => {
   const socialLinks = [
     { href: 'https://instagram.com/elpisworship', icon: Instagram, label: 'Instagram' },
     { href: 'https://youtube.com/@elpisworship', icon: Youtube, label: 'YouTube' },
-    { href: 'https://open.spotify.com/artist/elpisworship', icon: Music, label: 'Spotify' },
+    { href: 'https://open.spotify.com/artist/6Vpsb6n5cBmH3midkqMeE0?si=8WeWEnprTZWeZfXx1cRt1g', icon: Music, label: 'Spotify' },
   ];
 
   return (
