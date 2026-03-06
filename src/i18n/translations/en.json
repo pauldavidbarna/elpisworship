@@ -93,6 +93,12 @@
     "tagline": "Everything for His glory!",
     "quick_links": "Quick Links"
   },
+  "cookie": {
+    "message": "We use cookies for analytics (Google Analytics, Microsoft Clarity) to improve your experience. See our",
+    "privacy": "Privacy Policy",
+    "accept": "Accept",
+    "decline": "Decline"
+  },
   "not_found": {
     "title": "Page not found",
     "message": "The page does not exist.",

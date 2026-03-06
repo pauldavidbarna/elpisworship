@@ -72,10 +72,13 @@ const Footer = () => {
         </div>
 
         {/* Copyright */}
-        <div className="mt-12 pt-8 border-t border-secondary-foreground/10 text-center">
+        <div className="mt-12 pt-8 border-t border-secondary-foreground/10 text-center space-y-2">
           <p className="text-sm text-secondary-foreground/50">
             {t('footer.copyright')}
           </p>
+          <Link to="/privacy" className="text-xs text-secondary-foreground/40 hover:text-secondary-foreground/70 transition-colors">
+            {t('cookie.privacy')}
+          </Link>
         </div>
       </div>
     </footer>
