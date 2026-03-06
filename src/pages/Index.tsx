@@ -30,7 +30,7 @@ const Index = () => {
   useEffect(() => {
     fetch('/api/instagram-feed')
       .then((r) => r.json())
-      .then((data) => { if (Array.isArray(data)) setIgPosts(data.slice(0, 10)); })
+      .then((data) => { if (Array.isArray(data)) setIgPosts(data.slice(0, 6)); })
       .catch(() => {});
   }, []);
 
@@ -227,7 +227,7 @@ const Index = () => {
                 <h2 className="font-display text-3xl md:text-4xl font-bold">{t('home.instagram_title')}</h2>
               </div>
             </motion.div>
-            <div className="grid grid-cols-5 gap-1 sm:gap-2 max-w-5xl mx-auto">
+            <div className="grid grid-cols-3 gap-1 sm:gap-2 max-w-3xl mx-auto">
               {igPosts.map((post, index) => (
                 <motion.a
                   key={post.id}
