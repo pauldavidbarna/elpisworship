@@ -1,12 +1,11 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Music, Download, ChevronDown, Search, Eye, X } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion'; // AnimatePresence used for PdfViewer
+import { Music, Download, Search, X } from 'lucide-react';
 import { Layout } from '@/components/layout';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { getResourcesData, type Song } from '@/lib/resourcesData';
 import { downloadPdf, getPdfURL } from '@/lib/pdfStorage';
@@ -108,19 +107,11 @@ const Lyrics = () => {
   const { t } = useTranslation();
   const { songs } = getResourcesData();
   const [search, setSearch] = useState('');
-  const [expanded, setExpanded] = useState<number | null>(null);
   const [viewing, setViewing] = useState<Song | null>(null);
-  const [downloading, setDownloading] = useState<string | null>(null);
 
   const filtered = songs.filter((s) =>
     s.title.toLowerCase().includes(search.toLowerCase())
   );
-
-  const handleDownload = async (key: string, filename: string) => {
-    setDownloading(key);
-    try { await downloadPdf(key, filename); }
-    finally { setDownloading(null); }
-  };
 
   return (
     <Layout>
@@ -168,84 +159,16 @@ const Lyrics = () => {
                   transition={{ delay: index * 0.04 }}
                 >
                   <Card
-                    className="border-0 shadow-md overflow-hidden cursor-pointer select-none"
-                    onClick={() => setExpanded(expanded === song.id ? null : song.id)}
+                    className="border-0 shadow-md overflow-hidden cursor-pointer select-none hover:shadow-lg transition-shadow"
+                    onClick={() => setViewing(song)}
                   >
                     <CardContent className="p-0">
-                      {/* Header row */}
-                      <div className="flex items-center justify-between px-5 py-4 hover:bg-muted/40 transition-colors">
-                        <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                            <Music className="h-4 w-4 text-primary" />
-                          </div>
-                          <span className="font-medium">{song.title}</span>
+                      <div className="flex items-center gap-3 px-5 py-4 hover:bg-muted/40 transition-colors">
+                        <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                          <Music className="h-4 w-4 text-primary" />
                         </div>
-                        <div className="flex items-center gap-2 shrink-0">
-                          {song.lyricsPdfKey && (
-                            <Badge variant="outline" className="text-xs hidden sm:inline-flex">Lyrics</Badge>
-                          )}
-                          {song.chordsPdfKey && (
-                            <Badge variant="outline" className="text-xs hidden sm:inline-flex">Chords</Badge>
-                          )}
-                          <ChevronDown
-                            className={`h-4 w-4 text-muted-foreground transition-transform duration-200 ${expanded === song.id ? 'rotate-180' : ''}`}
-                          />
-                        </div>
+                        <span className="font-medium flex-1">{song.title}</span>
                       </div>
-
-                      {/* Expanded area */}
-                      <AnimatePresence initial={false}>
-                        {expanded === song.id && (
-                          <motion.div
-                            initial={{ height: 0, opacity: 0 }}
-                            animate={{ height: 'auto', opacity: 1 }}
-                            exit={{ height: 0, opacity: 0 }}
-                            transition={{ duration: 0.2 }}
-                          >
-                            <div className="px-5 pb-5 pt-3 border-t border-border space-y-3">
-                              {/* View button */}
-                              <Button
-                                className="w-full"
-                                disabled={!song.lyricsPdfKey && !song.chordsPdfKey}
-                                onClick={(e) => { e.stopPropagation(); setViewing(song); }}
-                              >
-                                <Eye className="h-4 w-4 mr-2" />
-                                {t('lyrics.view')}
-                              </Button>
-
-                              {/* Download buttons */}
-                              <div className="flex flex-col sm:flex-row gap-2">
-                                <Button
-                                  className="flex-1"
-                                  variant="outline"
-                                  size="sm"
-                                  disabled={!song.lyricsPdfKey || downloading === song.lyricsPdfKey}
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    if (song.lyricsPdfKey) handleDownload(song.lyricsPdfKey, `${song.title} - Lyrics.pdf`);
-                                  }}
-                                >
-                                  <Download className="h-3 w-3 mr-1" />
-                                  {downloading === song.lyricsPdfKey ? '...' : t('lyrics.download_lyrics')}
-                                </Button>
-                                <Button
-                                  className="flex-1"
-                                  variant="outline"
-                                  size="sm"
-                                  disabled={!song.chordsPdfKey || downloading === song.chordsPdfKey}
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    if (song.chordsPdfKey) handleDownload(song.chordsPdfKey, `${song.title} - Lyrics & Chords.pdf`);
-                                  }}
-                                >
-                                  <Download className="h-3 w-3 mr-1" />
-                                  {downloading === song.chordsPdfKey ? '...' : t('lyrics.download_chords')}
-                                </Button>
-                              </div>
-                            </div>
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
                     </CardContent>
                   </Card>
                 </motion.div>
