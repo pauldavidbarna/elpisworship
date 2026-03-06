@@ -6,31 +6,11 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Layout } from '@/components/layout';
 import heroImage from '@/assets/hero-worship.jpg';
-
-// Sample upcoming events data
-const upcomingEvents = [
-  {
-    id: 1,
-    title: 'Worship Night Athens',
-    date: '2025-03-15',
-    location: 'Athens, Greece',
-  },
-  {
-    id: 2,
-    title: 'Easter Concert',
-    date: '2025-04-20',
-    location: 'Kallithea Church',
-  },
-  {
-    id: 3,
-    title: 'Youth Conference',
-    date: '2025-05-10',
-    location: 'Thessaloniki',
-  },
-];
+import { getResourcesData } from '@/lib/resourcesData';
 
 const Index = () => {
   const { t, i18n } = useTranslation();
+  const upcomingEvents = getResourcesData().events.filter((e) => e.type === 'upcoming');
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString(
