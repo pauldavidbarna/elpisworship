@@ -7,7 +7,6 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 
 const PLAYLIST_ID = 'PLRX8hHCncTbi-bPiUtoCDGgTW5i-a_2IN';
-const API_KEY = import.meta.env.VITE_YOUTUBE_API_KEY as string;
 
 interface YTVideo {
   videoId: string;
@@ -16,39 +15,10 @@ interface YTVideo {
 }
 
 async function fetchPlaylistVideos(): Promise<YTVideo[]> {
-  const videos: YTVideo[] = [];
-  let pageToken = '';
-
-  do {
-    const url = new URL('https://www.googleapis.com/youtube/v3/playlistItems');
-    url.searchParams.set('part', 'snippet');
-    url.searchParams.set('playlistId', PLAYLIST_ID);
-    url.searchParams.set('maxResults', '50');
-    url.searchParams.set('key', API_KEY);
-    if (pageToken) url.searchParams.set('pageToken', pageToken);
-
-    const res = await fetch(url.toString());
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error?.message || `HTTP ${res.status}`);
-
-    for (const item of data.items ?? []) {
-      const snippet = item.snippet;
-      if (snippet.resourceId?.videoId) {
-        videos.push({
-          videoId: snippet.resourceId.videoId,
-          title: snippet.title,
-          thumbnail:
-            snippet.thumbnails?.maxres?.url ||
-            snippet.thumbnails?.high?.url ||
-            snippet.thumbnails?.medium?.url || '',
-        });
-      }
-    }
-
-    pageToken = data.nextPageToken ?? '';
-  } while (pageToken);
-
-  return videos;
+  const res = await fetch('/api/youtube-playlist');
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
+  return data as YTVideo[];
 }
 
 const ElpisPlay = () => {
