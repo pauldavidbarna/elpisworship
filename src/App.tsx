@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -27,13 +27,26 @@ import Admin from "./pages/Admin";
 const queryClient = new QueryClient();
 
 const App = () => {
+  const [ready, setReady] = useState(false);
+
   useEffect(() => {
     loadFromSupabase().then((data) => {
       if (data && Object.keys(data).length > 0) {
         saveResourcesData(data);
       }
+      setReady(true);
     });
   }, []);
+
+  if (!ready) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+        </div>
+      </div>
+    );
+  }
 
   return (
   <QueryClientProvider client={queryClient}>

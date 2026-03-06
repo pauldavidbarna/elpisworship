@@ -1,44 +1,27 @@
-const DB_NAME = 'elpis_videos';
-const STORE = 'videos';
+import { supabase } from './supabase';
 
-function openDB(): Promise<IDBDatabase> {
-  return new Promise((resolve, reject) => {
-    const req = indexedDB.open(DB_NAME, 1);
-    req.onupgradeneeded = (e) => {
-      const db = (e.target as IDBOpenDBRequest).result;
-      if (!db.objectStoreNames.contains(STORE)) db.createObjectStore(STORE);
-    };
-    req.onsuccess = () => resolve(req.result);
-    req.onerror = () => reject(req.error);
-  });
-}
+const BUCKET = 'videos';
 
-export async function saveVideo(key: string, blob: Blob): Promise<void> {
-  const db = await openDB();
-  return new Promise((resolve, reject) => {
-    const tx = db.transaction(STORE, 'readwrite');
-    tx.objectStore(STORE).put(blob, key);
-    tx.oncomplete = () => resolve();
-    tx.onerror = () => reject(tx.error);
-  });
+export async function saveVideo(key: string, file: Blob): Promise<void> {
+  const ext = file instanceof File ? file.name.split('.').pop() : 'mp4';
+  const path = `${key}.${ext}`;
+  const { error } = await supabase.storage.from(BUCKET).upload(path, file, { upsert: true });
+  if (error) throw error;
 }
 
 export async function getVideoURL(key: string): Promise<string | null> {
-  const db = await openDB();
-  return new Promise((resolve, reject) => {
-    const tx = db.transaction(STORE, 'readonly');
-    const req = tx.objectStore(STORE).get(key);
-    req.onsuccess = () => resolve(req.result ? URL.createObjectURL(req.result) : null);
-    req.onerror = () => reject(req.error);
-  });
+  // Try common extensions
+  for (const ext of ['mp4', 'mov', 'webm', 'avi']) {
+    const { data } = supabase.storage.from(BUCKET).getPublicUrl(`${key}.${ext}`);
+    // Verify the file exists by checking if URL resolves
+    const res = await fetch(data.publicUrl, { method: 'HEAD' }).catch(() => null);
+    if (res?.ok) return data.publicUrl;
+  }
+  return null;
 }
 
 export async function deleteVideo(key: string): Promise<void> {
-  const db = await openDB();
-  return new Promise((resolve, reject) => {
-    const tx = db.transaction(STORE, 'readwrite');
-    tx.objectStore(STORE).delete(key);
-    tx.oncomplete = () => resolve();
-    tx.onerror = () => reject(tx.error);
-  });
+  for (const ext of ['mp4', 'mov', 'webm', 'avi']) {
+    await supabase.storage.from(BUCKET).remove([`${key}.${ext}`]);
+  }
 }
