@@ -7,6 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { getResourcesData, type Video as VideoType } from '@/lib/resourcesData';
+import { usePageMeta } from '@/hooks/usePageMeta';
 import { getVideoURL } from '@/lib/videoDB';
 
 function VideoPlayer({ video }: { video: VideoType }) {
@@ -32,6 +33,7 @@ function VideoPlayer({ video }: { video: VideoType }) {
 }
 
 const Resources = () => {
+  usePageMeta('Resources', 'Browse Elpis Worship photos, videos, upcoming events and announcements.');
   const { t, i18n } = useTranslation();
   const [activeTab, setActiveTab] = useState('photos');
   const { photos, videos, events: allEvents, announcements } = getResourcesData();

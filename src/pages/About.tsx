@@ -5,6 +5,7 @@ import { Target, Heart, Lightbulb, Instagram } from 'lucide-react';
 import { Layout } from '@/components/layout';
 import { Card, CardContent } from '@/components/ui/card';
 import { getResourcesData } from '@/lib/resourcesData';
+import { usePageMeta } from '@/hooks/usePageMeta';
 
 function shuffle<T>(arr: T[]): T[] {
   const a = [...arr];
@@ -17,6 +18,7 @@ function shuffle<T>(arr: T[]): T[] {
 
 const About = () => {
   const { t, i18n } = useTranslation();
+  usePageMeta('About', 'Learn about Elpis Worship — who we are, our mission and the team behind the music.');
   const [{ team }] = useState(() => getResourcesData());
   const shuffledTeam = useMemo(() => shuffle(team), [team]);
 

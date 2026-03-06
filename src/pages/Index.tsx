@@ -8,9 +8,11 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Layout } from '@/components/layout';
 import heroImage from '@/assets/hero-worship.jpg';
 import { getResourcesData } from '@/lib/resourcesData';
+import { usePageMeta } from '@/hooks/usePageMeta';
 
 const Index = () => {
   const { t, i18n } = useTranslation();
+  usePageMeta('Home', 'Elpis Worship — worship band dedicated to glorifying God through music.');
   const { events, heroImages } = getResourcesData();
   const upcomingEvents = events.filter((e) => e.type === 'upcoming');
   const slides = heroImages.length > 0 ? heroImages : [heroImage];

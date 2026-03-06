@@ -5,7 +5,10 @@ import { Layout } from '@/components/layout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 
+import { usePageMeta } from '@/hooks/usePageMeta';
+
 const Donate = () => {
+  usePageMeta('Support Us', 'Support Elpis Worship ministry and help us continue creating music for His glory.');
   const { t, i18n } = useTranslation();
 
   return (

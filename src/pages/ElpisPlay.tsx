@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next';
+import { usePageMeta } from '@/hooks/usePageMeta';
 import { motion } from 'framer-motion';
 import { Play, Music, ExternalLink } from 'lucide-react';
 import { Layout } from '@/components/layout';
@@ -10,6 +11,7 @@ const PLAYLIST_ID = 'PLRX8hHCncTbi-bPiUtoCDGgTW5i-a_2IN';
 const YOUTUBE_PLAYLIST_URL = `https://www.youtube.com/playlist?list=${PLAYLIST_ID}`;
 
 const ElpisPlay = () => {
+  usePageMeta('Elpis Play', 'Watch and listen to Elpis Worship music — worship sessions, live recordings and more.');
   const { t, i18n } = useTranslation();
 
   return (
