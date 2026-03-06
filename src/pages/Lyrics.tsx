@@ -173,9 +173,9 @@ const Lyrics = () => {
   const [search, setSearch] = useState('');
   const [viewing, setViewing] = useState<Song | null>(null);
 
-  const filtered = songs.filter((s) =>
-    s.title.toLowerCase().includes(search.toLowerCase())
-  );
+  const filtered = songs
+    .filter((s) => s.title.toLowerCase().includes(search.toLowerCase()))
+    .sort((a, b) => a.title.localeCompare(b.title));
 
   return (
     <Layout>
