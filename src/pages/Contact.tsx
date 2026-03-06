@@ -18,19 +18,43 @@ const Contact = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
-    // Simulate form submission
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    toast({
-      title: i18n.language === 'gr' ? 'Επιτυχία!' : 'Success!',
-      description: i18n.language === 'gr' 
-        ? 'Το μήνυμά σας εστάλη.'
-        : 'Your message has been sent.',
-    });
-    
-    setIsSubmitting(false);
-    (e.target as HTMLFormElement).reset();
+
+    const form = e.target as HTMLFormElement;
+    const data = new FormData(form);
+
+    try {
+      const res = await fetch('/api/send-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: data.get('name'),
+          email: data.get('email'),
+          subject: data.get('subject'),
+          message: data.get('message'),
+        }),
+      });
+
+      if (!res.ok) throw new Error('Failed');
+
+      toast({
+        title: i18n.language === 'gr' ? 'Επιτυχία!' : 'Success!',
+        description: i18n.language === 'gr'
+          ? 'Το μήνυμά σας εστάλη.'
+          : 'Your message has been sent.',
+      });
+
+      form.reset();
+    } catch {
+      toast({
+        title: i18n.language === 'gr' ? 'Σφάλμα' : 'Error',
+        description: i18n.language === 'gr'
+          ? 'Κάτι πήγε στραβά. Παρακαλώ δοκιμάστε ξανά.'
+          : 'Something went wrong. Please try again.',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const socialLinks = [
