@@ -10,7 +10,6 @@ const Footer = () => {
     { path: '/', label: t('nav.home') },
     { path: '/about', label: t('nav.about') },
     { path: '/donate', label: t('nav.donate') },
-    { path: '/shop', label: t('nav.shop') },
     { path: '/resources', label: t('nav.resources') },
     { path: '/contact', label: t('nav.contact') },
   ];
