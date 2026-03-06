@@ -25,6 +25,7 @@ const Contact = lazy(() => import("./pages/Contact"));
 const Resources = lazy(() => import("./pages/Resources"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const Admin = lazy(() => import("./pages/Admin"));
+const Lyrics = lazy(() => import("./pages/Lyrics"));
 
 const queryClient = new QueryClient();
 
@@ -83,6 +84,7 @@ const App = () => {
           <Route path="/donate" element={<Donate />} />
           <Route path="/shop" element={<Shop />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/lyrics" element={<Lyrics />} />
           <Route path="/resources" element={<Resources />} />
           <Route path="/admin" element={<Admin />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

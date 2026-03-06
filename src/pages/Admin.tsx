@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
-import { Image, Video, Calendar, Megaphone, LogOut, Plus, Pencil, Trash2, Lock, X, Upload, Film, Users, LayoutTemplate } from 'lucide-react';
+import { Image, Video, Calendar, Megaphone, LogOut, Plus, Pencil, Trash2, Lock, X, Upload, Film, Users, LayoutTemplate, Music } from 'lucide-react';
 import { saveVideo, deleteVideo } from '@/lib/videoDB';
+import { uploadPdf, deletePdf } from '@/lib/pdfStorage';
 import { saveToSupabase } from '@/lib/supabase';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -21,6 +22,7 @@ import {
   type ResourceEvent,
   type Announcement,
   type TeamMember,
+  type Song,
 } from '@/lib/resourcesData';
 
 const ADMIN_PASSWORD = 'elpis2024';
@@ -737,6 +739,164 @@ function HeroAdmin({ data, onChange }: { data: ResourcesData; onChange: (d: Reso
   );
 }
 
+// ── Songs Admin ────────────────────────────────────────────────────────────
+
+function SongsAdmin({ data, onChange }: { data: ResourcesData; onChange: (d: ResourcesData) => void }) {
+  const songs = data.songs ?? [];
+  const [open, setOpen] = useState(false);
+  const [editing, setEditing] = useState<Song | null>(null);
+  const [draftId, setDraftId] = useState(1);
+  const [title, setTitle] = useState('');
+  const [lyricsPdfKey, setLyricsPdfKey] = useState<string | undefined>();
+  const [chordsPdfKey, setChordsPdfKey] = useState<string | undefined>();
+  const [uploadingLyrics, setUploadingLyrics] = useState(false);
+  const [uploadingChords, setUploadingChords] = useState(false);
+  const lyricsRef = useRef<HTMLInputElement>(null);
+  const chordsRef = useRef<HTMLInputElement>(null);
+
+  const openAdd = () => {
+    const newId = songs.length > 0 ? Math.max(...songs.map((s) => s.id)) + 1 : 1;
+    setDraftId(newId);
+    setEditing(null); setTitle(''); setLyricsPdfKey(undefined); setChordsPdfKey(undefined);
+    setOpen(true);
+  };
+
+  const openEdit = (s: Song) => {
+    setDraftId(s.id);
+    setEditing(s); setTitle(s.title); setLyricsPdfKey(s.lyricsPdfKey); setChordsPdfKey(s.chordsPdfKey);
+    setOpen(true);
+  };
+
+  const save = () => {
+    if (!title.trim()) return;
+    if (editing) {
+      onChange({ ...data, songs: songs.map((s) => s.id === editing.id ? { ...s, title, lyricsPdfKey, chordsPdfKey } : s) });
+    } else {
+      onChange({ ...data, songs: [...songs, { id: draftId, title, lyricsPdfKey, chordsPdfKey }] });
+    }
+    setOpen(false);
+  };
+
+  const remove = async (s: Song) => {
+    if (!window.confirm(`Ștergi "${s.title}"?`)) return;
+    if (s.lyricsPdfKey) await deletePdf(s.lyricsPdfKey);
+    if (s.chordsPdfKey) await deletePdf(s.chordsPdfKey);
+    onChange({ ...data, songs: songs.filter((x) => x.id !== s.id) });
+  };
+
+  const handlePdf = async (file: File, type: 'lyrics' | 'chords') => {
+    const key = `${draftId}-${type}.pdf`;
+    if (type === 'lyrics') {
+      setUploadingLyrics(true);
+      try { await uploadPdf(file, key); setLyricsPdfKey(key); } finally { setUploadingLyrics(false); }
+    } else {
+      setUploadingChords(true);
+      try { await uploadPdf(file, key); setChordsPdfKey(key); } finally { setUploadingChords(false); }
+    }
+  };
+
+  return (
+    <>
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="font-semibold text-lg">Cântări & PDF-uri</h2>
+        <Button size="sm" onClick={openAdd}><Plus className="h-4 w-4 mr-1" /> Adaugă cântare</Button>
+      </div>
+
+      {songs.length === 0 && (
+        <div className="border-2 border-dashed rounded-lg p-12 text-center text-muted-foreground">
+          <Music className="h-10 w-10 mx-auto mb-3 opacity-30" />
+          <p>Nicio cântare adăugată încă</p>
+        </div>
+      )}
+
+      <div className="space-y-3">
+        {songs.map((s) => (
+          <Card key={s.id} className="border shadow-sm">
+            <CardContent className="p-4 flex items-center gap-3">
+              <Music className="h-5 w-5 text-primary shrink-0" />
+              <div className="flex-1 min-w-0">
+                <p className="font-medium truncate">{s.title}</p>
+                <div className="flex gap-2 mt-1">
+                  <span className={`text-xs px-2 py-0.5 rounded-full border ${s.lyricsPdfKey ? 'border-primary text-primary' : 'border-muted-foreground/30 text-muted-foreground'}`}>
+                    Lyrics {s.lyricsPdfKey ? '✓' : '—'}
+                  </span>
+                  <span className={`text-xs px-2 py-0.5 rounded-full border ${s.chordsPdfKey ? 'border-primary text-primary' : 'border-muted-foreground/30 text-muted-foreground'}`}>
+                    Chords {s.chordsPdfKey ? '✓' : '—'}
+                  </span>
+                </div>
+              </div>
+              <div className="flex gap-1 shrink-0">
+                <Button size="icon" variant="ghost" onClick={() => openEdit(s)}><Pencil className="h-4 w-4" /></Button>
+                <Button size="icon" variant="ghost" className="text-destructive" onClick={() => remove(s)}><Trash2 className="h-4 w-4" /></Button>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>{editing ? 'Editează cântare' : 'Adaugă cântare'}</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-5 py-2">
+            <div className="space-y-1">
+              <Label>Titlu cântare</Label>
+              <Input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="ex: Amazing Grace" />
+            </div>
+
+            {/* Lyrics PDF */}
+            <div className="space-y-2">
+              <Label>PDF Lyrics</Label>
+              <div className="flex items-center gap-3">
+                <div className={`flex-1 text-sm px-3 py-2 rounded border ${lyricsPdfKey ? 'border-primary/50 text-primary bg-primary/5' : 'border-dashed text-muted-foreground'}`}>
+                  {lyricsPdfKey ? `${draftId}-lyrics.pdf ✓` : 'Niciun fișier încărcat'}
+                </div>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  disabled={uploadingLyrics}
+                  onClick={() => lyricsRef.current?.click()}
+                >
+                  {uploadingLyrics ? 'Se încarcă...' : <><Upload className="h-3 w-3 mr-1" /> Upload</>}
+                </Button>
+                <input ref={lyricsRef} type="file" accept="application/pdf" className="hidden"
+                  onChange={(e) => { if (e.target.files?.[0]) handlePdf(e.target.files[0], 'lyrics'); e.target.value = ''; }}
+                />
+              </div>
+            </div>
+
+            {/* Chords PDF */}
+            <div className="space-y-2">
+              <Label>PDF Lyrics + Chords</Label>
+              <div className="flex items-center gap-3">
+                <div className={`flex-1 text-sm px-3 py-2 rounded border ${chordsPdfKey ? 'border-primary/50 text-primary bg-primary/5' : 'border-dashed text-muted-foreground'}`}>
+                  {chordsPdfKey ? `${draftId}-chords.pdf ✓` : 'Niciun fișier încărcat'}
+                </div>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  disabled={uploadingChords}
+                  onClick={() => chordsRef.current?.click()}
+                >
+                  {uploadingChords ? 'Se încarcă...' : <><Upload className="h-3 w-3 mr-1" /> Upload</>}
+                </Button>
+                <input ref={chordsRef} type="file" accept="application/pdf" className="hidden"
+                  onChange={(e) => { if (e.target.files?.[0]) handlePdf(e.target.files[0], 'chords'); e.target.value = ''; }}
+                />
+              </div>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setOpen(false)}>Anulează</Button>
+            <Button onClick={save} disabled={!title.trim() || uploadingLyrics || uploadingChords}>Salvează</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </>
+  );
+}
+
 // ── Main Admin ─────────────────────────────────────────────────────────────
 
 const Admin = () => {
@@ -809,7 +969,7 @@ const Admin = () => {
       <main className="container mx-auto px-4 py-8 max-w-4xl">
         <Tabs defaultValue="photos">
           <div className="overflow-x-auto mb-8">
-            <TabsList className="flex w-max min-w-full sm:grid sm:grid-cols-6">
+            <TabsList className="flex w-max min-w-full sm:grid sm:grid-cols-7">
               <TabsTrigger value="hero" className="flex items-center gap-2 flex-1">
                 <LayoutTemplate className="h-4 w-4" /><span className="hidden sm:inline">Hero</span>
               </TabsTrigger>
@@ -828,6 +988,9 @@ const Admin = () => {
               <TabsTrigger value="announcements" className="flex items-center gap-2 flex-1">
                 <Megaphone className="h-4 w-4" /><span className="hidden sm:inline">Anunțuri</span>
               </TabsTrigger>
+              <TabsTrigger value="songs" className="flex items-center gap-2 flex-1">
+                <Music className="h-4 w-4" /><span className="hidden sm:inline">Lyrics</span>
+              </TabsTrigger>
             </TabsList>
           </div>
 
@@ -837,6 +1000,7 @@ const Admin = () => {
           <TabsContent value="videos"><VideosAdmin data={data} onChange={setData} /></TabsContent>
           <TabsContent value="events"><EventsAdmin data={data} onChange={setData} /></TabsContent>
           <TabsContent value="announcements"><AnnouncementsAdmin data={data} onChange={setData} /></TabsContent>
+          <TabsContent value="songs"><SongsAdmin data={data} onChange={setData} /></TabsContent>
         </Tabs>
       </main>
     </div>

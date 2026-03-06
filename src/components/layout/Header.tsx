@@ -18,8 +18,8 @@ const Header = () => {
     { path: '/', label: t('nav.home') },
     { path: '/about', label: t('nav.about') },
     { path: '/play', label: t('nav.play') },
+    { path: '/lyrics', label: t('nav.lyrics') },
     { path: '/donate', label: t('nav.donate') },
-
     { path: '/resources', label: t('nav.resources') },
     { path: '/contact', label: t('nav.contact') },
   ];

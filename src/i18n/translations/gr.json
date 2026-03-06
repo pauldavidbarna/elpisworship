@@ -3,10 +3,20 @@
     "home": "Αρχική",
     "about": "Σχετικά",
     "play": "Elpis Play",
+    "lyrics": "Lyrics",
     "donate": "Δωρεά",
     "shop": "Κατάστημα",
     "resources": "Πόροι",
     "contact": "Επικοινωνία"
+  },
+  "lyrics": {
+    "title": "Lyrics & Chords",
+    "subtitle": "Κατεβάστε τα lyrics των τραγουδιών λατρείας μας σε PDF",
+    "search": "Αναζήτηση τραγουδιών...",
+    "download_lyrics": "Λήψη PDF Lyrics",
+    "download_chords": "Λήψη PDF Lyrics + Chords",
+    "no_songs": "Δεν υπάρχουν διαθέσιμα τραγούδια.",
+    "no_pdf": "Μη διαθέσιμο"
   },
   "play": {
     "title": "Elpis Play",

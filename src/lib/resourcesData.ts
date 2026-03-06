@@ -46,6 +46,13 @@ export interface Announcement {
   image?: string; // base64 data URL
 }
 
+export interface Song {
+  id: number;
+  title: string;
+  lyricsPdfKey?: string; // key in Supabase Storage 'pdfs' bucket
+  chordsPdfKey?: string; // key in Supabase Storage 'pdfs' bucket
+}
+
 export interface TeamMember {
   id: number;
   name: string;
@@ -64,12 +71,14 @@ export interface ResourcesData {
   announcements: Announcement[];
   team: TeamMember[];
   heroImages: string[]; // base64 data URLs
+  songs: Song[];
 }
 
 const STORAGE_KEY = 'elpis_resources';
 
 const defaultData: ResourcesData = {
   heroImages: [],
+  songs: [],
   photos: [
     { id: 1, title: 'Worship Night 2024', images: [] },
     { id: 2, title: 'Easter Concert', images: [] },
@@ -110,6 +119,7 @@ export function getResourcesData(): ResourcesData {
       }));
       // migrate: team might not exist in old data
       if (!parsed.heroImages) parsed.heroImages = [];
+      if (!parsed.songs) parsed.songs = [];
       if (!parsed.team) {
         parsed.team = defaultData.team;
       } else {
