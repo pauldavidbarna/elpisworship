@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Image, Video, Calendar, Megaphone, LogOut, Plus, Pencil, Trash2, Lock, X, Upload, Film, Users, LayoutTemplate } from 'lucide-react';
 import { saveVideo, deleteVideo } from '@/lib/videoDB';
+import { saveToSupabase } from '@/lib/supabase';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -745,7 +746,10 @@ const Admin = () => {
   const [data, setData] = useState<ResourcesData>(getResourcesData);
 
   useEffect(() => {
-    if (authed) saveResourcesData(data);
+    if (authed) {
+      saveResourcesData(data);
+      saveToSupabase(data);
+    }
   }, [data, authed]);
 
   const login = () => {
