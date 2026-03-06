@@ -49,7 +49,7 @@ const ElpisPlay = () => {
             {t('play.description')}
           </p>
           <Button asChild className="bg-white text-black hover:bg-white/90">
-            <a href={`https://www.youtube.com/playlist?list=${PLAYLIST_ID}`} target="_blank" rel="noopener noreferrer">
+            <a href="https://www.youtube.com/@ElpisWorship" target="_blank" rel="noopener noreferrer">
               <ExternalLink className="mr-2 h-4 w-4" /> {t('play.open_youtube')}
             </a>
           </Button>
