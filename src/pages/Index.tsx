@@ -2,13 +2,20 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
-import { ArrowRight, Calendar, MapPin } from 'lucide-react';
+import { ArrowRight, Calendar, MapPin, Instagram } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Layout } from '@/components/layout';
 import heroImage from '@/assets/hero-worship.jpg';
 import { getResourcesData } from '@/lib/resourcesData';
 import { usePageMeta } from '@/hooks/usePageMeta';
+
+interface IGPost {
+  id: string;
+  mediaType: string;
+  imageUrl: string;
+  permalink: string;
+}
 
 const Index = () => {
   const { t, i18n } = useTranslation();
@@ -18,6 +25,14 @@ const Index = () => {
   const slides = heroImages.length > 0 ? heroImages : [heroImage];
 
   const [current, setCurrent] = useState(0);
+  const [igPosts, setIgPosts] = useState<IGPost[]>([]);
+
+  useEffect(() => {
+    fetch('/api/instagram-feed')
+      .then((r) => r.json())
+      .then((data) => { if (Array.isArray(data)) setIgPosts(data); })
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     if (slides.length <= 1) return;
@@ -195,6 +210,59 @@ const Index = () => {
           </motion.div>
         </div>
       </section>
+
+      {/* Instagram Grid */}
+      {igPosts.length > 0 && (
+        <section className="py-20">
+          <div className="container mx-auto px-4">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="text-center mb-10"
+            >
+              <div className="flex items-center justify-center gap-2 mb-2">
+                <Instagram className="h-6 w-6 text-primary" />
+                <h2 className="font-display text-3xl md:text-4xl font-bold">{t('home.instagram_title')}</h2>
+              </div>
+            </motion.div>
+            <div className="grid grid-cols-3 gap-1 sm:gap-2 max-w-3xl mx-auto">
+              {igPosts.map((post, index) => (
+                <motion.a
+                  key={post.id}
+                  href={post.permalink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: (index % 9) * 0.05 }}
+                  className="relative aspect-square overflow-hidden group bg-muted"
+                >
+                  <img
+                    src={post.imageUrl}
+                    alt="Elpis Worship on Instagram"
+                    loading="lazy"
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                  />
+                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                    <Instagram className="h-8 w-8 text-white" />
+                  </div>
+                </motion.a>
+              ))}
+            </div>
+            <div className="text-center mt-8">
+              <Button asChild variant="outline" size="lg">
+                <a href="https://instagram.com/elpisworship" target="_blank" rel="noopener noreferrer">
+                  <Instagram className="mr-2 h-4 w-4" />
+                  {t('home.instagram_cta')}
+                </a>
+              </Button>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Call to Action */}
       <section className="py-20 md:py-32 hero-gradient text-white">
