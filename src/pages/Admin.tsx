@@ -848,8 +848,8 @@ function SongsAdmin({ data, onChange }: { data: ResourcesData; onChange: (d: Res
           </DialogHeader>
           <div className="space-y-5 py-2">
             <div className="space-y-1">
-              <Label>Titlu cântare</Label>
-              <Input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="ex: Uimitor Har" />
+              <Label>Titlu în greacă</Label>
+              <Input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="ex: Εκπληκτική Χάρη" />
             </div>
             <div className="space-y-1">
               <Label>Titlu în engleză <span className="text-muted-foreground font-normal">(opțional)</span></Label>
