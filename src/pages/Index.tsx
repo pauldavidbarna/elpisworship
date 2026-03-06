@@ -238,7 +238,7 @@ const Index = () => {
                   whileInView={{ opacity: 1, scale: 1 }}
                   viewport={{ once: true }}
                   transition={{ delay: (index % 9) * 0.05 }}
-                  className="relative aspect-square overflow-hidden group bg-muted"
+                  className="relative overflow-hidden group bg-muted" style={{ aspectRatio: '4/5' }}
                 >
                   <img
                     src={post.imageUrl}
