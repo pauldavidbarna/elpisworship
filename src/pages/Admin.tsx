@@ -95,8 +95,8 @@ function PhotosAdmin({ data, onChange }: { data: ResourcesData; onChange: (d: Re
   return (
     <>
       <div className="flex justify-between items-center mb-4">
-        <h2 className="font-semibold text-lg">Galerii foto</h2>
-        <Button size="sm" onClick={openAdd}><Plus className="h-4 w-4 mr-1" /> Adaugă galerie</Button>
+        <h2 className="font-semibold text-lg">Photo Galleries</h2>
+        <Button size="sm" onClick={openAdd}><Plus className="h-4 w-4 mr-1" /> Add gallery</Button>
       </div>
       <div className="space-y-2">
         {data.photos.map((g) => (
@@ -109,7 +109,7 @@ function PhotosAdmin({ data, onChange }: { data: ResourcesData; onChange: (d: Re
                 }
                 <div>
                   <p className="font-medium">{g.title}</p>
-                  <p className="text-sm text-muted-foreground">{g.images.length} {g.images.length === 1 ? 'poză' : 'poze'}</p>
+                  <p className="text-sm text-muted-foreground">{g.images.length} {g.images.length === 1 ? 'photo' : 'photos'}</p>
                 </div>
               </div>
               <div className="flex gap-2">
@@ -123,10 +123,10 @@ function PhotosAdmin({ data, onChange }: { data: ResourcesData; onChange: (d: Re
 
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader><DialogTitle>{editing ? 'Editează galerie' : 'Galerie nouă'}</DialogTitle></DialogHeader>
+          <DialogHeader><DialogTitle>{editing ? 'Edit gallery' : 'New gallery'}</DialogTitle></DialogHeader>
           <div className="space-y-4 py-2">
             <div className="space-y-1">
-              <Label>Titlu galerie</Label>
+              <Label>Gallery title</Label>
               <Input value={title} onChange={(e) => setTitle(e.target.value)} />
             </div>
 
@@ -137,7 +137,7 @@ function PhotosAdmin({ data, onChange }: { data: ResourcesData; onChange: (d: Re
             >
               <Upload className="h-8 w-8 mx-auto mb-2 text-muted-foreground" />
               <p className="text-sm text-muted-foreground">
-                {uploading ? 'Se procesează...' : 'Click sau drag & drop pentru a adăuga poze'}
+                {uploading ? 'Processing...' : 'Click or drag & drop to add photos'}
               </p>
               <input
                 ref={fileRef}
@@ -167,8 +167,8 @@ function PhotosAdmin({ data, onChange }: { data: ResourcesData; onChange: (d: Re
             )}
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setOpen(false)}>Anulează</Button>
-            <Button onClick={save} disabled={uploading}>Salvează</Button>
+            <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
+            <Button onClick={save} disabled={uploading}>Save</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -226,8 +226,8 @@ function VideosAdmin({ data, onChange }: { data: ResourcesData; onChange: (d: Re
   return (
     <>
       <div className="flex justify-between items-center mb-4">
-        <h2 className="font-semibold text-lg">Videoclipuri</h2>
-        <Button size="sm" onClick={openAdd}><Plus className="h-4 w-4 mr-1" /> Adaugă video</Button>
+        <h2 className="font-semibold text-lg">Videos</h2>
+        <Button size="sm" onClick={openAdd}><Plus className="h-4 w-4 mr-1" /> Add video</Button>
       </div>
       <div className="space-y-2">
         {data.videos.map((v) => (
@@ -250,21 +250,21 @@ function VideosAdmin({ data, onChange }: { data: ResourcesData; onChange: (d: Re
 
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="max-w-lg">
-          <DialogHeader><DialogTitle>{editing ? 'Editează video' : 'Video nou'}</DialogTitle></DialogHeader>
+          <DialogHeader><DialogTitle>{editing ? 'Edit video' : 'New video'}</DialogTitle></DialogHeader>
           <div className="space-y-4 py-2">
             <div className="space-y-1">
-              <Label>Titlu</Label>
+              <Label>Title</Label>
               <Input value={title} onChange={(e) => setTitle(e.target.value)} />
             </div>
             <div className="space-y-1">
-              <Label>{editing ? 'Înlocuiește fișier (opțional)' : 'Fișier video'}</Label>
+              <Label>{editing ? 'Replace file (optional)' : 'Video file'}</Label>
               <div
                 className="border-2 border-dashed rounded-lg p-6 text-center cursor-pointer hover:border-primary transition-colors"
                 onClick={() => fileRef.current?.click()}
               >
                 <Upload className="h-8 w-8 mx-auto mb-2 text-muted-foreground" />
                 <p className="text-sm text-muted-foreground">
-                  {videoFile ? videoFile.name : 'Click pentru a selecta un fișier video'}
+                  {videoFile ? videoFile.name : 'Click to select a video file'}
                 </p>
                 <p className="text-xs text-muted-foreground mt-1">MP4, MOV, WebM</p>
                 <input
@@ -281,9 +281,9 @@ function VideosAdmin({ data, onChange }: { data: ResourcesData; onChange: (d: Re
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setOpen(false)}>Anulează</Button>
+            <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
             <Button onClick={save} disabled={uploading || (!editing && !videoFile)}>
-              {uploading ? 'Se salvează...' : 'Salvează'}
+              {uploading ? 'Saving...' : 'Save'}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -333,50 +333,50 @@ function EventsAdmin({ data, onChange }: { data: ResourcesData; onChange: (d: Re
   return (
     <>
       <div className="flex justify-between items-center mb-4">
-        <h2 className="font-semibold text-lg">Evenimente</h2>
-        <Button size="sm" onClick={openAdd}><Plus className="h-4 w-4 mr-1" /> Adaugă</Button>
+        <h2 className="font-semibold text-lg">Events</h2>
+        <Button size="sm" onClick={openAdd}><Plus className="h-4 w-4 mr-1" /> Add</Button>
       </div>
       <div className="space-y-6">
         <div>
-          <p className="text-sm font-medium text-muted-foreground mb-2">Viitoare</p>
+          <p className="text-sm font-medium text-muted-foreground mb-2">Upcoming</p>
           <div className="space-y-2">{upcoming.map((e) => <EventRow key={e.id} e={e} />)}</div>
         </div>
         <div>
-          <p className="text-sm font-medium text-muted-foreground mb-2">Trecute</p>
+          <p className="text-sm font-medium text-muted-foreground mb-2">Past</p>
           <div className="space-y-2 opacity-75">{past.map((e) => <EventRow key={e.id} e={e} />)}</div>
         </div>
       </div>
 
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent>
-          <DialogHeader><DialogTitle>{editing ? 'Editează eveniment' : 'Eveniment nou'}</DialogTitle></DialogHeader>
+          <DialogHeader><DialogTitle>{editing ? 'Edit event' : 'New event'}</DialogTitle></DialogHeader>
           <div className="space-y-4 py-2">
             <div className="space-y-1">
-              <Label>Titlu</Label>
+              <Label>Title</Label>
               <Input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} />
             </div>
             <div className="space-y-1">
-              <Label>Dată</Label>
+              <Label>Date</Label>
               <Input type="date" value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value })} />
             </div>
             <div className="space-y-1">
-              <Label>Locație</Label>
+              <Label>Location</Label>
               <Input value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })} />
             </div>
             <div className="space-y-1">
-              <Label>Tip</Label>
+              <Label>Type</Label>
               <Select value={form.type} onValueChange={(v) => setForm({ ...form, type: v as 'upcoming' | 'past' })}>
                 <SelectTrigger><SelectValue /></SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="upcoming">Viitor</SelectItem>
-                  <SelectItem value="past">Trecut</SelectItem>
+                  <SelectItem value="upcoming">Upcoming</SelectItem>
+                  <SelectItem value="past">Past</SelectItem>
                 </SelectContent>
               </Select>
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setOpen(false)}>Anulează</Button>
-            <Button onClick={save}>Salvează</Button>
+            <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
+            <Button onClick={save}>Save</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -417,8 +417,8 @@ function AnnouncementsAdmin({ data, onChange }: { data: ResourcesData; onChange:
   return (
     <>
       <div className="flex justify-between items-center mb-4">
-        <h2 className="font-semibold text-lg">Anunțuri</h2>
-        <Button size="sm" onClick={openAdd}><Plus className="h-4 w-4 mr-1" /> Adaugă</Button>
+        <h2 className="font-semibold text-lg">Announcements</h2>
+        <Button size="sm" onClick={openAdd}><Plus className="h-4 w-4 mr-1" /> Add</Button>
       </div>
       <div className="space-y-2">
         {data.announcements.map((a) => (
@@ -450,22 +450,22 @@ function AnnouncementsAdmin({ data, onChange }: { data: ResourcesData; onChange:
 
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent>
-          <DialogHeader><DialogTitle>{editing ? 'Editează anunț' : 'Anunț nou'}</DialogTitle></DialogHeader>
+          <DialogHeader><DialogTitle>{editing ? 'Edit announcement' : 'New announcement'}</DialogTitle></DialogHeader>
           <div className="space-y-4 py-2">
             <div className="space-y-1">
-              <Label>Titlu</Label>
+              <Label>Title</Label>
               <Input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} />
             </div>
             <div className="space-y-1">
-              <Label>Dată</Label>
+              <Label>Date</Label>
               <Input type="date" value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value })} />
             </div>
             <div className="space-y-1">
-              <Label>Conținut</Label>
+              <Label>Content</Label>
               <Textarea rows={4} value={form.content} onChange={(e) => setForm({ ...form, content: e.target.value })} />
             </div>
             <div className="space-y-1">
-              <Label>Imagine (opțional)</Label>
+              <Label>Image (optional)</Label>
               <div
                 className="border-2 border-dashed rounded-lg p-4 text-center cursor-pointer hover:border-primary transition-colors"
                 onClick={() => fileRef.current?.click()}
@@ -475,22 +475,22 @@ function AnnouncementsAdmin({ data, onChange }: { data: ResourcesData; onChange:
                   : (
                     <>
                       <Upload className="h-6 w-6 mx-auto mb-1 text-muted-foreground" />
-                      <p className="text-sm text-muted-foreground">{uploading ? 'Se procesează...' : 'Click pentru a adăuga o imagine'}</p>
+                      <p className="text-sm text-muted-foreground">{uploading ? 'Processing...' : 'Click to add an image'}</p>
                     </>
                   )
                 }
               </div>
               {form.image && (
                 <button type="button" className="text-xs text-destructive underline mt-1" onClick={() => setForm((f) => ({ ...f, image: '' }))}>
-                  Elimină imaginea
+                  Remove image
                 </button>
               )}
               <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={(e) => handleFile(e.target.files)} />
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setOpen(false)}>Anulează</Button>
-            <Button onClick={save} disabled={uploading}>Salvează</Button>
+            <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
+            <Button onClick={save} disabled={uploading}>Save</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -572,7 +572,7 @@ function TeamAdmin({ data, onChange }: { data: ResourcesData; onChange: (d: Reso
     <>
       <div className="flex justify-between items-center mb-4">
         <h2 className="font-semibold text-lg">Meet the Team</h2>
-        <Button size="sm" onClick={openAdd}><Plus className="h-4 w-4 mr-1" /> Adaugă membru</Button>
+        <Button size="sm" onClick={openAdd}><Plus className="h-4 w-4 mr-1" /> Add member</Button>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         {data.team.map((m) => (
@@ -583,7 +583,7 @@ function TeamAdmin({ data, onChange }: { data: ResourcesData; onChange: (d: Reso
                 : <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center shrink-0"><Users className="h-5 w-5 text-muted-foreground" /></div>
               }
               <div className="flex-1 min-w-0">
-                <p className="font-medium truncate">{m.name || <span className="text-muted-foreground italic">Fără nume</span>}</p>
+                <p className="font-medium truncate">{m.name || <span className="text-muted-foreground italic">No name</span>}</p>
                 <p className="text-sm text-primary truncate">{m.role}</p>
                 {m.description && <p className="text-xs text-muted-foreground truncate">{m.description}</p>}
               </div>
@@ -598,11 +598,11 @@ function TeamAdmin({ data, onChange }: { data: ResourcesData; onChange: (d: Reso
 
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="max-w-md">
-          <DialogHeader><DialogTitle>{editing ? 'Editează membru' : 'Membru nou'}</DialogTitle></DialogHeader>
+          <DialogHeader><DialogTitle>{editing ? 'Edit member' : 'New member'}</DialogTitle></DialogHeader>
           <div className="space-y-4 py-2">
             {/* Photo upload + reposition */}
             <div className="space-y-2">
-              <Label>Poză profil</Label>
+              <Label>Profile photo</Label>
               <div className="flex items-center gap-4">
                 <div className="relative shrink-0">
                   <div
@@ -628,10 +628,10 @@ function TeamAdmin({ data, onChange }: { data: ResourcesData; onChange: (d: Reso
                     className="block text-xs underline hover:text-foreground transition-colors"
                     onClick={() => fileRef.current?.click()}
                   >
-                    {form.image ? 'Schimbă poza' : 'Încarcă poza'}
+                    {form.image ? 'Change photo' : 'Upload photo'}
                   </button>
-                  {form.image && <p className="text-xs">Trage poza pentru a ajusta poziția</p>}
-                  {uploading && <p className="text-primary text-xs">Se procesează...</p>}
+                  {form.image && <p className="text-xs">Drag the photo to adjust position</p>}
+                  {uploading && <p className="text-primary text-xs">Processing...</p>}
                 </div>
                 <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={(e) => handleFile(e.target.files)} />
               </div>
@@ -642,12 +642,12 @@ function TeamAdmin({ data, onChange }: { data: ResourcesData; onChange: (d: Reso
               <Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="ex: Andrei Pop" />
             </div>
             <div className="space-y-1">
-              <Label>Instrument / Rol</Label>
-              <Input value={form.role} onChange={(e) => setForm({ ...form, role: e.target.value })} placeholder="ex: Chitară & Voce" />
+              <Label>Instrument / Role</Label>
+              <Input value={form.role} onChange={(e) => setForm({ ...form, role: e.target.value })} placeholder="e.g. Guitar & Vocals" />
             </div>
             <div className="space-y-1">
               <Label>Descriere</Label>
-              <Textarea rows={3} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} placeholder="Câteva cuvinte despre acest membru..." />
+              <Textarea rows={3} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} placeholder="A few words about this member..." />
             </div>
             <div className="space-y-1">
               <Label>Instagram</Label>
@@ -658,8 +658,8 @@ function TeamAdmin({ data, onChange }: { data: ResourcesData; onChange: (d: Reso
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setOpen(false)}>Anulează</Button>
-            <Button onClick={save} disabled={uploading}>Salvează</Button>
+            <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
+            <Button onClick={save} disabled={uploading}>Save</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -704,7 +704,7 @@ function HeroAdmin({ data, onChange }: { data: ResourcesData; onChange: (d: Reso
       <div className="flex justify-between items-center mb-4">
         <h2 className="font-semibold text-lg">Imagini Hero (Carousel)</h2>
         <Button size="sm" onClick={() => fileRef.current?.click()} disabled={uploading}>
-          <Plus className="h-4 w-4 mr-1" /> {uploading ? 'Se procesează...' : 'Adaugă poze'}
+          <Plus className="h-4 w-4 mr-1" /> {uploading ? 'Processing...' : 'Add photos'}
         </Button>
         <input ref={fileRef} type="file" accept="image/*" multiple className="hidden" onChange={(e) => handleFiles(e.target.files)} />
       </div>
@@ -715,8 +715,8 @@ function HeroAdmin({ data, onChange }: { data: ResourcesData; onChange: (d: Reso
           onClick={() => fileRef.current?.click()}
         >
           <Upload className="h-10 w-10 mx-auto mb-3 text-muted-foreground" />
-          <p className="text-muted-foreground">Click pentru a adăuga prima imagine hero</p>
-          <p className="text-xs text-muted-foreground mt-1">Se va afișa ca slideshow pe pagina principală</p>
+          <p className="text-muted-foreground">Click to add the first hero image</p>
+          <p className="text-xs text-muted-foreground mt-1">Will be displayed as a slideshow on the home page</p>
         </div>
       )}
 
@@ -805,14 +805,14 @@ function SongsAdmin({ data, onChange }: { data: ResourcesData; onChange: (d: Res
   return (
     <>
       <div className="flex justify-between items-center mb-4">
-        <h2 className="font-semibold text-lg">Cântări & PDF-uri</h2>
-        <Button size="sm" onClick={openAdd}><Plus className="h-4 w-4 mr-1" /> Adaugă cântare</Button>
+        <h2 className="font-semibold text-lg">Songs & PDFs</h2>
+        <Button size="sm" onClick={openAdd}><Plus className="h-4 w-4 mr-1" /> Add song</Button>
       </div>
 
       {songs.length === 0 && (
         <div className="border-2 border-dashed rounded-lg p-12 text-center text-muted-foreground">
           <Music className="h-10 w-10 mx-auto mb-3 opacity-30" />
-          <p>Nicio cântare adăugată încă</p>
+          <p>No songs added yet</p>
         </div>
       )}
 
@@ -844,15 +844,15 @@ function SongsAdmin({ data, onChange }: { data: ResourcesData; onChange: (d: Res
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="max-w-md">
           <DialogHeader>
-            <DialogTitle>{editing ? 'Editează cântare' : 'Adaugă cântare'}</DialogTitle>
+            <DialogTitle>{editing ? 'Edit song' : 'Add song'}</DialogTitle>
           </DialogHeader>
           <div className="space-y-5 py-2">
             <div className="space-y-1">
-              <Label>Titlu în greacă</Label>
-              <Input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="ex: Εκπληκτική Χάρη" />
+              <Label>Greek title</Label>
+              <Input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="e.g. Εκπληκτική Χάρη" />
             </div>
             <div className="space-y-1">
-              <Label>Titlu în engleză <span className="text-muted-foreground font-normal">(opțional)</span></Label>
+              <Label>English title <span className="text-muted-foreground font-normal">(optional)</span></Label>
               <Input value={titleEn} onChange={(e) => setTitleEn(e.target.value)} placeholder="ex: Amazing Grace" />
             </div>
 
@@ -861,7 +861,7 @@ function SongsAdmin({ data, onChange }: { data: ResourcesData; onChange: (d: Res
               <Label>PDF Lyrics</Label>
               <div className="flex items-center gap-3">
                 <div className={`flex-1 text-sm px-3 py-2 rounded border ${lyricsPdfKey ? 'border-primary/50 text-primary bg-primary/5' : 'border-dashed text-muted-foreground'}`}>
-                  {lyricsPdfKey ? `${draftId}-lyrics.pdf ✓` : 'Niciun fișier încărcat'}
+                  {lyricsPdfKey ? `${draftId}-lyrics.pdf ✓` : 'No file uploaded'}
                 </div>
                 <Button
                   size="sm"
@@ -869,7 +869,7 @@ function SongsAdmin({ data, onChange }: { data: ResourcesData; onChange: (d: Res
                   disabled={uploadingLyrics}
                   onClick={() => lyricsRef.current?.click()}
                 >
-                  {uploadingLyrics ? 'Se încarcă...' : <><Upload className="h-3 w-3 mr-1" /> Upload</>}
+                  {uploadingLyrics ? 'Uploading...' : <><Upload className="h-3 w-3 mr-1" /> Upload</>}
                 </Button>
                 <input ref={lyricsRef} type="file" accept="application/pdf" className="hidden"
                   onChange={(e) => { if (e.target.files?.[0]) handlePdf(e.target.files[0], 'lyrics'); e.target.value = ''; }}
@@ -882,7 +882,7 @@ function SongsAdmin({ data, onChange }: { data: ResourcesData; onChange: (d: Res
               <Label>PDF Lyrics + Chords</Label>
               <div className="flex items-center gap-3">
                 <div className={`flex-1 text-sm px-3 py-2 rounded border ${chordsPdfKey ? 'border-primary/50 text-primary bg-primary/5' : 'border-dashed text-muted-foreground'}`}>
-                  {chordsPdfKey ? `${draftId}-chords.pdf ✓` : 'Niciun fișier încărcat'}
+                  {chordsPdfKey ? `${draftId}-chords.pdf ✓` : 'No file uploaded'}
                 </div>
                 <Button
                   size="sm"
@@ -890,7 +890,7 @@ function SongsAdmin({ data, onChange }: { data: ResourcesData; onChange: (d: Res
                   disabled={uploadingChords}
                   onClick={() => chordsRef.current?.click()}
                 >
-                  {uploadingChords ? 'Se încarcă...' : <><Upload className="h-3 w-3 mr-1" /> Upload</>}
+                  {uploadingChords ? 'Uploading...' : <><Upload className="h-3 w-3 mr-1" /> Upload</>}
                 </Button>
                 <input ref={chordsRef} type="file" accept="application/pdf" className="hidden"
                   onChange={(e) => { if (e.target.files?.[0]) handlePdf(e.target.files[0], 'chords'); e.target.value = ''; }}
@@ -903,8 +903,8 @@ function SongsAdmin({ data, onChange }: { data: ResourcesData; onChange: (d: Res
             )}
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setOpen(false)}>Anulează</Button>
-            <Button onClick={save} disabled={!title.trim() || uploadingLyrics || uploadingChords}>Salvează</Button>
+            <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
+            <Button onClick={save} disabled={!title.trim() || uploadingLyrics || uploadingChords}>Save</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -933,7 +933,7 @@ const Admin = () => {
       setAuthed(true);
       setError('');
     } else {
-      setError('Parolă incorectă');
+      setError('Incorrect password');
     }
   };
 
@@ -955,7 +955,7 @@ const Admin = () => {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-1">
-              <Label>Parolă</Label>
+              <Label>Password</Label>
               <Input
                 type="password"
                 value={password}
@@ -965,7 +965,7 @@ const Admin = () => {
               />
             </div>
             {error && <p className="text-sm text-destructive">{error}</p>}
-            <Button className="w-full" onClick={login}>Intră</Button>
+            <Button className="w-full" onClick={login}>Sign in</Button>
           </CardContent>
         </Card>
       </div>
@@ -977,7 +977,7 @@ const Admin = () => {
       <header className="bg-background border-b px-6 py-3 flex justify-between items-center">
         <h1 className="font-bold text-lg">Admin · Elpis Worship</h1>
         <Button variant="ghost" size="sm" onClick={logout}>
-          <LogOut className="h-4 w-4 mr-2" /> Ieși
+          <LogOut className="h-4 w-4 mr-2" /> Sign out
         </Button>
       </header>
 
@@ -1001,7 +1001,7 @@ const Admin = () => {
                 <Calendar className="h-4 w-4" /><span className="hidden sm:inline">Evenimente</span>
               </TabsTrigger>
               <TabsTrigger value="announcements" className="flex items-center gap-2 flex-1">
-                <Megaphone className="h-4 w-4" /><span className="hidden sm:inline">Anunțuri</span>
+                <Megaphone className="h-4 w-4" /><span className="hidden sm:inline">Announcements</span>
               </TabsTrigger>
               <TabsTrigger value="songs" className="flex items-center gap-2 flex-1">
                 <Music className="h-4 w-4" /><span className="hidden sm:inline">Lyrics</span>
