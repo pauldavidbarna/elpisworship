@@ -39,7 +39,7 @@ function PdfViewer({ song, onClose }: { song: Song; onClose: () => void }) {
     if (ytVideoId) { setYtVideoId(null); return; }
     setLoadingYt(true);
     try {
-      const q = encodeURIComponent(`${displayTitle} - Elpis Worship`);
+      const q = encodeURIComponent(`${song.title} - Elpis Worship`);
       const res = await fetch(`/api/youtube-search?q=${q}`);
       const data = await res.json();
       if (data.videoId) setYtVideoId(data.videoId);
