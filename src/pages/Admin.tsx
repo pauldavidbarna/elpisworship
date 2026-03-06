@@ -983,31 +983,29 @@ const Admin = () => {
 
       <main className="container mx-auto px-4 py-8 max-w-4xl">
         <Tabs defaultValue="photos">
-          <div className="overflow-x-auto mb-8">
-            <TabsList className="flex w-max min-w-full sm:grid sm:grid-cols-7">
-              <TabsTrigger value="hero" className="flex items-center gap-2 flex-1">
-                <LayoutTemplate className="h-4 w-4" /><span className="hidden sm:inline">Hero</span>
-              </TabsTrigger>
-              <TabsTrigger value="team" className="flex items-center gap-2 flex-1">
-                <Users className="h-4 w-4" /><span className="hidden sm:inline">Team</span>
-              </TabsTrigger>
-              <TabsTrigger value="photos" className="flex items-center gap-2 flex-1">
-                <Image className="h-4 w-4" /><span className="hidden sm:inline">Foto</span>
-              </TabsTrigger>
-              <TabsTrigger value="videos" className="flex items-center gap-2 flex-1">
-                <Video className="h-4 w-4" /><span className="hidden sm:inline">Video</span>
-              </TabsTrigger>
-              <TabsTrigger value="events" className="flex items-center gap-2 flex-1">
-                <Calendar className="h-4 w-4" /><span className="hidden sm:inline">Evenimente</span>
-              </TabsTrigger>
-              <TabsTrigger value="announcements" className="flex items-center gap-2 flex-1">
-                <Megaphone className="h-4 w-4" /><span className="hidden sm:inline">Announcements</span>
-              </TabsTrigger>
-              <TabsTrigger value="songs" className="flex items-center gap-2 flex-1">
-                <Music className="h-4 w-4" /><span className="hidden sm:inline">Lyrics</span>
-              </TabsTrigger>
-            </TabsList>
-          </div>
+          <TabsList className="grid grid-cols-4 sm:grid-cols-7 mb-8 h-auto gap-1 p-1">
+            <TabsTrigger value="hero" className="flex flex-col sm:flex-row items-center gap-1 py-2 text-xs sm:text-sm">
+              <LayoutTemplate className="h-4 w-4 shrink-0" /><span>Hero</span>
+            </TabsTrigger>
+            <TabsTrigger value="team" className="flex flex-col sm:flex-row items-center gap-1 py-2 text-xs sm:text-sm">
+              <Users className="h-4 w-4 shrink-0" /><span>Team</span>
+            </TabsTrigger>
+            <TabsTrigger value="photos" className="flex flex-col sm:flex-row items-center gap-1 py-2 text-xs sm:text-sm">
+              <Image className="h-4 w-4 shrink-0" /><span>Photos</span>
+            </TabsTrigger>
+            <TabsTrigger value="videos" className="flex flex-col sm:flex-row items-center gap-1 py-2 text-xs sm:text-sm">
+              <Video className="h-4 w-4 shrink-0" /><span>Videos</span>
+            </TabsTrigger>
+            <TabsTrigger value="events" className="flex flex-col sm:flex-row items-center gap-1 py-2 text-xs sm:text-sm">
+              <Calendar className="h-4 w-4 shrink-0" /><span>Events</span>
+            </TabsTrigger>
+            <TabsTrigger value="announcements" className="flex flex-col sm:flex-row items-center gap-1 py-2 text-xs sm:text-sm">
+              <Megaphone className="h-4 w-4 shrink-0" /><span>Announce</span>
+            </TabsTrigger>
+            <TabsTrigger value="songs" className="flex flex-col sm:flex-row items-center gap-1 py-2 text-xs sm:text-sm col-span-4 sm:col-span-1">
+              <Music className="h-4 w-4 shrink-0" /><span>Lyrics</span>
+            </TabsTrigger>
+          </TabsList>
 
           <TabsContent value="hero"><HeroAdmin data={data} onChange={setData} /></TabsContent>
           <TabsContent value="team"><TeamAdmin data={data} onChange={setData} /></TabsContent>

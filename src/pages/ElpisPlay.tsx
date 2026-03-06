@@ -33,7 +33,7 @@ const ElpisPlay = () => {
 
   useEffect(() => {
     fetchPlaylistVideos()
-      .then((v) => { setVideos(v); if (v.length === 0) setError('Nu au fost găsite videoclipuri.'); })
+      .then((v) => { setVideos(v); if (v.length === 0) setError('No videos found.'); })
       .catch((e) => setError(String(e)))
       .finally(() => setLoading(false));
   }, []);
