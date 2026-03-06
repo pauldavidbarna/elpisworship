@@ -196,11 +196,6 @@ const About = () => {
               ))}
             </div>
 
-            <p className="text-center text-muted-foreground mt-8">
-              {i18n.language === 'gr'
-                ? '...και ακόμα περισσότεροι ταλαντούχοι μουσικοί!'
-                : '...and many more talented musicians!'}
-            </p>
           </motion.div>
         </div>
       </section>
