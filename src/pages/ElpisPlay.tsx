@@ -44,11 +44,11 @@ const ElpisPlay = () => {
           <Play className="h-14 w-14 mx-auto mb-4 text-primary" />
           <h1 className="font-display text-4xl md:text-6xl font-bold mb-4">Elpis Play</h1>
           <p className="text-white/70 text-lg max-w-xl mx-auto mb-6">
-            Toate clipurile noastre — worship sessions, înregistrări live și mai mult.
+            All our videos — worship sessions, live recordings and more.
           </p>
-          <Button asChild variant="outline" className="border-white text-white hover:bg-white hover:text-black">
+          <Button asChild className="bg-white text-black hover:bg-white/90">
             <a href={`https://www.youtube.com/playlist?list=${PLAYLIST_ID}`} target="_blank" rel="noopener noreferrer">
-              <ExternalLink className="mr-2 h-4 w-4" /> Deschide pe YouTube
+              <ExternalLink className="mr-2 h-4 w-4" /> Open on YouTube
             </a>
           </Button>
         </motion.div>
