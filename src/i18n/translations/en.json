@@ -16,6 +16,8 @@
     "view": "View PDF",
     "view_chords": "Lyrics + Chords",
     "view_lyrics": "Lyrics only",
+    "play": "Play",
+    "stop": "Stop",
     "download": "Download",
     "download_lyrics": "Download Lyrics",
     "download_chords": "Download Lyrics + Chords",

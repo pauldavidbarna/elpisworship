@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion'; // AnimatePresence used for PdfViewer
-import { Music, Download, Search, X } from 'lucide-react';
+import { Music, Download, Search, X, Play, Loader2 } from 'lucide-react';
 import { Layout } from '@/components/layout';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -14,11 +14,12 @@ import { downloadPdf, getPdfURL } from '@/lib/pdfStorage';
 
 function PdfViewer({ song, onClose }: { song: Song; onClose: () => void }) {
   const { t } = useTranslation();
-  // default: chords if available, else lyrics
   const [mode, setMode] = useState<'chords' | 'lyrics'>(
     song.chordsPdfKey ? 'chords' : 'lyrics'
   );
   const [downloading, setDownloading] = useState(false);
+  const [ytVideoId, setYtVideoId] = useState<string | null>(null);
+  const [loadingYt, setLoadingYt] = useState(false);
 
   const activeKey = mode === 'chords' ? song.chordsPdfKey : song.lyricsPdfKey;
   const pdfUrl = activeKey ? getPdfURL(activeKey) : null;
@@ -33,6 +34,21 @@ function PdfViewer({ song, onClose }: { song: Song; onClose: () => void }) {
     finally { setDownloading(false); }
   };
 
+  const handlePlay = async () => {
+    if (ytVideoId) { setYtVideoId(null); return; }
+    setLoadingYt(true);
+    try {
+      const q = encodeURIComponent(`${song.title} - Elpis Worship`);
+      const res = await fetch(`/api/youtube-search?q=${q}`);
+      const data = await res.json();
+      if (data.videoId) setYtVideoId(data.videoId);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoadingYt(false);
+    }
+  };
+
   return (
     <div
       className="fixed inset-0 z-50 bg-black/80 flex flex-col"
@@ -40,12 +56,12 @@ function PdfViewer({ song, onClose }: { song: Song; onClose: () => void }) {
     >
       {/* Toolbar */}
       <div
-        className="flex items-center justify-between px-4 py-3 bg-background border-b shrink-0"
+        className="flex items-center justify-between px-4 py-3 bg-background border-b shrink-0 gap-2"
         onClick={(e) => e.stopPropagation()}
       >
-        <p className="font-semibold text-sm truncate max-w-[40%]">{song.title}</p>
+        <p className="font-semibold text-sm truncate max-w-[25%] shrink-0">{song.title}</p>
 
-        {/* Toggle */}
+        {/* PDF toggle */}
         <div className="flex items-center gap-1 bg-muted rounded-lg p-1">
           <button
             className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${
@@ -67,11 +83,26 @@ function PdfViewer({ song, onClose }: { song: Song; onClose: () => void }) {
           </button>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 shrink-0">
+          {/* Play button */}
+          <Button
+            size="sm"
+            variant={ytVideoId ? 'default' : 'outline'}
+            onClick={handlePlay}
+            disabled={loadingYt}
+          >
+            {loadingYt
+              ? <Loader2 className="h-4 w-4 animate-spin" />
+              : <Play className="h-4 w-4 mr-1" fill={ytVideoId ? 'currentColor' : 'none'} />
+            }
+            <span className="hidden sm:inline">{ytVideoId ? t('lyrics.stop') : t('lyrics.play')}</span>
+          </Button>
+
           <Button size="sm" variant="outline" onClick={handleDownload} disabled={!activeKey || downloading}>
             <Download className="h-4 w-4 mr-1" />
-            {downloading ? '...' : t('lyrics.download')}
+            <span className="hidden sm:inline">{downloading ? '...' : t('lyrics.download')}</span>
           </Button>
+
           <button
             className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-muted transition-colors"
             onClick={onClose}
@@ -82,7 +113,7 @@ function PdfViewer({ song, onClose }: { song: Song; onClose: () => void }) {
       </div>
 
       {/* PDF embed */}
-      <div className="flex-1 overflow-hidden" onClick={(e) => e.stopPropagation()}>
+      <div className="flex-1 overflow-hidden relative" onClick={(e) => e.stopPropagation()}>
         {pdfUrl ? (
           <iframe
             key={pdfUrl}
@@ -95,6 +126,39 @@ function PdfViewer({ song, onClose }: { song: Song; onClose: () => void }) {
             {t('lyrics.no_pdf')}
           </div>
         )}
+
+        {/* Floating YouTube mini-player */}
+        <AnimatePresence>
+          {ytVideoId && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              transition={{ duration: 0.2 }}
+              className="absolute bottom-4 right-4 w-72 md:w-80 shadow-2xl rounded-xl overflow-hidden bg-black border border-white/10"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between px-3 py-2 bg-black/90">
+                <span className="text-white/80 text-xs truncate pr-2">{song.title} — Elpis Worship</span>
+                <button
+                  className="text-white/60 hover:text-white shrink-0 transition-colors"
+                  onClick={() => setYtVideoId(null)}
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
+              <div className="aspect-video">
+                <iframe
+                  src={`https://www.youtube.com/embed/${ytVideoId}?autoplay=1`}
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  className="w-full h-full"
+                  title={song.title}
+                />
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );
