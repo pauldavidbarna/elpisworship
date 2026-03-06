@@ -178,8 +178,11 @@ const Lyrics = () => {
     i18n.language === 'en' && s.titleEn ? s.titleEn : s.title;
 
   const filtered = songs
-    .filter((s) => songTitle(s).toLowerCase().includes(search.toLowerCase()))
-    .sort((a, b) => songTitle(a).localeCompare(songTitle(b)));
+    .filter((s) => {
+      const q = search.toLowerCase();
+      return s.title.toLowerCase().includes(q) || (s.titleEn ?? '').toLowerCase().includes(q);
+    })
+    .sort((a, b) => a.title.localeCompare(b.title));
 
   return (
     <Layout>
