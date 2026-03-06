@@ -751,6 +751,7 @@ function SongsAdmin({ data, onChange }: { data: ResourcesData; onChange: (d: Res
   const [chordsPdfKey, setChordsPdfKey] = useState<string | undefined>();
   const [uploadingLyrics, setUploadingLyrics] = useState(false);
   const [uploadingChords, setUploadingChords] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
   const lyricsRef = useRef<HTMLInputElement>(null);
   const chordsRef = useRef<HTMLInputElement>(null);
 
@@ -786,12 +787,17 @@ function SongsAdmin({ data, onChange }: { data: ResourcesData; onChange: (d: Res
 
   const handlePdf = async (file: File, type: 'lyrics' | 'chords') => {
     const key = `${draftId}-${type}.pdf`;
+    setUploadError(null);
     if (type === 'lyrics') {
       setUploadingLyrics(true);
-      try { await uploadPdf(file, key); setLyricsPdfKey(key); } finally { setUploadingLyrics(false); }
+      try { await uploadPdf(file, key); setLyricsPdfKey(key); }
+      catch (e) { setUploadError(String(e)); }
+      finally { setUploadingLyrics(false); }
     } else {
       setUploadingChords(true);
-      try { await uploadPdf(file, key); setChordsPdfKey(key); } finally { setUploadingChords(false); }
+      try { await uploadPdf(file, key); setChordsPdfKey(key); }
+      catch (e) { setUploadError(String(e)); }
+      finally { setUploadingChords(false); }
     }
   };
 
@@ -886,6 +892,10 @@ function SongsAdmin({ data, onChange }: { data: ResourcesData; onChange: (d: Res
                 />
               </div>
             </div>
+
+            {uploadError && (
+              <p className="text-xs text-destructive bg-destructive/10 rounded p-2 font-mono break-all">{uploadError}</p>
+            )}
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setOpen(false)}>Anulează</Button>
