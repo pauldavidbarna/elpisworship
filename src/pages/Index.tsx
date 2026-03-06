@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
@@ -10,7 +11,17 @@ import { getResourcesData } from '@/lib/resourcesData';
 
 const Index = () => {
   const { t, i18n } = useTranslation();
-  const upcomingEvents = getResourcesData().events.filter((e) => e.type === 'upcoming');
+  const { events, heroImages } = getResourcesData();
+  const upcomingEvents = events.filter((e) => e.type === 'upcoming');
+  const slides = heroImages.length > 0 ? heroImages : [heroImage];
+
+  const [current, setCurrent] = useState(0);
+
+  useEffect(() => {
+    if (slides.length <= 1) return;
+    const timer = setInterval(() => setCurrent((c) => (c + 1) % slides.length), 5000);
+    return () => clearInterval(timer);
+  }, [slides.length]);
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString(
@@ -23,15 +34,32 @@ const Index = () => {
     <Layout>
       {/* Hero Section */}
       <section className="relative h-[90vh] min-h-[600px] flex items-center justify-center overflow-hidden">
-        {/* Background Image */}
+        {/* Background Carousel */}
         <div className="absolute inset-0">
-          <img
-            src={heroImage}
-            alt="Elpis Worship performing"
-            className="w-full h-full object-cover"
-          />
+          {slides.map((src, idx) => (
+            <img
+              key={idx}
+              src={src}
+              alt="Elpis Worship"
+              className="absolute inset-0 w-full h-full object-cover transition-opacity duration-1000"
+              style={{ opacity: idx === current ? 1 : 0 }}
+            />
+          ))}
           <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-background" />
         </div>
+
+        {/* Dots */}
+        {slides.length > 1 && (
+          <div className="absolute bottom-20 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+            {slides.map((_, idx) => (
+              <button
+                key={idx}
+                onClick={() => setCurrent(idx)}
+                className={`w-2 h-2 rounded-full transition-all ${idx === current ? 'bg-white scale-125' : 'bg-white/40'}`}
+              />
+            ))}
+          </div>
+        )}
 
         {/* Hero Content */}
         <div className="relative z-10 container mx-auto px-4 text-center">

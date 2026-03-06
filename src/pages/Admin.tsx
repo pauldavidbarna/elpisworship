@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Image, Video, Calendar, Megaphone, LogOut, Plus, Pencil, Trash2, Lock, X, Upload, Film, Users } from 'lucide-react';
+import { Image, Video, Calendar, Megaphone, LogOut, Plus, Pencil, Trash2, Lock, X, Upload, Film, Users, LayoutTemplate } from 'lucide-react';
 import { saveVideo, deleteVideo } from '@/lib/videoDB';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -664,6 +664,78 @@ function TeamAdmin({ data, onChange }: { data: ResourcesData; onChange: (d: Reso
   );
 }
 
+// ── Hero Admin ─────────────────────────────────────────────────────────────
+
+function HeroAdmin({ data, onChange }: { data: ResourcesData; onChange: (d: ResourcesData) => void }) {
+  const [uploading, setUploading] = useState(false);
+  const fileRef = useRef<HTMLInputElement>(null);
+
+  const handleFiles = async (files: FileList | null) => {
+    if (!files) return;
+    setUploading(true);
+    const compressed = await Promise.all(Array.from(files).map((f) => compressImage(f, 1600, 0.88)));
+    onChange({ ...data, heroImages: [...data.heroImages, ...compressed] });
+    setUploading(false);
+  };
+
+  const remove = (idx: number) => {
+    onChange({ ...data, heroImages: data.heroImages.filter((_, i) => i !== idx) });
+  };
+
+  const moveUp = (idx: number) => {
+    if (idx === 0) return;
+    const imgs = [...data.heroImages];
+    [imgs[idx - 1], imgs[idx]] = [imgs[idx], imgs[idx - 1]];
+    onChange({ ...data, heroImages: imgs });
+  };
+
+  const moveDown = (idx: number) => {
+    if (idx === data.heroImages.length - 1) return;
+    const imgs = [...data.heroImages];
+    [imgs[idx], imgs[idx + 1]] = [imgs[idx + 1], imgs[idx]];
+    onChange({ ...data, heroImages: imgs });
+  };
+
+  return (
+    <>
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="font-semibold text-lg">Imagini Hero (Carousel)</h2>
+        <Button size="sm" onClick={() => fileRef.current?.click()} disabled={uploading}>
+          <Plus className="h-4 w-4 mr-1" /> {uploading ? 'Se procesează...' : 'Adaugă poze'}
+        </Button>
+        <input ref={fileRef} type="file" accept="image/*" multiple className="hidden" onChange={(e) => handleFiles(e.target.files)} />
+      </div>
+
+      {data.heroImages.length === 0 && (
+        <div
+          className="border-2 border-dashed rounded-lg p-12 text-center cursor-pointer hover:border-primary transition-colors"
+          onClick={() => fileRef.current?.click()}
+        >
+          <Upload className="h-10 w-10 mx-auto mb-3 text-muted-foreground" />
+          <p className="text-muted-foreground">Click pentru a adăuga prima imagine hero</p>
+          <p className="text-xs text-muted-foreground mt-1">Se va afișa ca slideshow pe pagina principală</p>
+        </div>
+      )}
+
+      <div className="space-y-3">
+        {data.heroImages.map((src, idx) => (
+          <Card key={idx} className="border shadow-sm">
+            <CardContent className="p-3 flex items-center gap-3">
+              <img src={src} className="w-24 h-14 object-cover rounded shrink-0" />
+              <div className="flex-1 text-sm text-muted-foreground">Imagine {idx + 1}</div>
+              <div className="flex gap-1 shrink-0">
+                <Button size="icon" variant="ghost" onClick={() => moveUp(idx)} disabled={idx === 0}>↑</Button>
+                <Button size="icon" variant="ghost" onClick={() => moveDown(idx)} disabled={idx === data.heroImages.length - 1}>↓</Button>
+                <Button size="icon" variant="ghost" className="text-destructive" onClick={() => remove(idx)}><Trash2 className="h-4 w-4" /></Button>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    </>
+  );
+}
+
 // ── Main Admin ─────────────────────────────────────────────────────────────
 
 const Admin = () => {
@@ -732,7 +804,10 @@ const Admin = () => {
 
       <main className="container mx-auto px-4 py-8 max-w-4xl">
         <Tabs defaultValue="photos">
-          <TabsList className="grid grid-cols-5 w-full mb-8">
+          <TabsList className="grid grid-cols-6 w-full mb-8">
+            <TabsTrigger value="hero" className="flex items-center gap-2">
+              <LayoutTemplate className="h-4 w-4" /><span className="hidden sm:inline">Hero</span>
+            </TabsTrigger>
             <TabsTrigger value="team" className="flex items-center gap-2">
               <Users className="h-4 w-4" /><span className="hidden sm:inline">Team</span>
             </TabsTrigger>
@@ -750,6 +825,7 @@ const Admin = () => {
             </TabsTrigger>
           </TabsList>
 
+          <TabsContent value="hero"><HeroAdmin data={data} onChange={setData} /></TabsContent>
           <TabsContent value="team"><TeamAdmin data={data} onChange={setData} /></TabsContent>
           <TabsContent value="photos"><PhotosAdmin data={data} onChange={setData} /></TabsContent>
           <TabsContent value="videos"><VideosAdmin data={data} onChange={setData} /></TabsContent>

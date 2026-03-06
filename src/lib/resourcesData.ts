@@ -63,11 +63,13 @@ export interface ResourcesData {
   events: ResourceEvent[];
   announcements: Announcement[];
   team: TeamMember[];
+  heroImages: string[]; // base64 data URLs
 }
 
 const STORAGE_KEY = 'elpis_resources';
 
 const defaultData: ResourcesData = {
+  heroImages: [],
   photos: [
     { id: 1, title: 'Worship Night 2024', images: [] },
     { id: 2, title: 'Easter Concert', images: [] },
@@ -107,6 +109,7 @@ export function getResourcesData(): ResourcesData {
         images: Array.isArray(p.images) ? p.images : [],
       }));
       // migrate: team might not exist in old data
+      if (!parsed.heroImages) parsed.heroImages = [];
       if (!parsed.team) {
         parsed.team = defaultData.team;
       } else {
