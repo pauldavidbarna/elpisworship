@@ -43,6 +43,7 @@ export interface Announcement {
   title: string;
   date: string;
   content: string;
+  image?: string; // base64 data URL
 }
 
 export interface TeamMember {

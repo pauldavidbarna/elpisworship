@@ -193,7 +193,10 @@ const Resources = () => {
               <div className="space-y-4">
                 {announcements.map((announcement) => (
                   <motion.div key={announcement.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-                    <Card className="border-0 shadow-md">
+                    <Card className="border-0 shadow-md overflow-hidden">
+                      {announcement.image && (
+                        <img src={announcement.image} alt={announcement.title} className="w-full max-h-72 object-cover" />
+                      )}
                       <CardContent className="p-6">
                         <div className="flex justify-between items-start mb-2">
                           <h3 className="font-display font-semibold text-lg">{announcement.title}</h3>

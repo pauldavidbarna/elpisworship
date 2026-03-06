@@ -386,10 +386,20 @@ function EventsAdmin({ data, onChange }: { data: ResourcesData; onChange: (d: Re
 function AnnouncementsAdmin({ data, onChange }: { data: ResourcesData; onChange: (d: ResourcesData) => void }) {
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<Announcement | null>(null);
-  const [form, setForm] = useState({ title: '', date: '', content: '' });
+  const [form, setForm] = useState({ title: '', date: '', content: '', image: '' });
+  const [uploading, setUploading] = useState(false);
+  const fileRef = useRef<HTMLInputElement>(null);
 
-  const openAdd = () => { setEditing(null); setForm({ title: '', date: new Date().toISOString().split('T')[0], content: '' }); setOpen(true); };
-  const openEdit = (a: Announcement) => { setEditing(a); setForm({ title: a.title, date: a.date, content: a.content }); setOpen(true); };
+  const openAdd = () => { setEditing(null); setForm({ title: '', date: new Date().toISOString().split('T')[0], content: '', image: '' }); setOpen(true); };
+  const openEdit = (a: Announcement) => { setEditing(a); setForm({ title: a.title, date: a.date, content: a.content, image: a.image || '' }); setOpen(true); };
+
+  const handleFile = async (files: FileList | null) => {
+    if (!files?.[0]) return;
+    setUploading(true);
+    const compressed = await compressImage(files[0], 1200, 0.85);
+    setForm((f) => ({ ...f, image: compressed }));
+    setUploading(false);
+  };
 
   const save = () => {
     const updated = editing
@@ -412,12 +422,18 @@ function AnnouncementsAdmin({ data, onChange }: { data: ResourcesData; onChange:
           <Card key={a.id} className="border shadow-sm">
             <CardContent className="p-4">
               <div className="flex justify-between items-start">
-                <div className="flex-1 mr-4">
-                  <div className="flex items-center gap-2 mb-1">
-                    <p className="font-medium">{a.title}</p>
-                    <Badge variant="outline" className="text-xs">{a.date}</Badge>
+                <div className="flex items-center gap-3 flex-1 mr-4">
+                  {a.image
+                    ? <img src={a.image} className="w-14 h-10 object-cover rounded shrink-0" />
+                    : <div className="w-14 h-10 bg-muted rounded shrink-0" />
+                  }
+                  <div>
+                    <div className="flex items-center gap-2 mb-1">
+                      <p className="font-medium">{a.title}</p>
+                      <Badge variant="outline" className="text-xs">{a.date}</Badge>
+                    </div>
+                    <p className="text-sm text-muted-foreground">{a.content}</p>
                   </div>
-                  <p className="text-sm text-muted-foreground">{a.content}</p>
                 </div>
                 <div className="flex gap-2 shrink-0">
                   <Button size="icon" variant="ghost" onClick={() => openEdit(a)}><Pencil className="h-4 w-4" /></Button>
@@ -445,10 +461,33 @@ function AnnouncementsAdmin({ data, onChange }: { data: ResourcesData; onChange:
               <Label>Conținut</Label>
               <Textarea rows={4} value={form.content} onChange={(e) => setForm({ ...form, content: e.target.value })} />
             </div>
+            <div className="space-y-1">
+              <Label>Imagine (opțional)</Label>
+              <div
+                className="border-2 border-dashed rounded-lg p-4 text-center cursor-pointer hover:border-primary transition-colors"
+                onClick={() => fileRef.current?.click()}
+              >
+                {form.image
+                  ? <img src={form.image} className="max-h-40 mx-auto rounded object-cover" />
+                  : (
+                    <>
+                      <Upload className="h-6 w-6 mx-auto mb-1 text-muted-foreground" />
+                      <p className="text-sm text-muted-foreground">{uploading ? 'Se procesează...' : 'Click pentru a adăuga o imagine'}</p>
+                    </>
+                  )
+                }
+              </div>
+              {form.image && (
+                <button type="button" className="text-xs text-destructive underline mt-1" onClick={() => setForm((f) => ({ ...f, image: '' }))}>
+                  Elimină imaginea
+                </button>
+              )}
+              <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={(e) => handleFile(e.target.files)} />
+            </div>
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setOpen(false)}>Anulează</Button>
-            <Button onClick={save}>Salvează</Button>
+            <Button onClick={save} disabled={uploading}>Salvează</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
