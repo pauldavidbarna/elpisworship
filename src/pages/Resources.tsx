@@ -102,7 +102,7 @@ const Resources = () => {
                       {/* Cover image or placeholder */}
                       <div className="aspect-video overflow-hidden bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center">
                         {gallery.images.length > 0
-                          ? <img src={gallery.images[0]} className="w-full h-full object-cover" />
+                          ? <img src={gallery.images[0]} loading="lazy" className="w-full h-full object-cover" />
                           : <Image className="h-12 w-12 text-primary/30" />
                         }
                       </div>
@@ -118,7 +118,7 @@ const Resources = () => {
                                 className="aspect-square overflow-hidden rounded cursor-pointer relative"
                                 onClick={() => openLightbox(gallery.images, idx)}
                               >
-                                <img src={src} className="w-full h-full object-cover hover:scale-105 transition-transform" />
+                                <img src={src} loading="lazy" className="w-full h-full object-cover hover:scale-105 transition-transform" />
                                 {idx === 3 && gallery.images.length > 4 && (
                                   <div className="absolute inset-0 bg-black/50 flex items-center justify-center text-white font-bold text-sm">
                                     +{gallery.images.length - 4}
@@ -245,6 +245,7 @@ const Resources = () => {
 
           <img
             src={lightbox.images[lightbox.index]}
+            loading="lazy"
             className="max-h-[90vh] max-w-[90vw] object-contain"
             onClick={(e) => e.stopPropagation()}
           />

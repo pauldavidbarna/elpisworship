@@ -168,7 +168,7 @@ const About = () => {
                   <Card className="overflow-hidden border-0 shadow-md hover:shadow-xl transition-all duration-300 group-hover:scale-105">
                     <div className="aspect-square overflow-hidden bg-muted">
                       {member.image
-                        ? <img src={member.image} alt={member.role} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" style={{ objectPosition: `${member.imagePosX ?? 50}% ${member.imagePosY ?? 50}%` }} />
+                        ? <img src={member.image} alt={member.role} loading="lazy" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" style={{ objectPosition: `${member.imagePosX ?? 50}% ${member.imagePosY ?? 50}%` }} />
                         : <div className="w-full h-full flex items-center justify-center text-muted-foreground/30 text-4xl font-bold">{member.role[0]}</div>
                       }
                     </div>
