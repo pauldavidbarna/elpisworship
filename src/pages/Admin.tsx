@@ -804,26 +804,28 @@ const Admin = () => {
 
       <main className="container mx-auto px-4 py-8 max-w-4xl">
         <Tabs defaultValue="photos">
-          <TabsList className="grid grid-cols-6 w-full mb-8">
-            <TabsTrigger value="hero" className="flex items-center gap-2">
-              <LayoutTemplate className="h-4 w-4" /><span className="hidden sm:inline">Hero</span>
-            </TabsTrigger>
-            <TabsTrigger value="team" className="flex items-center gap-2">
-              <Users className="h-4 w-4" /><span className="hidden sm:inline">Team</span>
-            </TabsTrigger>
-            <TabsTrigger value="photos" className="flex items-center gap-2">
-              <Image className="h-4 w-4" /><span className="hidden sm:inline">Foto</span>
-            </TabsTrigger>
-            <TabsTrigger value="videos" className="flex items-center gap-2">
-              <Video className="h-4 w-4" /><span className="hidden sm:inline">Video</span>
-            </TabsTrigger>
-            <TabsTrigger value="events" className="flex items-center gap-2">
-              <Calendar className="h-4 w-4" /><span className="hidden sm:inline">Evenimente</span>
-            </TabsTrigger>
-            <TabsTrigger value="announcements" className="flex items-center gap-2">
-              <Megaphone className="h-4 w-4" /><span className="hidden sm:inline">Anunțuri</span>
-            </TabsTrigger>
-          </TabsList>
+          <div className="overflow-x-auto mb-8">
+            <TabsList className="flex w-max min-w-full sm:grid sm:grid-cols-6">
+              <TabsTrigger value="hero" className="flex items-center gap-2 flex-1">
+                <LayoutTemplate className="h-4 w-4" /><span className="hidden sm:inline">Hero</span>
+              </TabsTrigger>
+              <TabsTrigger value="team" className="flex items-center gap-2 flex-1">
+                <Users className="h-4 w-4" /><span className="hidden sm:inline">Team</span>
+              </TabsTrigger>
+              <TabsTrigger value="photos" className="flex items-center gap-2 flex-1">
+                <Image className="h-4 w-4" /><span className="hidden sm:inline">Foto</span>
+              </TabsTrigger>
+              <TabsTrigger value="videos" className="flex items-center gap-2 flex-1">
+                <Video className="h-4 w-4" /><span className="hidden sm:inline">Video</span>
+              </TabsTrigger>
+              <TabsTrigger value="events" className="flex items-center gap-2 flex-1">
+                <Calendar className="h-4 w-4" /><span className="hidden sm:inline">Evenimente</span>
+              </TabsTrigger>
+              <TabsTrigger value="announcements" className="flex items-center gap-2 flex-1">
+                <Megaphone className="h-4 w-4" /><span className="hidden sm:inline">Anunțuri</span>
+              </TabsTrigger>
+            </TabsList>
+          </div>
 
           <TabsContent value="hero"><HeroAdmin data={data} onChange={setData} /></TabsContent>
           <TabsContent value="team"><TeamAdmin data={data} onChange={setData} /></TabsContent>
