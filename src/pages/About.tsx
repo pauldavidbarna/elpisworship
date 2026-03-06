@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { Target, Heart, Lightbulb, Instagram } from 'lucide-react';
@@ -15,12 +15,10 @@ function shuffle<T>(arr: T[]): T[] {
   return a;
 }
 
-const INITIAL_VISIBLE = 4;
-
 const About = () => {
   const { t, i18n } = useTranslation();
-  const { team } = getResourcesData();
-  const shuffledTeam = useMemo(() => shuffle(team), []);
+  const [{ team }] = useState(() => getResourcesData());
+  const shuffledTeam = useMemo(() => shuffle(team), [team]);
 
   const missionItems = [
     {
