@@ -29,6 +29,7 @@ async function fetchPlaylistVideos(): Promise<YTVideo[]> {
 
     const res = await fetch(url.toString());
     const data = await res.json();
+    if (!res.ok) throw new Error(data.error?.message || `HTTP ${res.status}`);
 
     for (const item of data.items ?? []) {
       const snippet = item.snippet;
@@ -55,11 +56,13 @@ const ElpisPlay = () => {
 
   const [videos, setVideos] = useState<YTVideo[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [activeVideo, setActiveVideo] = useState<YTVideo | null>(null);
 
   useEffect(() => {
     fetchPlaylistVideos()
-      .then(setVideos)
+      .then((v) => { setVideos(v); if (v.length === 0) setError('Nu au fost găsite videoclipuri.'); })
+      .catch((e) => setError(String(e)))
       .finally(() => setLoading(false));
   }, []);
 
@@ -87,6 +90,10 @@ const ElpisPlay = () => {
           {loading ? (
             <div className="flex justify-center py-20">
               <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+            </div>
+          ) : error ? (
+            <div className="text-center py-20 text-muted-foreground">
+              <p className="text-sm font-mono bg-muted p-4 rounded">{error}</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
