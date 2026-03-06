@@ -49,6 +49,7 @@ export interface Announcement {
 export interface Song {
   id: number;
   title: string;
+  titleEn?: string;
   lyricsPdfKey?: string; // key in Supabase Storage 'pdfs' bucket
   chordsPdfKey?: string; // key in Supabase Storage 'pdfs' bucket
 }

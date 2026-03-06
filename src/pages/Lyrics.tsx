@@ -13,7 +13,8 @@ import { downloadPdf, getPdfURL } from '@/lib/pdfStorage';
 // ── PDF Viewer Modal ────────────────────────────────────────────────────────
 
 function PdfViewer({ song, onClose }: { song: Song; onClose: () => void }) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const displayTitle = i18n.language === 'en' && song.titleEn ? song.titleEn : song.title;
   const [mode, setMode] = useState<'chords' | 'lyrics'>(
     song.chordsPdfKey ? 'chords' : 'lyrics'
   );
@@ -38,7 +39,7 @@ function PdfViewer({ song, onClose }: { song: Song; onClose: () => void }) {
     if (ytVideoId) { setYtVideoId(null); return; }
     setLoadingYt(true);
     try {
-      const q = encodeURIComponent(`${song.title} - Elpis Worship`);
+      const q = encodeURIComponent(`${displayTitle} - Elpis Worship`);
       const res = await fetch(`/api/youtube-search?q=${q}`);
       const data = await res.json();
       if (data.videoId) setYtVideoId(data.videoId);
@@ -59,7 +60,7 @@ function PdfViewer({ song, onClose }: { song: Song; onClose: () => void }) {
         className="flex items-center justify-between px-4 py-3 bg-background border-b shrink-0 gap-2"
         onClick={(e) => e.stopPropagation()}
       >
-        <p className="font-semibold text-sm truncate max-w-[25%] shrink-0">{song.title}</p>
+        <p className="font-semibold text-sm truncate max-w-[25%] shrink-0">{displayTitle}</p>
 
         {/* PDF toggle */}
         <div className="flex items-center gap-1 bg-muted rounded-lg p-1">
@@ -139,7 +140,7 @@ function PdfViewer({ song, onClose }: { song: Song; onClose: () => void }) {
               onClick={(e) => e.stopPropagation()}
             >
               <div className="flex items-center justify-between px-3 py-2 bg-black/90">
-                <span className="text-white/80 text-xs truncate pr-2">{song.title} — Elpis Worship</span>
+                <span className="text-white/80 text-xs truncate pr-2">{displayTitle} — Elpis Worship</span>
                 <button
                   className="text-white/60 hover:text-white shrink-0 transition-colors"
                   onClick={() => setYtVideoId(null)}
@@ -168,14 +169,17 @@ function PdfViewer({ song, onClose }: { song: Song; onClose: () => void }) {
 
 const Lyrics = () => {
   usePageMeta('Lyrics & Chords', 'View and download PDF lyrics and chord sheets for Elpis Worship songs.');
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { songs } = getResourcesData();
   const [search, setSearch] = useState('');
   const [viewing, setViewing] = useState<Song | null>(null);
 
+  const songTitle = (s: Song) =>
+    i18n.language === 'en' && s.titleEn ? s.titleEn : s.title;
+
   const filtered = songs
-    .filter((s) => s.title.toLowerCase().includes(search.toLowerCase()))
-    .sort((a, b) => a.title.localeCompare(b.title));
+    .filter((s) => songTitle(s).toLowerCase().includes(search.toLowerCase()))
+    .sort((a, b) => songTitle(a).localeCompare(songTitle(b)));
 
   return (
     <Layout>
@@ -231,7 +235,7 @@ const Lyrics = () => {
                         <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
                           <Music className="h-4 w-4 text-primary" />
                         </div>
-                        <span className="font-medium flex-1">{song.title}</span>
+                        <span className="font-medium flex-1">{songTitle(song)}</span>
                       </div>
                     </CardContent>
                   </Card>

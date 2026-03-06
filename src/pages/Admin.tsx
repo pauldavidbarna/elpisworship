@@ -747,6 +747,7 @@ function SongsAdmin({ data, onChange }: { data: ResourcesData; onChange: (d: Res
   const [editing, setEditing] = useState<Song | null>(null);
   const [draftId, setDraftId] = useState(1);
   const [title, setTitle] = useState('');
+  const [titleEn, setTitleEn] = useState('');
   const [lyricsPdfKey, setLyricsPdfKey] = useState<string | undefined>();
   const [chordsPdfKey, setChordsPdfKey] = useState<string | undefined>();
   const [uploadingLyrics, setUploadingLyrics] = useState(false);
@@ -758,22 +759,22 @@ function SongsAdmin({ data, onChange }: { data: ResourcesData; onChange: (d: Res
   const openAdd = () => {
     const newId = songs.length > 0 ? Math.max(...songs.map((s) => s.id)) + 1 : 1;
     setDraftId(newId);
-    setEditing(null); setTitle(''); setLyricsPdfKey(undefined); setChordsPdfKey(undefined);
+    setEditing(null); setTitle(''); setTitleEn(''); setLyricsPdfKey(undefined); setChordsPdfKey(undefined);
     setOpen(true);
   };
 
   const openEdit = (s: Song) => {
     setDraftId(s.id);
-    setEditing(s); setTitle(s.title); setLyricsPdfKey(s.lyricsPdfKey); setChordsPdfKey(s.chordsPdfKey);
+    setEditing(s); setTitle(s.title); setTitleEn(s.titleEn ?? ''); setLyricsPdfKey(s.lyricsPdfKey); setChordsPdfKey(s.chordsPdfKey);
     setOpen(true);
   };
 
   const save = () => {
     if (!title.trim()) return;
     if (editing) {
-      onChange({ ...data, songs: songs.map((s) => s.id === editing.id ? { ...s, title, lyricsPdfKey, chordsPdfKey } : s) });
+      onChange({ ...data, songs: songs.map((s) => s.id === editing.id ? { ...s, title, titleEn: titleEn || undefined, lyricsPdfKey, chordsPdfKey } : s) });
     } else {
-      onChange({ ...data, songs: [...songs, { id: draftId, title, lyricsPdfKey, chordsPdfKey }] });
+      onChange({ ...data, songs: [...songs, { id: draftId, title, titleEn: titleEn || undefined, lyricsPdfKey, chordsPdfKey }] });
     }
     setOpen(false);
   };
@@ -848,7 +849,11 @@ function SongsAdmin({ data, onChange }: { data: ResourcesData; onChange: (d: Res
           <div className="space-y-5 py-2">
             <div className="space-y-1">
               <Label>Titlu cântare</Label>
-              <Input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="ex: Amazing Grace" />
+              <Input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="ex: Uimitor Har" />
+            </div>
+            <div className="space-y-1">
+              <Label>Titlu în engleză <span className="text-muted-foreground font-normal">(opțional)</span></Label>
+              <Input value={titleEn} onChange={(e) => setTitleEn(e.target.value)} placeholder="ex: Amazing Grace" />
             </div>
 
             {/* Lyrics PDF */}
