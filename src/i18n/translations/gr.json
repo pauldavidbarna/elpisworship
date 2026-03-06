@@ -11,10 +11,14 @@
   },
   "lyrics": {
     "title": "Lyrics & Chords",
-    "subtitle": "Κατεβάστε τα lyrics των τραγουδιών λατρείας μας σε PDF",
+    "subtitle": "Δείτε και κατεβάστε τα lyrics των τραγουδιών μας σε PDF",
     "search": "Αναζήτηση τραγουδιών...",
-    "download_lyrics": "Λήψη PDF Lyrics",
-    "download_chords": "Λήψη PDF Lyrics + Chords",
+    "view": "Προβολή PDF",
+    "view_chords": "Lyrics + Chords",
+    "view_lyrics": "Μόνο Lyrics",
+    "download": "Λήψη",
+    "download_lyrics": "Λήψη Lyrics",
+    "download_chords": "Λήψη Lyrics + Chords",
     "no_songs": "Δεν υπάρχουν διαθέσιμα τραγούδια.",
     "no_pdf": "Μη διαθέσιμο"
   },

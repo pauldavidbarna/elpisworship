@@ -11,10 +11,14 @@
   },
   "lyrics": {
     "title": "Lyrics & Chords",
-    "subtitle": "Download PDF sheets for our worship songs",
+    "subtitle": "View and download PDF sheets for our worship songs",
     "search": "Search songs...",
-    "download_lyrics": "Download Lyrics PDF",
-    "download_chords": "Download Lyrics + Chords PDF",
+    "view": "View PDF",
+    "view_chords": "Lyrics + Chords",
+    "view_lyrics": "Lyrics only",
+    "download": "Download",
+    "download_lyrics": "Download Lyrics",
+    "download_chords": "Download Lyrics + Chords",
     "no_songs": "No songs available yet.",
     "no_pdf": "Not available"
   },

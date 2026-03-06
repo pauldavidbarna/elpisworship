@@ -1,22 +1,115 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Music, Download, ChevronDown, Search } from 'lucide-react';
+import { Music, Download, ChevronDown, Search, Eye, X } from 'lucide-react';
 import { Layout } from '@/components/layout';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { usePageMeta } from '@/hooks/usePageMeta';
-import { getResourcesData } from '@/lib/resourcesData';
-import { downloadPdf } from '@/lib/pdfStorage';
+import { getResourcesData, type Song } from '@/lib/resourcesData';
+import { downloadPdf, getPdfURL } from '@/lib/pdfStorage';
+
+// ── PDF Viewer Modal ────────────────────────────────────────────────────────
+
+function PdfViewer({ song, onClose }: { song: Song; onClose: () => void }) {
+  const { t } = useTranslation();
+  // default: chords if available, else lyrics
+  const [mode, setMode] = useState<'chords' | 'lyrics'>(
+    song.chordsPdfKey ? 'chords' : 'lyrics'
+  );
+  const [downloading, setDownloading] = useState(false);
+
+  const activeKey = mode === 'chords' ? song.chordsPdfKey : song.lyricsPdfKey;
+  const pdfUrl = activeKey ? getPdfURL(activeKey) : null;
+
+  const handleDownload = async () => {
+    if (!activeKey) return;
+    setDownloading(true);
+    const filename = mode === 'chords'
+      ? `${song.title} - Lyrics & Chords.pdf`
+      : `${song.title} - Lyrics.pdf`;
+    try { await downloadPdf(activeKey, filename); }
+    finally { setDownloading(false); }
+  };
+
+  return (
+    <div
+      className="fixed inset-0 z-50 bg-black/80 flex flex-col"
+      onClick={onClose}
+    >
+      {/* Toolbar */}
+      <div
+        className="flex items-center justify-between px-4 py-3 bg-background border-b shrink-0"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <p className="font-semibold text-sm truncate max-w-[40%]">{song.title}</p>
+
+        {/* Toggle */}
+        <div className="flex items-center gap-1 bg-muted rounded-lg p-1">
+          <button
+            className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${
+              mode === 'chords' ? 'bg-background shadow text-foreground' : 'text-muted-foreground hover:text-foreground'
+            }`}
+            onClick={() => setMode('chords')}
+            disabled={!song.chordsPdfKey}
+          >
+            {t('lyrics.view_chords')}
+          </button>
+          <button
+            className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${
+              mode === 'lyrics' ? 'bg-background shadow text-foreground' : 'text-muted-foreground hover:text-foreground'
+            }`}
+            onClick={() => setMode('lyrics')}
+            disabled={!song.lyricsPdfKey}
+          >
+            {t('lyrics.view_lyrics')}
+          </button>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <Button size="sm" variant="outline" onClick={handleDownload} disabled={!activeKey || downloading}>
+            <Download className="h-4 w-4 mr-1" />
+            {downloading ? '...' : t('lyrics.download')}
+          </Button>
+          <button
+            className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-muted transition-colors"
+            onClick={onClose}
+          >
+            <X className="h-5 w-5" />
+          </button>
+        </div>
+      </div>
+
+      {/* PDF embed */}
+      <div className="flex-1 overflow-hidden" onClick={(e) => e.stopPropagation()}>
+        {pdfUrl ? (
+          <iframe
+            key={pdfUrl}
+            src={pdfUrl}
+            className="w-full h-full border-0"
+            title={song.title}
+          />
+        ) : (
+          <div className="h-full flex items-center justify-center text-muted-foreground">
+            {t('lyrics.no_pdf')}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ── Main page ───────────────────────────────────────────────────────────────
 
 const Lyrics = () => {
-  usePageMeta('Lyrics & Chords', 'Download PDF lyrics and chord sheets for Elpis Worship songs.');
+  usePageMeta('Lyrics & Chords', 'View and download PDF lyrics and chord sheets for Elpis Worship songs.');
   const { t } = useTranslation();
   const { songs } = getResourcesData();
   const [search, setSearch] = useState('');
   const [expanded, setExpanded] = useState<number | null>(null);
+  const [viewing, setViewing] = useState<Song | null>(null);
   const [downloading, setDownloading] = useState<string | null>(null);
 
   const filtered = songs.filter((s) =>
@@ -25,11 +118,8 @@ const Lyrics = () => {
 
   const handleDownload = async (key: string, filename: string) => {
     setDownloading(key);
-    try {
-      await downloadPdf(key, filename);
-    } finally {
-      setDownloading(null);
-    }
+    try { await downloadPdf(key, filename); }
+    finally { setDownloading(null); }
   };
 
   return (
@@ -103,7 +193,7 @@ const Lyrics = () => {
                         </div>
                       </div>
 
-                      {/* Expanded download area */}
+                      {/* Expanded area */}
                       <AnimatePresence initial={false}>
                         {expanded === song.id && (
                           <motion.div
@@ -112,30 +202,46 @@ const Lyrics = () => {
                             exit={{ height: 0, opacity: 0 }}
                             transition={{ duration: 0.2 }}
                           >
-                            <div className="px-5 pb-5 pt-1 border-t border-border flex flex-col sm:flex-row gap-3">
+                            <div className="px-5 pb-5 pt-3 border-t border-border space-y-3">
+                              {/* View button */}
                               <Button
-                                className="flex-1"
-                                variant="outline"
-                                disabled={!song.lyricsPdfKey || downloading === song.lyricsPdfKey}
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  if (song.lyricsPdfKey) handleDownload(song.lyricsPdfKey, `${song.title} - Lyrics.pdf`);
-                                }}
+                                className="w-full"
+                                disabled={!song.lyricsPdfKey && !song.chordsPdfKey}
+                                onClick={(e) => { e.stopPropagation(); setViewing(song); }}
                               >
-                                <Download className="h-4 w-4 mr-2" />
-                                {downloading === song.lyricsPdfKey ? '...' : t('lyrics.download_lyrics')}
+                                <Eye className="h-4 w-4 mr-2" />
+                                {t('lyrics.view')}
                               </Button>
-                              <Button
-                                className="flex-1"
-                                disabled={!song.chordsPdfKey || downloading === song.chordsPdfKey}
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  if (song.chordsPdfKey) handleDownload(song.chordsPdfKey, `${song.title} - Lyrics & Chords.pdf`);
-                                }}
-                              >
-                                <Download className="h-4 w-4 mr-2" />
-                                {downloading === song.chordsPdfKey ? '...' : t('lyrics.download_chords')}
-                              </Button>
+
+                              {/* Download buttons */}
+                              <div className="flex flex-col sm:flex-row gap-2">
+                                <Button
+                                  className="flex-1"
+                                  variant="outline"
+                                  size="sm"
+                                  disabled={!song.lyricsPdfKey || downloading === song.lyricsPdfKey}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    if (song.lyricsPdfKey) handleDownload(song.lyricsPdfKey, `${song.title} - Lyrics.pdf`);
+                                  }}
+                                >
+                                  <Download className="h-3 w-3 mr-1" />
+                                  {downloading === song.lyricsPdfKey ? '...' : t('lyrics.download_lyrics')}
+                                </Button>
+                                <Button
+                                  className="flex-1"
+                                  variant="outline"
+                                  size="sm"
+                                  disabled={!song.chordsPdfKey || downloading === song.chordsPdfKey}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    if (song.chordsPdfKey) handleDownload(song.chordsPdfKey, `${song.title} - Lyrics & Chords.pdf`);
+                                  }}
+                                >
+                                  <Download className="h-3 w-3 mr-1" />
+                                  {downloading === song.chordsPdfKey ? '...' : t('lyrics.download_chords')}
+                                </Button>
+                              </div>
                             </div>
                           </motion.div>
                         )}
@@ -148,6 +254,20 @@ const Lyrics = () => {
           )}
         </div>
       </section>
+
+      {/* PDF Viewer */}
+      <AnimatePresence>
+        {viewing && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.15 }}
+          >
+            <PdfViewer song={viewing} onClose={() => setViewing(null)} />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </Layout>
   );
 };
