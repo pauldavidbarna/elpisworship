@@ -155,7 +155,7 @@ const About = () => {
             <h2 className="font-display text-3xl md:text-4xl font-bold mb-12 text-center">
               {t('about.meet_the_team')}
             </h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-5xl mx-auto">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 max-w-5xl mx-auto">
               {shuffledTeam.map((member, index) => (
                 <motion.div
                   key={member.id}
