@@ -296,15 +296,16 @@ function VideosAdmin({ data, onChange }: { data: ResourcesData; onChange: (d: Re
 function EventsAdmin({ data, onChange }: { data: ResourcesData; onChange: (d: ResourcesData) => void }) {
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<ResourceEvent | null>(null);
-  const [form, setForm] = useState({ title: '', date: '', time: '', location: '', locationUrl: '', type: 'upcoming' as 'upcoming' | 'past' });
+  const [form, setForm] = useState({ title: '', date: '', times: [''] as string[], location: '', locationUrl: '', type: 'upcoming' as 'upcoming' | 'past' });
 
-  const openAdd = () => { setEditing(null); setForm({ title: '', date: '', time: '', location: '', locationUrl: '', type: 'upcoming' }); setOpen(true); };
-  const openEdit = (e: ResourceEvent) => { setEditing(e); setForm({ title: e.title, date: e.date, time: e.time ?? '', location: e.location, locationUrl: e.locationUrl ?? '', type: e.type }); setOpen(true); };
+  const openAdd = () => { setEditing(null); setForm({ title: '', date: '', times: [''], location: '', locationUrl: '', type: 'upcoming' }); setOpen(true); };
+  const openEdit = (e: ResourceEvent) => { setEditing(e); setForm({ title: e.title, date: e.date, times: e.times && e.times.length > 0 ? e.times : [''], location: e.location, locationUrl: e.locationUrl ?? '', type: e.type }); setOpen(true); };
 
   const save = () => {
+    const cleanedForm = { ...form, times: form.times.filter((t) => t.trim() !== '') };
     const updated = editing
-      ? data.events.map((e) => e.id === editing.id ? { ...e, ...form } : e)
-      : [...data.events, { id: nextId(data.events), ...form }];
+      ? data.events.map((e) => e.id === editing.id ? { ...e, ...cleanedForm } : e)
+      : [...data.events, { id: nextId(data.events), ...cleanedForm }];
     onChange({ ...data, events: updated });
     setOpen(false);
   };
@@ -354,14 +355,34 @@ function EventsAdmin({ data, onChange }: { data: ResourcesData; onChange: (d: Re
               <Label>Title</Label>
               <Input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} />
             </div>
-            <div className="grid grid-cols-2 gap-3">
-              <div className="space-y-1">
-                <Label>Date</Label>
-                <Input type="date" value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value })} />
-              </div>
-              <div className="space-y-1">
-                <Label>Time</Label>
-                <Input type="time" value={form.time} onChange={(e) => setForm({ ...form, time: e.target.value })} placeholder="e.g. 19:00" />
+            <div className="space-y-1">
+              <Label>Date</Label>
+              <Input type="date" value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value })} />
+            </div>
+            <div className="space-y-1">
+              <Label>Time slots</Label>
+              <div className="space-y-2">
+                {form.times.map((t, i) => (
+                  <div key={i} className="flex gap-2">
+                    <Input
+                      type="time"
+                      value={t}
+                      onChange={(e) => {
+                        const updated = [...form.times];
+                        updated[i] = e.target.value;
+                        setForm({ ...form, times: updated });
+                      }}
+                    />
+                    {form.times.length > 1 && (
+                      <Button size="icon" variant="ghost" className="text-destructive shrink-0" onClick={() => setForm({ ...form, times: form.times.filter((_, j) => j !== i) })}>
+                        <X className="h-4 w-4" />
+                      </Button>
+                    )}
+                  </div>
+                ))}
+                <Button size="sm" variant="outline" onClick={() => setForm({ ...form, times: [...form.times, ''] })}>
+                  <Plus className="h-4 w-4 mr-1" /> Add time slot
+                </Button>
               </div>
             </div>
             <div className="space-y-1">

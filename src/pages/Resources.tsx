@@ -2,6 +2,16 @@ import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { Image, Video, Calendar, Megaphone, X, ChevronLeft, ChevronRight, MapPin, Clock } from 'lucide-react';
+
+function EventTimes({ times }: { times?: string[] }) {
+  if (!times || times.length === 0) return null;
+  return (
+    <span className="flex items-center gap-1 text-sm text-muted-foreground">
+      <Clock className="h-3.5 w-3.5 shrink-0" />
+      {times.join(' & ')}
+    </span>
+  );
+}
 import { Layout } from '@/components/layout';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent } from '@/components/ui/card';
@@ -169,7 +179,7 @@ const Resources = () => {
                               ) : (
                                 <span className="flex items-center gap-1 text-sm text-muted-foreground"><MapPin className="h-3.5 w-3.5" />{event.location}</span>
                               )}
-                              {event.time && <span className="flex items-center gap-1 text-sm text-muted-foreground"><Clock className="h-3.5 w-3.5" />{event.time}</span>}
+                              <EventTimes times={event.times} />
                             </div>
                           </div>
                           <Badge variant="outline" className="shrink-0">{formatDate(event.date)}</Badge>
@@ -196,7 +206,7 @@ const Resources = () => {
                               ) : (
                                 <span className="flex items-center gap-1 text-sm text-muted-foreground"><MapPin className="h-3.5 w-3.5" />{event.location}</span>
                               )}
-                              {event.time && <span className="flex items-center gap-1 text-sm text-muted-foreground"><Clock className="h-3.5 w-3.5" />{event.time}</span>}
+                              <EventTimes times={event.times} />
                             </div>
                           </div>
                           <Badge variant="outline" className="shrink-0">{formatDate(event.date)}</Badge>

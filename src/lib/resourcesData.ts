@@ -34,7 +34,7 @@ export interface ResourceEvent {
   id: number;
   title: string;
   date: string;
-  time?: string;
+  times?: string[];
   location: string;
   locationUrl?: string;
   type: 'upcoming' | 'past';
