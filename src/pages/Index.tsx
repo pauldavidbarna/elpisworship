@@ -21,7 +21,7 @@ const Index = () => {
   const { t, i18n } = useTranslation();
   usePageMeta('Home', 'Elpis Worship — worship band dedicated to glorifying God through music.');
   const { events, heroImages } = getResourcesData();
-  const upcomingEvents = events.filter((e) => e.type === 'upcoming');
+  const upcomingEvents = events.filter((e) => e.type === 'upcoming').sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
   const slides = heroImages.length > 0 ? heroImages : [heroImage];
 
   const [current, setCurrent] = useState(0);

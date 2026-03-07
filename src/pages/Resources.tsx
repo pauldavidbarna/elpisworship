@@ -48,8 +48,8 @@ const Resources = () => {
   const [activeTab, setActiveTab] = useState('photos');
   const { photos, videos, events: allEvents, announcements } = getResourcesData();
   const events = {
-    upcoming: allEvents.filter((e) => e.type === 'upcoming'),
-    past: allEvents.filter((e) => e.type === 'past'),
+    upcoming: allEvents.filter((e) => e.type === 'upcoming').sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()),
+    past: allEvents.filter((e) => e.type === 'past').sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()),
   };
 
   // Lightbox state
