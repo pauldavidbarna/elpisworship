@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
-import { ArrowRight, Calendar, MapPin, Instagram } from 'lucide-react';
+import { ArrowRight, Calendar, MapPin, Clock, Instagram } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Layout } from '@/components/layout';
@@ -189,9 +189,15 @@ const Index = () => {
                       <h3 className="font-display font-semibold text-lg mb-2">
                         {event.title}
                       </h3>
-                      <div className="flex items-center gap-2 text-muted-foreground text-sm">
-                        <MapPin className="h-4 w-4" />
-                        {event.location}
+                      <div className="flex flex-wrap gap-x-3 gap-y-1 mt-1">
+                        {event.locationUrl ? (
+                          <a href={event.locationUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-sm text-primary hover:underline">
+                            <MapPin className="h-3.5 w-3.5" />{event.location}
+                          </a>
+                        ) : (
+                          <span className="flex items-center gap-1 text-sm text-muted-foreground"><MapPin className="h-3.5 w-3.5" />{event.location}</span>
+                        )}
+                        {event.time && <span className="flex items-center gap-1 text-sm text-muted-foreground"><Clock className="h-3.5 w-3.5" />{event.time}</span>}
                       </div>
                     </CardContent>
                   </Card>

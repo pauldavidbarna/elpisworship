@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
-import { Image, Video, Calendar, Megaphone, X, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Image, Video, Calendar, Megaphone, X, ChevronLeft, ChevronRight, MapPin, Clock } from 'lucide-react';
 import { Layout } from '@/components/layout';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent } from '@/components/ui/card';
@@ -158,12 +158,21 @@ const Resources = () => {
                   <div className="grid gap-4">
                     {events.upcoming.map((event) => (
                       <Card key={event.id} className="border-0 shadow-md">
-                        <CardContent className="p-4 flex justify-between items-center">
-                          <div>
+                        <CardContent className="p-4 flex justify-between items-start gap-4">
+                          <div className="space-y-1">
                             <h4 className="font-semibold">{event.title}</h4>
-                            <p className="text-sm text-muted-foreground">{event.location}</p>
+                            <div className="flex flex-wrap gap-x-4 gap-y-1">
+                              {event.locationUrl ? (
+                                <a href={event.locationUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-sm text-primary hover:underline">
+                                  <MapPin className="h-3.5 w-3.5" />{event.location}
+                                </a>
+                              ) : (
+                                <span className="flex items-center gap-1 text-sm text-muted-foreground"><MapPin className="h-3.5 w-3.5" />{event.location}</span>
+                              )}
+                              {event.time && <span className="flex items-center gap-1 text-sm text-muted-foreground"><Clock className="h-3.5 w-3.5" />{event.time}</span>}
+                            </div>
                           </div>
-                          <Badge variant="outline">{formatDate(event.date)}</Badge>
+                          <Badge variant="outline" className="shrink-0">{formatDate(event.date)}</Badge>
                         </CardContent>
                       </Card>
                     ))}
@@ -176,12 +185,21 @@ const Resources = () => {
                   <div className="grid gap-4">
                     {events.past.map((event) => (
                       <Card key={event.id} className="border-0 shadow-md opacity-75">
-                        <CardContent className="p-4 flex justify-between items-center">
-                          <div>
+                        <CardContent className="p-4 flex justify-between items-start gap-4">
+                          <div className="space-y-1">
                             <h4 className="font-semibold">{event.title}</h4>
-                            <p className="text-sm text-muted-foreground">{event.location}</p>
+                            <div className="flex flex-wrap gap-x-4 gap-y-1">
+                              {event.locationUrl ? (
+                                <a href={event.locationUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-sm text-primary hover:underline">
+                                  <MapPin className="h-3.5 w-3.5" />{event.location}
+                                </a>
+                              ) : (
+                                <span className="flex items-center gap-1 text-sm text-muted-foreground"><MapPin className="h-3.5 w-3.5" />{event.location}</span>
+                              )}
+                              {event.time && <span className="flex items-center gap-1 text-sm text-muted-foreground"><Clock className="h-3.5 w-3.5" />{event.time}</span>}
+                            </div>
                           </div>
-                          <Badge variant="outline">{formatDate(event.date)}</Badge>
+                          <Badge variant="outline" className="shrink-0">{formatDate(event.date)}</Badge>
                         </CardContent>
                       </Card>
                     ))}

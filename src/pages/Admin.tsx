@@ -296,10 +296,10 @@ function VideosAdmin({ data, onChange }: { data: ResourcesData; onChange: (d: Re
 function EventsAdmin({ data, onChange }: { data: ResourcesData; onChange: (d: ResourcesData) => void }) {
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<ResourceEvent | null>(null);
-  const [form, setForm] = useState({ title: '', date: '', location: '', type: 'upcoming' as 'upcoming' | 'past' });
+  const [form, setForm] = useState({ title: '', date: '', time: '', location: '', locationUrl: '', type: 'upcoming' as 'upcoming' | 'past' });
 
-  const openAdd = () => { setEditing(null); setForm({ title: '', date: '', location: '', type: 'upcoming' }); setOpen(true); };
-  const openEdit = (e: ResourceEvent) => { setEditing(e); setForm({ title: e.title, date: e.date, location: e.location, type: e.type }); setOpen(true); };
+  const openAdd = () => { setEditing(null); setForm({ title: '', date: '', time: '', location: '', locationUrl: '', type: 'upcoming' }); setOpen(true); };
+  const openEdit = (e: ResourceEvent) => { setEditing(e); setForm({ title: e.title, date: e.date, time: e.time ?? '', location: e.location, locationUrl: e.locationUrl ?? '', type: e.type }); setOpen(true); };
 
   const save = () => {
     const updated = editing
@@ -354,13 +354,23 @@ function EventsAdmin({ data, onChange }: { data: ResourcesData; onChange: (d: Re
               <Label>Title</Label>
               <Input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} />
             </div>
-            <div className="space-y-1">
-              <Label>Date</Label>
-              <Input type="date" value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value })} />
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-1">
+                <Label>Date</Label>
+                <Input type="date" value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value })} />
+              </div>
+              <div className="space-y-1">
+                <Label>Time</Label>
+                <Input type="time" value={form.time} onChange={(e) => setForm({ ...form, time: e.target.value })} placeholder="e.g. 19:00" />
+              </div>
             </div>
             <div className="space-y-1">
-              <Label>Location</Label>
-              <Input value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })} />
+              <Label>Location name</Label>
+              <Input value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })} placeholder="e.g. Εκκλησία Καλλιθέας" />
+            </div>
+            <div className="space-y-1">
+              <Label>Google Maps URL <span className="text-muted-foreground text-xs">(optional)</span></Label>
+              <Input value={form.locationUrl} onChange={(e) => setForm({ ...form, locationUrl: e.target.value })} placeholder="https://maps.google.com/..." />
             </div>
             <div className="space-y-1">
               <Label>Type</Label>
