@@ -62,7 +62,7 @@ const Contact = () => {
   const socialLinks = [
     { href: 'https://instagram.com/elpisworship', icon: Instagram, label: 'Instagram', color: 'hover:text-pink-500' },
     { href: 'https://youtube.com/@elpisworship', icon: Youtube, label: 'YouTube', color: 'hover:text-red-500' },
-    { href: 'https://open.spotify.com/artist/elpisworship', icon: Music, label: 'Spotify', color: 'hover:text-green-500' },
+    { href: 'https://open.spotify.com/artist/6Vpsb6n5cBmH3midkqMeE0?si=8WeWEnprTZWeZfXx1cRt1g', icon: Music, label: 'Spotify', color: 'hover:text-green-500' },
   ];
 
   return (
