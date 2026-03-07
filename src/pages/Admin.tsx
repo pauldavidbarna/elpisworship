@@ -3,7 +3,6 @@ import { Image, Video, Calendar, Megaphone, LogOut, Plus, Pencil, Trash2, Lock, 
 import { saveVideo, deleteVideo } from '@/lib/videoDB';
 import { uploadPdf, deletePdf } from '@/lib/pdfStorage';
 import { saveToSupabase } from '@/lib/supabase';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -972,50 +971,93 @@ const Admin = () => {
     );
   }
 
+  const [activeTab, setActiveTab] = useState('photos');
+
+  const navItems = [
+    { value: 'hero',          label: 'Hero',          icon: LayoutTemplate },
+    { value: 'team',          label: 'Team',          icon: Users },
+    { value: 'photos',        label: 'Photos',        icon: Image },
+    { value: 'videos',        label: 'Videos',        icon: Video },
+    { value: 'events',        label: 'Events',        icon: Calendar },
+    { value: 'announcements', label: 'Announcements', icon: Megaphone },
+    { value: 'songs',         label: 'Lyrics',        icon: Music },
+  ];
+
+  const renderContent = () => {
+    switch (activeTab) {
+      case 'hero':          return <HeroAdmin data={data} onChange={setData} />;
+      case 'team':          return <TeamAdmin data={data} onChange={setData} />;
+      case 'photos':        return <PhotosAdmin data={data} onChange={setData} />;
+      case 'videos':        return <VideosAdmin data={data} onChange={setData} />;
+      case 'events':        return <EventsAdmin data={data} onChange={setData} />;
+      case 'announcements': return <AnnouncementsAdmin data={data} onChange={setData} />;
+      case 'songs':         return <SongsAdmin data={data} onChange={setData} />;
+      default:              return null;
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-muted/20">
-      <header className="bg-background border-b px-6 py-3 flex justify-between items-center">
-        <h1 className="font-bold text-lg">Admin · Elpis Worship</h1>
-        <Button variant="ghost" size="sm" onClick={logout}>
+    <div className="min-h-screen bg-muted/20 flex flex-col">
+      {/* Top header */}
+      <header className="bg-background border-b px-6 py-4 flex justify-between items-center shrink-0">
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
+            <Lock className="h-4 w-4 text-primary-foreground" />
+          </div>
+          <div>
+            <p className="font-bold text-sm leading-none">Elpis Worship</p>
+            <p className="text-xs text-muted-foreground mt-0.5">Admin Panel</p>
+          </div>
+        </div>
+        <Button variant="ghost" size="sm" onClick={logout} className="text-muted-foreground hover:text-foreground">
           <LogOut className="h-4 w-4 mr-2" /> Sign out
         </Button>
       </header>
 
-      <main className="container mx-auto px-4 py-8 max-w-4xl">
-        <Tabs defaultValue="photos">
-          <TabsList className="grid grid-cols-4 sm:grid-cols-7 mb-8 h-auto gap-1 p-1">
-            <TabsTrigger value="hero" className="flex flex-col sm:flex-row items-center gap-1 py-2 text-xs sm:text-sm">
-              <LayoutTemplate className="h-4 w-4 shrink-0" /><span>Hero</span>
-            </TabsTrigger>
-            <TabsTrigger value="team" className="flex flex-col sm:flex-row items-center gap-1 py-2 text-xs sm:text-sm">
-              <Users className="h-4 w-4 shrink-0" /><span>Team</span>
-            </TabsTrigger>
-            <TabsTrigger value="photos" className="flex flex-col sm:flex-row items-center gap-1 py-2 text-xs sm:text-sm">
-              <Image className="h-4 w-4 shrink-0" /><span>Photos</span>
-            </TabsTrigger>
-            <TabsTrigger value="videos" className="flex flex-col sm:flex-row items-center gap-1 py-2 text-xs sm:text-sm">
-              <Video className="h-4 w-4 shrink-0" /><span>Videos</span>
-            </TabsTrigger>
-            <TabsTrigger value="events" className="flex flex-col sm:flex-row items-center gap-1 py-2 text-xs sm:text-sm">
-              <Calendar className="h-4 w-4 shrink-0" /><span>Events</span>
-            </TabsTrigger>
-            <TabsTrigger value="announcements" className="flex flex-col sm:flex-row items-center gap-1 py-2 text-xs sm:text-sm">
-              <Megaphone className="h-4 w-4 shrink-0" /><span>Announce</span>
-            </TabsTrigger>
-            <TabsTrigger value="songs" className="flex flex-col sm:flex-row items-center gap-1 py-2 text-xs sm:text-sm col-span-4 sm:col-span-1">
-              <Music className="h-4 w-4 shrink-0" /><span>Lyrics</span>
-            </TabsTrigger>
-          </TabsList>
+      <div className="flex flex-1 overflow-hidden">
+        {/* Sidebar — desktop only */}
+        <aside className="hidden md:flex flex-col w-56 bg-background border-r shrink-0 py-4 px-3 gap-1">
+          {navItems.map(({ value, label, icon: Icon }) => (
+            <button
+              key={value}
+              onClick={() => setActiveTab(value)}
+              className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors text-left w-full ${
+                activeTab === value
+                  ? 'bg-primary text-primary-foreground'
+                  : 'text-muted-foreground hover:bg-muted hover:text-foreground'
+              }`}
+            >
+              <Icon className="h-4 w-4 shrink-0" />
+              {label}
+            </button>
+          ))}
+        </aside>
 
-          <TabsContent value="hero"><HeroAdmin data={data} onChange={setData} /></TabsContent>
-          <TabsContent value="team"><TeamAdmin data={data} onChange={setData} /></TabsContent>
-          <TabsContent value="photos"><PhotosAdmin data={data} onChange={setData} /></TabsContent>
-          <TabsContent value="videos"><VideosAdmin data={data} onChange={setData} /></TabsContent>
-          <TabsContent value="events"><EventsAdmin data={data} onChange={setData} /></TabsContent>
-          <TabsContent value="announcements"><AnnouncementsAdmin data={data} onChange={setData} /></TabsContent>
-          <TabsContent value="songs"><SongsAdmin data={data} onChange={setData} /></TabsContent>
-        </Tabs>
-      </main>
+        {/* Mobile top nav */}
+        <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-background border-t flex overflow-x-auto">
+          {navItems.map(({ value, label, icon: Icon }) => (
+            <button
+              key={value}
+              onClick={() => setActiveTab(value)}
+              className={`flex flex-col items-center gap-1 px-4 py-3 text-xs font-medium transition-colors shrink-0 ${
+                activeTab === value
+                  ? 'text-primary border-t-2 border-primary -mt-px'
+                  : 'text-muted-foreground'
+              }`}
+            >
+              <Icon className="h-5 w-5" />
+              {label}
+            </button>
+          ))}
+        </div>
+
+        {/* Content */}
+        <main className="flex-1 overflow-y-auto p-6 pb-24 md:pb-6">
+          <div className="max-w-4xl mx-auto">
+            {renderContent()}
+          </div>
+        </main>
+      </div>
     </div>
   );
 };
