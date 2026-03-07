@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
-import { Image, Video, Calendar, Megaphone, X, ChevronLeft, ChevronRight, MapPin, Clock } from 'lucide-react';
+import { Image, Video, Calendar, Megaphone, X, ChevronLeft, ChevronRight, MapPin, Clock, Ticket } from 'lucide-react';
 
 function EventTimes({ times }: { times?: string[] }) {
   if (!times || times.length === 0) return null;
@@ -169,7 +169,7 @@ const Resources = () => {
                     {events.upcoming.map((event) => (
                       <Card key={event.id} className="border-0 shadow-md">
                         <CardContent className="p-4 flex justify-between items-start gap-4">
-                          <div className="space-y-1">
+                          <div className="space-y-1 flex-1">
                             <h4 className="font-semibold">{event.title}</h4>
                             <div className="flex flex-wrap gap-x-4 gap-y-1">
                               {event.locationUrl ? (
@@ -182,7 +182,14 @@ const Resources = () => {
                               <EventTimes times={event.times} />
                             </div>
                           </div>
-                          <Badge variant="outline" className="shrink-0">{formatDate(event.date)}</Badge>
+                          <div className="flex flex-col items-end gap-2 shrink-0">
+                            <Badge variant="outline">{formatDate(event.date)}</Badge>
+                            {event.ticketUrl && (
+                              <a href={event.ticketUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-xs font-medium bg-primary text-primary-foreground px-3 py-1.5 rounded-md hover:bg-primary/90 transition-colors">
+                                <Ticket className="h-3.5 w-3.5" /> Get Tickets
+                              </a>
+                            )}
+                          </div>
                         </CardContent>
                       </Card>
                     ))}

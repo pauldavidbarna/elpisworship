@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
-import { ArrowRight, Calendar, MapPin, Clock, Instagram } from 'lucide-react';
+import { ArrowRight, Calendar, MapPin, Clock, Instagram, Ticket } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Layout } from '@/components/layout';
@@ -199,6 +199,11 @@ const Index = () => {
                         )}
                         {event.times && event.times.length > 0 && <span className="flex items-center gap-1 text-sm text-muted-foreground"><Clock className="h-3.5 w-3.5" />{event.times.join(' & ')}</span>}
                       </div>
+                      {event.ticketUrl && (
+                        <a href={event.ticketUrl} target="_blank" rel="noopener noreferrer" className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium bg-primary text-primary-foreground px-4 py-2 rounded-md hover:bg-primary/90 transition-colors">
+                          <Ticket className="h-4 w-4" /> Get Tickets
+                        </a>
+                      )}
                     </CardContent>
                   </Card>
                 </motion.div>

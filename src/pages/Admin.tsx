@@ -296,10 +296,10 @@ function VideosAdmin({ data, onChange }: { data: ResourcesData; onChange: (d: Re
 function EventsAdmin({ data, onChange }: { data: ResourcesData; onChange: (d: ResourcesData) => void }) {
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<ResourceEvent | null>(null);
-  const [form, setForm] = useState({ title: '', date: '', times: [''] as string[], location: '', locationUrl: '', type: 'upcoming' as 'upcoming' | 'past' });
+  const [form, setForm] = useState({ title: '', date: '', times: [''] as string[], location: '', locationUrl: '', ticketUrl: '', type: 'upcoming' as 'upcoming' | 'past' });
 
-  const openAdd = () => { setEditing(null); setForm({ title: '', date: '', times: [''], location: '', locationUrl: '', type: 'upcoming' }); setOpen(true); };
-  const openEdit = (e: ResourceEvent) => { setEditing(e); setForm({ title: e.title, date: e.date, times: e.times && e.times.length > 0 ? e.times : [''], location: e.location, locationUrl: e.locationUrl ?? '', type: e.type }); setOpen(true); };
+  const openAdd = () => { setEditing(null); setForm({ title: '', date: '', times: [''], location: '', locationUrl: '', ticketUrl: '', type: 'upcoming' }); setOpen(true); };
+  const openEdit = (e: ResourceEvent) => { setEditing(e); setForm({ title: e.title, date: e.date, times: e.times && e.times.length > 0 ? e.times : [''], location: e.location, locationUrl: e.locationUrl ?? '', ticketUrl: e.ticketUrl ?? '', type: e.type }); setOpen(true); };
 
   const save = () => {
     const cleanedForm = { ...form, times: form.times.filter((t) => t.trim() !== '') };
@@ -392,6 +392,10 @@ function EventsAdmin({ data, onChange }: { data: ResourcesData; onChange: (d: Re
             <div className="space-y-1">
               <Label>Google Maps URL <span className="text-muted-foreground text-xs">(optional)</span></Label>
               <Input value={form.locationUrl} onChange={(e) => setForm({ ...form, locationUrl: e.target.value })} placeholder="https://maps.google.com/..." />
+            </div>
+            <div className="space-y-1">
+              <Label>Eventbrite / Ticket URL <span className="text-muted-foreground text-xs">(optional)</span></Label>
+              <Input value={form.ticketUrl} onChange={(e) => setForm({ ...form, ticketUrl: e.target.value })} placeholder="https://www.eventbrite.com/e/..." />
             </div>
             <div className="space-y-1">
               <Label>Type</Label>

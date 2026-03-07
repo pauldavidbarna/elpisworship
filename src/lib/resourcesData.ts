@@ -37,6 +37,7 @@ export interface ResourceEvent {
   times?: string[];
   location: string;
   locationUrl?: string;
+  ticketUrl?: string;
   type: 'upcoming' | 'past';
 }
 
