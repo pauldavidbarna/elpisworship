@@ -35,6 +35,7 @@
     "who_we_are_text": "Elpis Worship is a Christian worship band born in Athens, dedicated to serving Greece through music that brings hope, encouragement, and inspiration.",
     "read_more": "Read More",
     "upcoming_events": "Upcoming Events",
+    "get_tickets": "Get Tickets",
     "view_all_events": "View All Events",
     "instagram_title": "Follow Us on Instagram",
     "instagram_cta": "View Profile"
@@ -46,8 +47,11 @@
     "our_name": "Our Name - \"Elpis\"",
     "our_name_text": "We wanted a Greek name, melodic and meaningful. One day, our eyes fell on a stained glass window in our church with the word \"elpis\" (hope). Through our music, we want to bring hope to people!",
     "our_mission": "Our Mission",
+    "mission_1_title": "Evangelism",
     "mission_1": "Evangelism - to spread the message of salvation",
+    "mission_2_title": "Encouragement",
     "mission_2": "Encouragement - to bring hope to believers and churches",
+    "mission_3_title": "Inspiration",
     "mission_3": "Inspiration - to inspire young people to create bands for His glory!",
     "what_we_believe": "What We Believe",
     "motto": "Everything for His glory!",
@@ -57,10 +61,19 @@
     "title": "Support Our Ministry",
     "subtitle": "Help us continue bringing hope through worship",
     "message": "Our church trusted and invested in our vision. None of us does this full-time - we all work or study. Your support helps us continue bringing hope!",
-    "cta": "Buy Us a Coffee"
+    "cta": "Buy Us a Coffee",
+    "why_support": "Why Support Us",
+    "support_1_title": "Equipment",
+    "support_1_desc": "Sound, instruments, and technical equipment",
+    "support_2_title": "Production",
+    "support_2_desc": "Recording, mixing, and video production",
+    "support_3_title": "Events",
+    "support_3_desc": "Organizing concerts and worship events"
   },
   "shop": {
     "title": "Shop",
+    "collection_subtitle": "Made to Worship Collection",
+    "coming_soon": "More products coming soon!",
     "products": "Products",
     "size": "Size",
     "color": "Color",
@@ -73,10 +86,19 @@
   "contact": {
     "title": "Contact Us",
     "name": "Name",
+    "name_placeholder": "Your name",
     "email": "Email",
     "subject": "Subject",
+    "subject_placeholder": "Message subject",
     "message": "Message",
+    "message_placeholder": "Your message...",
     "send": "Send Message",
+    "sending": "Sending...",
+    "success_title": "Success!",
+    "success_message": "Your message has been sent.",
+    "error_title": "Error",
+    "error_message": "Something went wrong. Please try again.",
+    "booking_info": "For booking and collaborations, send us an email or reach out through social media.",
     "follow_us": "Follow Us"
   },
   "resources": {
@@ -112,6 +134,14 @@
     "description": "All our videos — worship sessions, live recordings and more.",
     "open_youtube": "Open on YouTube",
     "subscribe_text": "Subscribe to our YouTube channel for new releases!",
-    "subscribe": "Subscribe on YouTube"
+    "subscribe": "Subscribe on YouTube",
+    "no_videos": "No videos found.",
+    "error_title": "Could not load videos",
+    "error_message": "Something went wrong while loading our videos. Please try again or visit us directly on YouTube.",
+    "retry": "Try Again"
+  },
+  "privacy": {
+    "title": "Privacy Policy",
+    "last_updated": "Last updated: March 2026"
   }
 }

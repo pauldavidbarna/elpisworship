@@ -18,6 +18,8 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { getResourcesData, type Video as VideoType } from '@/lib/resourcesData';
 import { usePageMeta } from '@/hooks/usePageMeta';
+import { useFocusTrap } from '@/hooks/useFocusTrap';
+import LazyImage from '@/components/ui/lazy-image';
 import { getVideoURL } from '@/lib/videoDB';
 
 function VideoPlayer({ video }: { video: VideoType }) {
@@ -57,6 +59,7 @@ const Resources = () => {
 
   const openLightbox = (images: string[], index: number) => setLightbox({ images, index });
   const closeLightbox = () => setLightbox(null);
+  const lightboxRef = useFocusTrap(lightbox ? closeLightbox : undefined);
   const prevPhoto = () => lightbox && setLightbox({ ...lightbox, index: (lightbox.index - 1 + lightbox.images.length) % lightbox.images.length });
   const nextPhoto = () => lightbox && setLightbox({ ...lightbox, index: (lightbox.index + 1) % lightbox.images.length });
 
@@ -114,7 +117,7 @@ const Resources = () => {
                       {/* Cover image or placeholder */}
                       <div className="aspect-video overflow-hidden bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center">
                         {gallery.images.length > 0
-                          ? <img src={gallery.images[0]} loading="lazy" className="w-full h-full object-cover" />
+                          ? <LazyImage src={gallery.images[0]} alt={gallery.title} loading="lazy" wrapperClassName="w-full h-full" className="w-full h-full object-cover" />
                           : <Image className="h-12 w-12 text-primary/30" />
                         }
                       </div>
@@ -130,7 +133,7 @@ const Resources = () => {
                                 className="aspect-square overflow-hidden rounded cursor-pointer relative"
                                 onClick={() => openLightbox(gallery.images, idx)}
                               >
-                                <img src={src} loading="lazy" className="w-full h-full object-cover hover:scale-105 transition-transform" />
+                                <LazyImage src={src} alt={gallery.title} loading="lazy" wrapperClassName="w-full h-full" className="w-full h-full object-cover hover:scale-105 transition-transform" />
                                 {idx === 3 && gallery.images.length > 4 && (
                                   <div className="absolute inset-0 bg-black/50 flex items-center justify-center text-white font-bold text-sm">
                                     +{gallery.images.length - 4}
@@ -253,6 +256,10 @@ const Resources = () => {
       {/* Lightbox */}
       {lightbox && (
         <div
+          ref={lightboxRef}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Photo viewer"
           className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center"
           onClick={closeLightbox}
         >

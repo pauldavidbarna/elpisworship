@@ -7,6 +7,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { usePageMeta } from '@/hooks/usePageMeta';
+import { useFocusTrap } from '@/hooks/useFocusTrap';
 import { getResourcesData, type Song } from '@/lib/resourcesData';
 import { downloadPdf, getPdfURL } from '@/lib/pdfStorage';
 
@@ -14,6 +15,7 @@ import { downloadPdf, getPdfURL } from '@/lib/pdfStorage';
 
 function PdfViewer({ song, onClose }: { song: Song; onClose: () => void }) {
   const { t, i18n } = useTranslation();
+  const trapRef = useFocusTrap(onClose);
   const displayTitle = i18n.language === 'en' && song.titleEn ? song.titleEn : song.title;
   const [mode, setMode] = useState<'chords' | 'lyrics'>(
     song.chordsPdfKey ? 'chords' : 'lyrics'
@@ -52,6 +54,10 @@ function PdfViewer({ song, onClose }: { song: Song; onClose: () => void }) {
 
   return (
     <div
+      ref={trapRef}
+      role="dialog"
+      aria-modal="true"
+      aria-label={displayTitle}
       className="fixed inset-0 z-50 bg-black/80 flex flex-col"
       onClick={onClose}
     >

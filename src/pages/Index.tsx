@@ -159,7 +159,7 @@ const Index = () => {
       </section>
 
       {/* Upcoming Events */}
-      <section className="py-20 bg-muted/50">
+      {upcomingEvents.length > 0 && <section className="py-20 bg-muted/50">
         <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -201,7 +201,7 @@ const Index = () => {
                       </div>
                       {event.ticketUrl && (
                         <a href={event.ticketUrl} target="_blank" rel="noopener noreferrer" className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium bg-primary text-primary-foreground px-4 py-2 rounded-md hover:bg-primary/90 transition-colors">
-                          <Ticket className="h-4 w-4" /> Get Tickets
+                          <Ticket className="h-4 w-4" /> {t('home.get_tickets')}
                         </a>
                       )}
                     </CardContent>
@@ -220,7 +220,7 @@ const Index = () => {
             </div>
           </motion.div>
         </div>
-      </section>
+      </section>}
 
       {/* Instagram Grid */}
       {igPosts.length > 0 && (
@@ -286,7 +286,7 @@ const Index = () => {
             className="max-w-3xl mx-auto"
           >
             <h2 className="font-display text-3xl md:text-5xl font-bold mb-6">
-              {i18n.language === 'gr' ? 'Τα πάντα για τη δόξα Του!' : 'Everything for His glory!'}
+              {t('about.motto')}
             </h2>
             <p className="text-lg text-white/80 mb-8">
               {t('donate.message')}

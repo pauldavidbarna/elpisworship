@@ -6,7 +6,7 @@ import { usePageMeta } from '@/hooks/usePageMeta';
 
 const PrivacyPolicy = () => {
   usePageMeta('Privacy Policy', 'Privacy policy for Elpis Worship website.');
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
   const isGr = i18n.language === 'gr';
 
   return (
@@ -15,10 +15,10 @@ const PrivacyPolicy = () => {
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="container mx-auto px-4">
           <Shield className="h-14 w-14 mx-auto mb-4 text-primary" />
           <h1 className="font-display text-4xl md:text-5xl font-bold">
-            {isGr ? 'Πολιτική Απορρήτου' : 'Privacy Policy'}
+            {t('privacy.title')}
           </h1>
           <p className="text-white/60 mt-3 text-sm">
-            {isGr ? 'Τελευταία ενημέρωση: Μάρτιος 2026' : 'Last updated: March 2026'}
+            {t('privacy.last_updated')}
           </p>
         </motion.div>
       </section>

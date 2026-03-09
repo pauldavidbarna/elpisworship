@@ -64,7 +64,7 @@ const Shop = () => {
               {t('shop.title')}
             </h1>
             <p className="text-xl text-white/80">
-              Made to Worship Collection
+              {t('shop.collection_subtitle')}
             </p>
           </motion.div>
         </div>
@@ -145,9 +145,7 @@ const Shop = () => {
       <section className="py-12 bg-muted/50">
         <div className="container mx-auto px-4 text-center">
           <p className="text-muted-foreground">
-            {i18n.language === 'gr' 
-              ? 'Περισσότερα προϊόντα έρχονται σύντομα!'
-              : 'More products coming soon!'}
+            {t('shop.coming_soon')}
           </p>
         </div>
       </section>

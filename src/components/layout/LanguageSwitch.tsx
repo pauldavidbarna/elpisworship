@@ -6,6 +6,7 @@ const LanguageSwitch = () => {
 
   const toggleLanguage = () => {
     const newLang = i18n.language === 'en' ? 'gr' : 'en';
+    localStorage.setItem('elpis-lang', newLang);
     i18n.changeLanguage(newLang);
   };
 

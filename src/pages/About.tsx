@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { Target, Heart, Lightbulb, Instagram } from 'lucide-react';
 import { Layout } from '@/components/layout';
 import { Card, CardContent } from '@/components/ui/card';
+import LazyImage from '@/components/ui/lazy-image';
 import { getResourcesData } from '@/lib/resourcesData';
 import { usePageMeta } from '@/hooks/usePageMeta';
 
@@ -17,7 +18,7 @@ function shuffle<T>(arr: T[]): T[] {
 }
 
 const About = () => {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   usePageMeta('About', 'Learn about Elpis Worship — who we are, our mission and the team behind the music.');
   const [{ team }] = useState(() => getResourcesData());
   const shuffledTeam = useMemo(() => shuffle(team), [team]);
@@ -25,17 +26,17 @@ const About = () => {
   const missionItems = [
     {
       icon: Target,
-      title: i18n.language === 'gr' ? 'Ευαγγελισμός' : 'Evangelism',
+      title: t('about.mission_1_title'),
       description: t('about.mission_1'),
     },
     {
       icon: Heart,
-      title: i18n.language === 'gr' ? 'Ενθάρρυνση' : 'Encouragement',
+      title: t('about.mission_2_title'),
       description: t('about.mission_2'),
     },
     {
       icon: Lightbulb,
-      title: i18n.language === 'gr' ? 'Έμπνευση' : 'Inspiration',
+      title: t('about.mission_3_title'),
       description: t('about.mission_3'),
     },
   ];
@@ -170,7 +171,7 @@ const About = () => {
                   <Card className="overflow-hidden border-0 shadow-md hover:shadow-xl transition-all duration-300 group-hover:scale-105">
                     <div className="aspect-square overflow-hidden bg-muted">
                       {member.image
-                        ? <img src={member.image} alt={member.role} loading="lazy" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" style={{ objectPosition: `${member.imagePosX ?? 50}% ${member.imagePosY ?? 50}%` }} />
+                        ? <LazyImage src={member.image} alt={member.role} loading="lazy" wrapperClassName="w-full h-full" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" style={{ objectPosition: `${member.imagePosX ?? 50}% ${member.imagePosY ?? 50}%` }} />
                         : <div className="w-full h-full flex items-center justify-center text-muted-foreground/30 text-4xl font-bold">{member.role[0]}</div>
                       }
                     </div>

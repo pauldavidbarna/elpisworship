@@ -9,7 +9,7 @@ import { usePageMeta } from '@/hooks/usePageMeta';
 
 const Donate = () => {
   usePageMeta('Support Us', 'Support Elpis Worship ministry and help us continue creating music for His glory.');
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
 
   return (
     <Layout>
@@ -77,27 +77,21 @@ const Donate = () => {
             className="max-w-4xl mx-auto"
           >
             <h2 className="font-display text-3xl md:text-4xl font-bold mb-8 text-center">
-              {i18n.language === 'gr' ? 'Γιατί να μας Υποστηρίξετε' : 'Why Support Us'}
+              {t('donate.why_support')}
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {[
                 {
-                  title: i18n.language === 'gr' ? 'Εξοπλισμός' : 'Equipment',
-                  description: i18n.language === 'gr' 
-                    ? 'Ήχος, μουσικά όργανα και τεχνικός εξοπλισμός'
-                    : 'Sound, instruments, and technical equipment',
+                  title: t('donate.support_1_title'),
+                  description: t('donate.support_1_desc'),
                 },
                 {
-                  title: i18n.language === 'gr' ? 'Παραγωγή' : 'Production',
-                  description: i18n.language === 'gr'
-                    ? 'Ηχογράφηση, mixing και video production'
-                    : 'Recording, mixing, and video production',
+                  title: t('donate.support_2_title'),
+                  description: t('donate.support_2_desc'),
                 },
                 {
-                  title: i18n.language === 'gr' ? 'Events' : 'Events',
-                  description: i18n.language === 'gr'
-                    ? 'Οργάνωση συναυλιών και εκδηλώσεων λατρείας'
-                    : 'Organizing concerts and worship events',
+                  title: t('donate.support_3_title'),
+                  description: t('donate.support_3_desc'),
                 },
               ].map((item, index) => (
                 <Card key={item.title} className="border-0 shadow-md">

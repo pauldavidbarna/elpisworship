@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import { usePageMeta } from '@/hooks/usePageMeta';
+import { useFocusTrap } from '@/hooks/useFocusTrap';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
-import { Play, X, ExternalLink } from 'lucide-react';
+import { Play, X, ExternalLink, Youtube, RefreshCw } from 'lucide-react';
 import { Layout } from '@/components/layout';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -30,10 +31,12 @@ const ElpisPlay = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [activeVideo, setActiveVideo] = useState<YTVideo | null>(null);
+  const closeVideo = () => setActiveVideo(null);
+  const videoModalRef = useFocusTrap(activeVideo ? closeVideo : undefined);
 
   useEffect(() => {
     fetchPlaylistVideos()
-      .then((v) => { setVideos(v); if (v.length === 0) setError('No videos found.'); })
+      .then((v) => { setVideos(v); if (v.length === 0) setError(t('play.no_videos')); })
       .catch((e) => setError(String(e)))
       .finally(() => setLoading(false));
   }, []);
@@ -64,8 +67,22 @@ const ElpisPlay = () => {
               <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin" />
             </div>
           ) : error ? (
-            <div className="text-center py-20 text-muted-foreground">
-              <p className="text-sm font-mono bg-muted p-4 rounded">{error}</p>
+            <div className="flex flex-col items-center justify-center py-24 gap-6 text-center">
+              <Youtube className="h-14 w-14 text-muted-foreground/30" />
+              <div>
+                <p className="text-lg font-semibold mb-1">{t('play.error_title')}</p>
+                <p className="text-muted-foreground text-sm max-w-xs mx-auto">{t('play.error_message')}</p>
+              </div>
+              <div className="flex gap-3">
+                <Button variant="outline" size="sm" onClick={() => window.location.reload()}>
+                  <RefreshCw className="h-4 w-4 mr-2" />{t('play.retry')}
+                </Button>
+                <Button asChild size="sm">
+                  <a href="https://www.youtube.com/@ElpisWorship" target="_blank" rel="noopener noreferrer">
+                    <ExternalLink className="h-4 w-4 mr-2" />{t('play.open_youtube')}
+                  </a>
+                </Button>
+              </div>
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -108,12 +125,16 @@ const ElpisPlay = () => {
       {/* Video Modal */}
       {activeVideo && (
         <div
+          ref={videoModalRef}
+          role="dialog"
+          aria-modal="true"
+          aria-label={activeVideo.title}
           className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4"
-          onClick={() => setActiveVideo(null)}
+          onClick={closeVideo}
         >
           <button
             className="absolute top-4 right-4 text-white/80 hover:text-white"
-            onClick={() => setActiveVideo(null)}
+            onClick={closeVideo}
           >
             <X className="h-8 w-8" />
           </button>
@@ -121,6 +142,7 @@ const ElpisPlay = () => {
             className="w-full max-w-4xl"
             onClick={(e) => e.stopPropagation()}
           >
+
             <div className="aspect-video">
               <iframe
                 src={`https://www.youtube.com/embed/${activeVideo.videoId}?autoplay=1`}

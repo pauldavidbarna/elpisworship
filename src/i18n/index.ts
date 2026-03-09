@@ -8,15 +8,37 @@ const resources = {
   gr: { translation: gr },
 };
 
+const savedLang = localStorage.getItem('elpis-lang');
+
 i18n
   .use(initReactI18next)
   .init({
     resources,
-    lng: 'en', // default language
+    lng: (savedLang === 'en' || savedLang === 'gr') ? savedLang : 'en',
     fallbackLng: 'en',
     interpolation: {
       escapeValue: false,
     },
   });
+
+const langToLocale: Record<string, string> = { en: 'en', gr: 'el' };
+
+const updateHtmlLang = (lang: string) => {
+  document.documentElement.lang = langToLocale[lang] ?? lang;
+};
+
+updateHtmlLang(i18n.language);
+i18n.on('languageChanged', updateHtmlLang);
+
+// Only do IP detection if user hasn't manually chosen a language
+if (!savedLang) {
+  fetch('https://ip-api.com/json/?fields=countryCode')
+    .then((r) => r.json())
+    .then((data) => {
+      const lang = data.countryCode === 'GR' ? 'gr' : 'en';
+      i18n.changeLanguage(lang);
+    })
+    .catch(() => {/* stay on default 'en' */});
+}
 
 export default i18n;

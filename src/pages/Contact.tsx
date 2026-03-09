@@ -13,7 +13,7 @@ import { usePageMeta } from '@/hooks/usePageMeta';
 
 const Contact = () => {
   usePageMeta('Contact', 'Get in touch with Elpis Worship — send us a message or follow us on social media.');
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -39,19 +39,15 @@ const Contact = () => {
       if (!res.ok) throw new Error('Failed');
 
       toast({
-        title: i18n.language === 'gr' ? 'Επιτυχία!' : 'Success!',
-        description: i18n.language === 'gr'
-          ? 'Το μήνυμά σας εστάλη.'
-          : 'Your message has been sent.',
+        title: t('contact.success_title'),
+        description: t('contact.success_message'),
       });
 
       form.reset();
     } catch {
       toast({
-        title: i18n.language === 'gr' ? 'Σφάλμα' : 'Error',
-        description: i18n.language === 'gr'
-          ? 'Κάτι πήγε στραβά. Παρακαλώ δοκιμάστε ξανά.'
-          : 'Something went wrong. Please try again.',
+        title: t('contact.error_title'),
+        description: t('contact.error_message'),
         variant: 'destructive',
       });
     } finally {
@@ -101,7 +97,7 @@ const Contact = () => {
                         id="name" 
                         name="name" 
                         required 
-                        placeholder={i18n.language === 'gr' ? 'Το όνομά σας' : 'Your name'}
+                        placeholder={t('contact.name_placeholder')}
                       />
                     </div>
                     <div className="space-y-2">
@@ -120,7 +116,7 @@ const Contact = () => {
                         id="subject" 
                         name="subject" 
                         required 
-                        placeholder={i18n.language === 'gr' ? 'Θέμα μηνύματος' : 'Message subject'}
+                        placeholder={t('contact.subject_placeholder')}
                       />
                     </div>
                     <div className="space-y-2">
@@ -130,7 +126,7 @@ const Contact = () => {
                         name="message" 
                         required 
                         rows={5}
-                        placeholder={i18n.language === 'gr' ? 'Το μήνυμά σας...' : 'Your message...'}
+                        placeholder={t('contact.message_placeholder')}
                       />
                     </div>
                     <Button 
@@ -141,7 +137,7 @@ const Contact = () => {
                       {isSubmitting ? (
                         <span className="flex items-center gap-2">
                           <span className="animate-spin">⏳</span>
-                          {i18n.language === 'gr' ? 'Αποστολή...' : 'Sending...'}
+                          {t('contact.sending')}
                         </span>
                       ) : (
                         <>
@@ -184,9 +180,7 @@ const Contact = () => {
 
               <div className="mt-12 p-6 bg-muted/50 rounded-lg">
                 <p className="text-muted-foreground text-sm">
-                  {i18n.language === 'gr' 
-                    ? 'Για booking και συνεργασίες, στείλτε μας email ή επικοινωνήστε μέσω των social media.'
-                    : 'For booking and collaborations, send us an email or reach out through social media.'}
+                  {t('contact.booking_info')}
                 </p>
               </div>
             </motion.div>
