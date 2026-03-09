@@ -237,7 +237,11 @@ const Lyrics = () => {
                 >
                   <Card
                     className="border-0 shadow-md overflow-hidden cursor-pointer select-none hover:shadow-lg transition-shadow"
+                    tabIndex={0}
+                    role="button"
+                    aria-label={songTitle(song)}
                     onClick={() => setViewing(song)}
+                    onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && setViewing(song)}
                   >
                     <CardContent className="p-0">
                       <div className="flex items-center gap-3 px-5 py-4 hover:bg-muted/40 transition-colors">

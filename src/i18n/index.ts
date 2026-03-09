@@ -9,12 +9,19 @@ const resources = {
 };
 
 const savedLang = localStorage.getItem('elpis-lang');
+const detectedLang = localStorage.getItem('elpis-lang-detected');
+
+const initialLang = (savedLang === 'en' || savedLang === 'gr')
+  ? savedLang
+  : (detectedLang === 'en' || detectedLang === 'gr')
+    ? detectedLang
+    : 'en';
 
 i18n
   .use(initReactI18next)
   .init({
     resources,
-    lng: (savedLang === 'en' || savedLang === 'gr') ? savedLang : 'en',
+    lng: initialLang,
     fallbackLng: 'en',
     interpolation: {
       escapeValue: false,
@@ -30,12 +37,13 @@ const updateHtmlLang = (lang: string) => {
 updateHtmlLang(i18n.language);
 i18n.on('languageChanged', updateHtmlLang);
 
-// Only do IP detection if user hasn't manually chosen a language
-if (!savedLang) {
+// Do IP detection only if no saved preference and not yet detected
+if (!savedLang && !detectedLang) {
   fetch('https://ip-api.com/json/?fields=countryCode')
     .then((r) => r.json())
     .then((data) => {
       const lang = data.countryCode === 'GR' ? 'gr' : 'en';
+      localStorage.setItem('elpis-lang-detected', lang);
       i18n.changeLanguage(lang);
     })
     .catch(() => {/* stay on default 'en' */});

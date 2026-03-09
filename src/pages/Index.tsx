@@ -60,23 +60,13 @@ const Index = () => {
               alt="Elpis Worship"
               className="absolute inset-0 w-full h-full object-cover transition-opacity duration-1000"
               style={{ opacity: idx === current ? 1 : 0 }}
+              loading={idx === 0 ? 'eager' : 'lazy'}
+              fetchPriority={idx === 0 ? 'high' : 'low'}
             />
           ))}
           <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-background" />
         </div>
 
-        {/* Dots */}
-        {slides.length > 1 && (
-          <div className="absolute bottom-20 left-1/2 -translate-x-1/2 flex gap-2 z-10">
-            {slides.map((_, idx) => (
-              <button
-                key={idx}
-                onClick={() => setCurrent(idx)}
-                className={`w-2 h-2 rounded-full transition-all ${idx === current ? 'bg-white scale-125' : 'bg-white/40'}`}
-              />
-            ))}
-          </div>
-        )}
 
         {/* Hero Content */}
         <div className="relative z-10 container mx-auto px-4 text-center">
