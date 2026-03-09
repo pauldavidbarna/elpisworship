@@ -701,6 +701,80 @@ function TeamAdmin({ data, onChange }: { data: ResourcesData; onChange: (d: Reso
   );
 }
 
+// ── Dashboard ──────────────────────────────────────────────────────────────
+
+function Dashboard({ onNavigate, data }: { onNavigate: (tab: string) => void; data: ResourcesData }) {
+  const shortcuts = [
+    { value: 'hero',          label: 'Hero',          icon: LayoutTemplate, desc: 'Manage carousel images on the homepage' },
+    { value: 'team',          label: 'Team',          icon: Users,          desc: 'Add or edit band members' },
+    { value: 'photos',        label: 'Photos',        icon: Image,          desc: 'Upload photos and manage galleries' },
+    { value: 'videos',        label: 'Videos',        icon: Video,          desc: 'Add worship session recordings' },
+    { value: 'events',        label: 'Events',        icon: Calendar,       desc: 'Upcoming and past events' },
+    { value: 'announcements', label: 'Announcements', icon: Megaphone,      desc: 'Post news and updates' },
+    { value: 'songs',         label: 'Lyrics',        icon: Music,          desc: 'Manage song lyrics and chords PDFs' },
+  ];
+
+  const upcomingCount = data.events.filter((e) => e.type === 'upcoming').length;
+  const photosCount = data.photos.reduce((acc, g) => acc + g.images.length, 0);
+  const songsCount = (data.songs ?? []).length;
+  const heroCount = data.heroImages.length;
+
+  return (
+    <div className="max-w-3xl mx-auto">
+      {/* Welcome */}
+      <div className="mb-8 p-6 rounded-2xl bg-primary/5 border border-primary/10">
+        <div className="flex items-center gap-4 mb-3">
+          <div className="w-12 h-12 rounded-xl bg-primary flex items-center justify-center shrink-0">
+            <Lock className="h-6 w-6 text-primary-foreground" />
+          </div>
+          <div>
+            <h1 className="text-xl font-bold">Welcome to Elpis Worship Admin</h1>
+            <p className="text-sm text-muted-foreground">Manage all your website content from here.</p>
+          </div>
+        </div>
+        <p className="text-sm text-muted-foreground leading-relaxed">
+          Use the sidebar on the left to navigate between sections. All changes are saved automatically and synced to the live website.
+        </p>
+      </div>
+
+      {/* Stats */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
+        {[
+          { label: 'Hero images',      value: heroCount },
+          { label: 'Photos uploaded',  value: photosCount },
+          { label: 'Songs',            value: songsCount },
+          { label: 'Upcoming events',  value: upcomingCount },
+        ].map(({ label, value }) => (
+          <div key={label} className="rounded-xl border bg-background p-4 text-center">
+            <p className="text-2xl font-bold text-primary">{value}</p>
+            <p className="text-xs text-muted-foreground mt-1">{label}</p>
+          </div>
+        ))}
+      </div>
+
+      {/* Quick access */}
+      <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-3">Quick access</h2>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        {shortcuts.map(({ value, label, icon: Icon, desc }) => (
+          <button
+            key={value}
+            onClick={() => onNavigate(value)}
+            className="flex items-start gap-3 p-4 rounded-xl border bg-background hover:border-primary hover:bg-primary/5 transition-all text-left group"
+          >
+            <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+              <Icon className="h-4 w-4 text-primary group-hover:text-primary-foreground" />
+            </div>
+            <div>
+              <p className="font-medium text-sm">{label}</p>
+              <p className="text-xs text-muted-foreground mt-0.5">{desc}</p>
+            </div>
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 // ── Hero Admin ─────────────────────────────────────────────────────────────
 
 function HeroAdmin({ data, onChange }: { data: ResourcesData; onChange: (d: ResourcesData) => void }) {
@@ -1060,9 +1134,10 @@ const Admin = () => {
     );
   }
 
-  const [activeTab, setActiveTab] = useState('photos');
+  const [activeTab, setActiveTab] = useState('dashboard');
 
   const navItems = [
+    { value: 'dashboard',     label: 'Dashboard',     icon: Lock,           dividerAfter: true },
     { value: 'hero',          label: 'Hero',          icon: LayoutTemplate },
     { value: 'team',          label: 'Team',          icon: Users },
     { value: 'photos',        label: 'Photos',        icon: Image },
@@ -1074,6 +1149,7 @@ const Admin = () => {
 
   const renderContent = () => {
     switch (activeTab) {
+      case 'dashboard':     return <Dashboard onNavigate={setActiveTab} data={data} />;
       case 'hero':          return <HeroAdmin data={data} onChange={setData} />;
       case 'team':          return <TeamAdmin data={data} onChange={setData} />;
       case 'photos':        return <PhotosAdmin data={data} onChange={setData} />;
@@ -1106,19 +1182,22 @@ const Admin = () => {
       <div className="flex flex-1 overflow-hidden">
         {/* Sidebar — desktop only */}
         <aside className="hidden md:flex flex-col w-56 bg-background border-r shrink-0 py-4 px-3 gap-1">
-          {navItems.map(({ value, label, icon: Icon }) => (
-            <button
-              key={value}
-              onClick={() => setActiveTab(value)}
-              className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors text-left w-full ${
-                activeTab === value
-                  ? 'bg-primary text-primary-foreground'
-                  : 'text-muted-foreground hover:bg-muted hover:text-foreground'
-              }`}
-            >
-              <Icon className="h-4 w-4 shrink-0" />
-              {label}
-            </button>
+          {navItems.map(({ value, label, icon: Icon, dividerAfter }) => (
+            <>
+              <button
+                key={value}
+                onClick={() => setActiveTab(value)}
+                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors text-left w-full ${
+                  activeTab === value
+                    ? 'bg-primary text-primary-foreground'
+                    : 'text-muted-foreground hover:bg-muted hover:text-foreground'
+                }`}
+              >
+                <Icon className="h-4 w-4 shrink-0" />
+                {label}
+              </button>
+              {dividerAfter && <div key={`${value}-divider`} className="my-1 border-t" />}
+            </>
           ))}
         </aside>
 
