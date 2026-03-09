@@ -1081,6 +1081,7 @@ const Admin = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [data, setData] = useState<ResourcesData>(getResourcesData);
+  const [activeTab, setActiveTab] = useState('dashboard');
 
   useEffect(() => {
     if (authed) {
@@ -1133,8 +1134,6 @@ const Admin = () => {
       </div>
     );
   }
-
-  const [activeTab, setActiveTab] = useState('dashboard');
 
   const navItems = [
     { value: 'dashboard',     label: 'Dashboard',     icon: Lock,           dividerAfter: true },
