@@ -705,18 +705,24 @@ function TeamAdmin({ data, onChange }: { data: ResourcesData; onChange: (d: Reso
 
 function HeroAdmin({ data, onChange }: { data: ResourcesData; onChange: (d: ResourcesData) => void }) {
   const [uploading, setUploading] = useState(false);
+  const [previewIdx, setPreviewIdx] = useState<number | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
 
   const handleFiles = async (files: FileList | null) => {
     if (!files) return;
     setUploading(true);
-    const compressed = await Promise.all(Array.from(files).map((f) => compressImage(f, 1600, 0.88)));
-    onChange({ ...data, heroImages: [...data.heroImages, ...compressed] });
+    const compressed = await Promise.all(
+      Array.from(files).map(async (f) => ({ src: await compressImage(f, 1600, 0.88), posY: 50 }))
+    );
+    const newImages = [...data.heroImages, ...compressed];
+    onChange({ ...data, heroImages: newImages });
+    setPreviewIdx(newImages.length - 1);
     setUploading(false);
   };
 
   const remove = (idx: number) => {
     onChange({ ...data, heroImages: data.heroImages.filter((_, i) => i !== idx) });
+    setPreviewIdx(null);
   };
 
   const moveUp = (idx: number) => {
@@ -724,6 +730,7 @@ function HeroAdmin({ data, onChange }: { data: ResourcesData; onChange: (d: Reso
     const imgs = [...data.heroImages];
     [imgs[idx - 1], imgs[idx]] = [imgs[idx], imgs[idx - 1]];
     onChange({ ...data, heroImages: imgs });
+    setPreviewIdx(idx - 1);
   };
 
   const moveDown = (idx: number) => {
@@ -731,17 +738,57 @@ function HeroAdmin({ data, onChange }: { data: ResourcesData; onChange: (d: Reso
     const imgs = [...data.heroImages];
     [imgs[idx], imgs[idx + 1]] = [imgs[idx + 1], imgs[idx]];
     onChange({ ...data, heroImages: imgs });
+    setPreviewIdx(idx + 1);
   };
+
+  const setPosY = (idx: number, posY: number) => {
+    const imgs = data.heroImages.map((img, i) => i === idx ? { ...img, posY } : img);
+    onChange({ ...data, heroImages: imgs });
+  };
+
+  const previewImage = previewIdx !== null ? data.heroImages[previewIdx] : null;
 
   return (
     <>
       <div className="flex justify-between items-center mb-4">
-        <h2 className="font-semibold text-lg">Imagini Hero (Carousel)</h2>
+        <h2 className="font-semibold text-lg">Hero Images (Carousel)</h2>
         <Button size="sm" onClick={() => fileRef.current?.click()} disabled={uploading}>
           <Plus className="h-4 w-4 mr-1" /> {uploading ? 'Processing...' : 'Add photos'}
         </Button>
         <input ref={fileRef} type="file" accept="image/*" multiple className="hidden" onChange={(e) => handleFiles(e.target.files)} />
       </div>
+
+      {/* Hero Preview */}
+      {previewImage && (
+        <div className="mb-6">
+          <p className="text-sm font-medium mb-2 text-muted-foreground">Preview — Image {(previewIdx ?? 0) + 1}</p>
+          <div className="relative w-full rounded-xl overflow-hidden" style={{ aspectRatio: '16/7' }}>
+            <img
+              src={previewImage.src}
+              className="absolute inset-0 w-full h-full object-cover"
+              style={{ objectPosition: `50% ${previewImage.posY}%` }}
+            />
+            <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/60" />
+            <div className="absolute inset-0 flex flex-col items-center justify-center text-white text-center px-4">
+              <p className="font-black text-2xl md:text-4xl tracking-tight mb-2">Made to Worship</p>
+              <p className="text-sm md:text-base text-white/80">Bringing hope through Christian music in Greece</p>
+            </div>
+          </div>
+          {/* Position slider */}
+          <div className="mt-3 flex items-center gap-3">
+            <span className="text-xs text-muted-foreground w-12">Top</span>
+            <input
+              type="range"
+              min={0}
+              max={100}
+              value={previewImage.posY}
+              onChange={(e) => setPosY(previewIdx!, Number(e.target.value))}
+              className="flex-1 accent-primary"
+            />
+            <span className="text-xs text-muted-foreground w-14 text-right">Bottom</span>
+          </div>
+        </div>
+      )}
 
       {data.heroImages.length === 0 && (
         <div
@@ -755,12 +802,19 @@ function HeroAdmin({ data, onChange }: { data: ResourcesData; onChange: (d: Reso
       )}
 
       <div className="space-y-3">
-        {data.heroImages.map((src, idx) => (
-          <Card key={idx} className="border shadow-sm">
+        {data.heroImages.map((img, idx) => (
+          <Card
+            key={idx}
+            className={`border shadow-sm cursor-pointer transition-all ${previewIdx === idx ? 'ring-2 ring-primary' : 'hover:border-primary/50'}`}
+            onClick={() => setPreviewIdx(previewIdx === idx ? null : idx)}
+          >
             <CardContent className="p-3 flex items-center gap-3">
-              <img src={src} className="w-24 h-14 object-cover rounded shrink-0" />
-              <div className="flex-1 text-sm text-muted-foreground">Imagine {idx + 1}</div>
-              <div className="flex gap-1 shrink-0">
+              <img src={img.src} className="w-24 h-14 object-cover rounded shrink-0" style={{ objectPosition: `50% ${img.posY}%` }} />
+              <div className="flex-1 text-sm text-muted-foreground">
+                Image {idx + 1}
+                {previewIdx === idx && <span className="ml-2 text-primary text-xs font-medium">● editing</span>}
+              </div>
+              <div className="flex gap-1 shrink-0" onClick={(e) => e.stopPropagation()}>
                 <Button size="icon" variant="ghost" onClick={() => moveUp(idx)} disabled={idx === 0}>↑</Button>
                 <Button size="icon" variant="ghost" onClick={() => moveDown(idx)} disabled={idx === data.heroImages.length - 1}>↓</Button>
                 <Button size="icon" variant="ghost" className="text-destructive" onClick={() => remove(idx)}><Trash2 className="h-4 w-4" /></Button>

@@ -68,13 +68,18 @@ export interface TeamMember {
   imagePosY: number; // 0-100, default 50
 }
 
+export interface HeroImage {
+  src: string;  // base64 data URL
+  posY: number; // 0-100, vertical focus point, default 50
+}
+
 export interface ResourcesData {
   photos: PhotoGallery[];
   videos: Video[];
   events: ResourceEvent[];
   announcements: Announcement[];
   team: TeamMember[];
-  heroImages: string[]; // base64 data URLs
+  heroImages: HeroImage[];
   songs: Song[];
 }
 
@@ -123,6 +128,10 @@ export function getResourcesData(): ResourcesData {
       }));
       // migrate: team might not exist in old data
       if (!parsed.heroImages) parsed.heroImages = [];
+      // migrate old string[] format to HeroImage[]
+      parsed.heroImages = parsed.heroImages.map((img: unknown) =>
+        typeof img === 'string' ? { src: img, posY: 50 } : img
+      ) as HeroImage[];
       if (!parsed.songs) parsed.songs = [];
       if (!parsed.team) {
         parsed.team = defaultData.team;

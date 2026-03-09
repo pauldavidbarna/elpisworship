@@ -22,7 +22,7 @@ const Index = () => {
   usePageMeta('Home', 'Elpis Worship — worship band dedicated to glorifying God through music.');
   const { events, heroImages } = getResourcesData();
   const upcomingEvents = events.filter((e) => e.type === 'upcoming').sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-  const slides = heroImages.length > 0 ? heroImages : [heroImage];
+  const slides = heroImages.length > 0 ? heroImages : [{ src: heroImage, posY: 50 }];
 
   const [current, setCurrent] = useState(0);
   const [igPosts, setIgPosts] = useState<IGPost[]>([]);
@@ -53,13 +53,13 @@ const Index = () => {
       <section className="relative h-[90vh] min-h-[600px] flex items-center justify-center overflow-hidden">
         {/* Background Carousel */}
         <div className="absolute inset-0">
-          {slides.map((src, idx) => (
+          {slides.map((slide, idx) => (
             <img
               key={idx}
-              src={src}
+              src={slide.src}
               alt="Elpis Worship"
               className="absolute inset-0 w-full h-full object-cover transition-opacity duration-1000"
-              style={{ opacity: idx === current ? 1 : 0 }}
+              style={{ opacity: idx === current ? 1 : 0, objectPosition: `50% ${slide.posY}%` }}
               loading={idx === 0 ? 'eager' : 'lazy'}
               fetchPriority={idx === 0 ? 'high' : 'low'}
             />
