@@ -786,7 +786,7 @@ function HeroAdmin({ data, onChange }: { data: ResourcesData; onChange: (d: Reso
     if (!files) return;
     setUploading(true);
     const compressed = await Promise.all(
-      Array.from(files).map(async (f) => ({ src: await compressImage(f, 1600, 0.88), posY: 50 }))
+      Array.from(files).map(async (f) => ({ src: await compressImage(f, 1920, 0.95), posY: 50 }))
     );
     const newImages = [...data.heroImages, ...compressed];
     onChange({ ...data, heroImages: newImages });
