@@ -183,10 +183,13 @@ const Lyrics = () => {
   const songTitle = (s: Song) =>
     i18n.language === 'en' && s.titleEn ? s.titleEn : s.title;
 
+  const normalize = (str: string) =>
+    str.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+
   const filtered = songs
     .filter((s) => {
-      const q = search.toLowerCase();
-      return s.title.toLowerCase().includes(q) || (s.titleEn ?? '').toLowerCase().includes(q);
+      const q = normalize(search);
+      return normalize(s.title).includes(q) || normalize(s.titleEn ?? '').includes(q);
     })
     .sort((a, b) => a.title.localeCompare(b.title));
 
