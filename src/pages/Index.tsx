@@ -142,7 +142,7 @@ const Index = () => {
             className="text-center mb-14"
           >
             <p className="text-primary text-xs uppercase tracking-[0.4em] font-bold mb-4">
-              Elpis Worship {i18n.language === 'gr' ? 'Παρουσιάζει' : 'Presents'}
+              Elpis Worship {t('home.presents')}
             </p>
             <h2 className="font-display text-6xl md:text-8xl lg:text-9xl font-black text-white uppercase tracking-tighter leading-none">
               Worship Night
@@ -186,10 +186,10 @@ const Index = () => {
                 Ioannis Vellidis (Δ.Ε.Θ.)
               </a>
               <div className="mt-auto pt-5 border-t border-white/10">
-                <p className="text-white/40 text-[11px] uppercase tracking-widest mb-1">Speaker</p>
+                <p className="text-white/40 text-[11px] uppercase tracking-widest mb-1">{t('home.speaker')}</p>
                 <p className="text-white font-semibold text-sm">ΣΩΤΗΡΗΣ ΜΠΟΥΚΗΣ</p>
                 <p className="text-white/30 text-xs uppercase tracking-widest mt-3">
-                  {i18n.language === 'gr' ? 'Ελεύθερη Είσοδος' : 'Free Entry'}
+                  {t('home.free_entry')}
                 </p>
               </div>
             </motion.div>
@@ -226,7 +226,7 @@ const Index = () => {
                 Λασκαρίδου 112, Καλλιθέα
               </a>
               <div className="mt-auto pt-5 border-t border-white/10">
-                <p className="text-white/40 text-[11px] uppercase tracking-widest mb-1">Speaker</p>
+                <p className="text-white/40 text-[11px] uppercase tracking-widest mb-1">{t('home.speaker')}</p>
                 <p className="text-white font-semibold text-sm mb-4">ΘΕΟΔΟΣΗΣ ΚΑΡΒΟΥΝΑΚΗΣ</p>
                 <a
                   href="https://www.eventbrite.com/e/elpis-worship-night-tickets-1984665483888?aff=oddtdtcreator"
@@ -235,7 +235,7 @@ const Index = () => {
                   className="inline-flex items-center gap-2 bg-primary text-black font-bold px-5 py-2.5 rounded-lg text-sm hover:bg-primary/90 transition-colors"
                 >
                   <Ticket className="h-4 w-4" />
-                  Get your free ticket
+                  {t('home.free_ticket_cta')}
                 </a>
               </div>
             </motion.div>
