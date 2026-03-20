@@ -148,7 +148,7 @@ const Index = () => {
               Worship Night
             </h2>
             <p className="text-white/40 mt-4 text-base tracking-widest uppercase">
-              April 2026 · Greece
+              {t('home.worship_night_date_label')}
             </p>
           </motion.div>
 
@@ -164,12 +164,12 @@ const Index = () => {
               className="relative border border-white/10 bg-white/5 backdrop-blur-sm rounded-2xl p-8 flex flex-col hover:border-white/20 transition-colors"
             >
               <span className="text-primary text-[11px] uppercase tracking-[0.3em] font-bold mb-5">
-                Thessaloniki
+                {t('home.thessaloniki')}
               </span>
               <div className="flex items-baseline gap-3 mb-2">
                 <span className="font-display text-5xl font-black text-white">16</span>
                 <span className="font-display text-2xl font-bold text-white/60">
-                  {i18n.language === 'gr' ? 'Απριλίου' : 'April'}
+                  {t('home.april')}
                 </span>
               </div>
               <div className="flex items-center gap-1.5 text-white/50 text-sm mb-4">
@@ -183,7 +183,7 @@ const Index = () => {
                 className="flex items-start gap-1.5 text-white/50 text-sm hover:text-primary transition-colors mb-5"
               >
                 <MapPin className="h-3.5 w-3.5 shrink-0 mt-0.5" />
-                Ioannis Vellidis (Δ.Ε.Θ.)
+                {t('home.thessaloniki_venue')}
               </a>
               <div className="mt-auto pt-5 border-t border-white/10">
                 <p className="text-white/40 text-[11px] uppercase tracking-widest mb-1">{t('home.speaker')}</p>
@@ -204,12 +204,12 @@ const Index = () => {
             >
               <div className="absolute inset-0 rounded-2xl bg-[radial-gradient(ellipse_70%_60%_at_50%_100%,rgba(0,194,204,0.07),transparent)] pointer-events-none" />
               <span className="text-primary text-[11px] uppercase tracking-[0.3em] font-bold mb-5">
-                Athens
+                {t('home.athens')}
               </span>
               <div className="flex items-baseline gap-3 mb-2">
                 <span className="font-display text-5xl font-black text-white">18</span>
                 <span className="font-display text-2xl font-bold text-white/60">
-                  {i18n.language === 'gr' ? 'Απριλίου' : 'April'}
+                  {t('home.april')}
                 </span>
               </div>
               <div className="flex items-center gap-1.5 text-white/50 text-sm mb-4">
@@ -223,7 +223,7 @@ const Index = () => {
                 className="flex items-start gap-1.5 text-white/50 text-sm hover:text-primary transition-colors mb-5"
               >
                 <MapPin className="h-3.5 w-3.5 shrink-0 mt-0.5" />
-                Λασκαρίδου 112, Καλλιθέα
+                {t('home.athens_venue')}
               </a>
               <div className="mt-auto pt-5 border-t border-white/10">
                 <p className="text-white/40 text-[11px] uppercase tracking-widest mb-1">{t('home.speaker')}</p>
