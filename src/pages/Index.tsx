@@ -51,7 +51,7 @@ const Index = () => {
   return (
     <Layout>
       {/* Worship Night Hero */}
-      <section className="relative h-screen min-h-[600px] flex items-center justify-center overflow-hidden">
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         {/* Background photo */}
         <div className="absolute inset-0">
           <img src={worshipNightBg} alt="Worship Night" className="w-full h-full object-cover object-center" loading="eager" fetchPriority="high" />
