@@ -50,103 +50,29 @@ const Index = () => {
 
   return (
     <Layout>
-      {/* Hero Section */}
-      <section className="relative h-[90vh] min-h-[600px] flex items-center justify-center overflow-hidden">
-        {/* Background Carousel */}
-        <div className="absolute inset-0">
-          {slides.map((slide, idx) => (
-            <img
-              key={idx}
-              src={slide.src}
-              alt="Elpis Worship"
-              className="absolute inset-0 w-full h-full object-cover transition-opacity duration-1000"
-              style={{ opacity: idx === current ? 1 : 0, objectPosition: `50% ${slide.posY}%` }}
-              loading={idx === 0 ? 'eager' : 'lazy'}
-              fetchPriority={idx === 0 ? 'high' : 'low'}
-            />
-          ))}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-background" />
-        </div>
-
-
-        {/* Hero Content */}
-        <div className="relative z-10 container mx-auto px-4 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="max-w-4xl mx-auto"
-          >
-            <h1 className="font-display text-5xl md:text-7xl lg:text-8xl font-black text-white mb-6 tracking-tight">
-              {t('hero.title')}
-            </h1>
-            <p className="text-lg md:text-xl text-white/80 mb-8 max-w-2xl mx-auto">
-              {t('hero.subtitle')}
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button
-                asChild
-                size="lg"
-                className="text-lg px-8 py-6 glow-effect"
-              >
-                <Link to="/about">
-                  {t('hero.cta_primary')}
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                </Link>
-              </Button>
-              <Button
-                asChild
-                variant="outline"
-                size="lg"
-                className="text-lg px-8 py-6 bg-transparent border-white text-white hover:bg-white hover:text-black"
-              >
-                <Link to="/donate">{t('hero.cta_secondary')}</Link>
-              </Button>
-            </div>
-          </motion.div>
-        </div>
-
-        {/* Scroll Indicator */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.5 }}
-          className="absolute bottom-8 left-1/2 -translate-x-1/2"
-        >
-          <motion.div
-            animate={{ y: [0, 10, 0] }}
-            transition={{ repeat: Infinity, duration: 2 }}
-            className="w-6 h-10 rounded-full border-2 border-white/50 flex items-start justify-center p-2"
-          >
-            <motion.div className="w-1.5 h-1.5 rounded-full bg-white/50" />
-          </motion.div>
-        </motion.div>
-      </section>
-
-      {/* Worship Night Promo */}
-      <section className="relative py-20 md:py-28 overflow-hidden">
+      {/* Worship Night Hero */}
+      <section className="relative h-screen min-h-[600px] flex items-center justify-center overflow-hidden">
         {/* Background photo */}
         <div className="absolute inset-0">
-          <img src={worshipNightBg} alt="Worship Night" className="w-full h-full object-cover object-center" />
+          <img src={worshipNightBg} alt="Worship Night" className="w-full h-full object-cover object-center" loading="eager" fetchPriority="high" />
           <div className="absolute inset-0 bg-black/75" />
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-10%,rgba(0,194,204,0.12),transparent)]" />
         </div>
 
-        <div className="relative z-10 container mx-auto px-4">
+        <div className="relative z-10 container mx-auto px-4 py-16">
           {/* Header */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7 }}
-            className="text-center mb-14"
+            className="text-center mb-10"
           >
             <p className="text-primary text-xs uppercase tracking-[0.4em] font-bold mb-4">
               Elpis Worship {t('home.presents')}
             </p>
-            <h2 className="font-display text-6xl md:text-8xl lg:text-9xl font-black text-white uppercase tracking-tighter leading-none">
+            <h1 className="font-display text-6xl md:text-8xl lg:text-9xl font-black text-white uppercase tracking-tighter leading-none">
               Worship Night
-            </h2>
+            </h1>
             <p className="text-white/40 mt-4 text-base tracking-widest uppercase">
               {t('home.worship_night_date_label')}
             </p>
@@ -158,9 +84,8 @@ const Index = () => {
             {/* Thessaloniki */}
             <motion.div
               initial={{ opacity: 0, x: -30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.1 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
               className="relative border border-white/10 bg-white/5 backdrop-blur-sm rounded-2xl p-8 flex flex-col hover:border-white/20 transition-colors"
             >
               <span className="text-primary text-[11px] uppercase tracking-[0.3em] font-bold mb-5">
@@ -197,9 +122,8 @@ const Index = () => {
             {/* Athens */}
             <motion.div
               initial={{ opacity: 0, x: 30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.2 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
               className="relative border border-primary/30 bg-primary/5 backdrop-blur-sm rounded-2xl p-8 flex flex-col hover:border-primary/50 transition-colors"
             >
               <div className="absolute inset-0 rounded-2xl bg-[radial-gradient(ellipse_70%_60%_at_50%_100%,rgba(0,194,204,0.07),transparent)] pointer-events-none" />
@@ -240,6 +164,69 @@ const Index = () => {
               </div>
             </motion.div>
           </div>
+        </div>
+
+        {/* Scroll Indicator */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.5 }}
+          className="absolute bottom-8 left-1/2 -translate-x-1/2"
+        >
+          <motion.div
+            animate={{ y: [0, 10, 0] }}
+            transition={{ repeat: Infinity, duration: 2 }}
+            className="w-6 h-10 rounded-full border-2 border-white/50 flex items-start justify-center p-2"
+          >
+            <motion.div className="w-1.5 h-1.5 rounded-full bg-white/50" />
+          </motion.div>
+        </motion.div>
+      </section>
+
+      {/* Hero Section */}
+      <section className="relative h-[90vh] min-h-[600px] flex items-center justify-center overflow-hidden">
+        {/* Background Carousel */}
+        <div className="absolute inset-0">
+          {slides.map((slide, idx) => (
+            <img
+              key={idx}
+              src={slide.src}
+              alt="Elpis Worship"
+              className="absolute inset-0 w-full h-full object-cover transition-opacity duration-1000"
+              style={{ opacity: idx === current ? 1 : 0, objectPosition: `50% ${slide.posY}%` }}
+              loading="lazy"
+            />
+          ))}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-background" />
+        </div>
+
+        {/* Hero Content */}
+        <div className="relative z-10 container mx-auto px-4 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="max-w-4xl mx-auto"
+          >
+            <h2 className="font-display text-5xl md:text-7xl lg:text-8xl font-black text-white mb-6 tracking-tight">
+              {t('hero.title')}
+            </h2>
+            <p className="text-lg md:text-xl text-white/80 mb-8 max-w-2xl mx-auto">
+              {t('hero.subtitle')}
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button asChild size="lg" className="text-lg px-8 py-6 glow-effect">
+                <Link to="/about">
+                  {t('hero.cta_primary')}
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </Link>
+              </Button>
+              <Button asChild variant="outline" size="lg" className="text-lg px-8 py-6 bg-transparent border-white text-white hover:bg-white hover:text-black">
+                <Link to="/donate">{t('hero.cta_secondary')}</Link>
+              </Button>
+            </div>
+          </motion.div>
         </div>
       </section>
 
