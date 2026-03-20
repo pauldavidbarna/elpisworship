@@ -59,7 +59,7 @@ const Index = () => {
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-10%,rgba(0,194,204,0.12),transparent)]" />
         </div>
 
-        <div className="relative z-10 container mx-auto px-4 py-16">
+        <div className="relative z-10 container mx-auto px-4 py-8">
           {/* Header */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -183,8 +183,8 @@ const Index = () => {
         </motion.div>
       </section>
 
-      {/* Hero Section */}
-      <section className="relative h-[90vh] min-h-[600px] flex items-center justify-center overflow-hidden">
+      {/* Hero Section — hidden temporarily */}
+      <section className="relative h-[90vh] min-h-[600px] flex items-center justify-center overflow-hidden hidden">
         {/* Background Carousel */}
         <div className="absolute inset-0">
           {slides.map((slide, idx) => (
