@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Layout } from '@/components/layout';
 import heroImage from '@/assets/hero-worship.jpg';
+import worshipNightBg from '@/assets/worship-night-bg.png';
 import { getResourcesData } from '@/lib/resourcesData';
 import { usePageMeta } from '@/hooks/usePageMeta';
 
@@ -123,114 +124,128 @@ const Index = () => {
       </section>
 
       {/* Worship Night Promo */}
-      <section className="relative bg-black py-20 md:py-28 overflow-hidden">
-        {/* Background glow */}
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-10%,rgba(0,194,204,0.15),transparent)]" />
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:60px_60px]" />
+      <section className="relative overflow-hidden bg-black">
+        {/* Background photo */}
+        <div className="absolute inset-0">
+          <img
+            src={worshipNightBg}
+            alt="Worship Night"
+            className="w-full h-full object-cover object-center"
+          />
+          {/* Dark + teal overlay matching poster mood */}
+          <div className="absolute inset-0 bg-black/65" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-[#00c2cc]/10" />
+        </div>
 
-        <div className="relative z-10 container mx-auto px-4">
-          {/* Header */}
+        <div className="relative z-10 container mx-auto px-6 md:px-10 py-20 md:py-28">
+
+          {/* Poster-style title */}
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 25 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.7 }}
-            className="text-center mb-14"
+            className="mb-16 md:mb-20"
           >
-            <p className="text-primary text-xs uppercase tracking-[0.4em] font-bold mb-4">
-              Elpis Worship {i18n.language === 'gr' ? 'Παρουσιάζει' : 'Presents'}
+            <p className="font-display font-black text-white uppercase leading-none tracking-tight text-5xl md:text-7xl lg:text-8xl">
+              ELPIS
             </p>
-            <h2 className="font-display text-6xl md:text-8xl lg:text-9xl font-black text-white uppercase tracking-tighter leading-none">
-              Worship<br className="md:hidden" />{' '}Night
-            </h2>
-            <p className="text-white/40 mt-4 text-base tracking-widest uppercase">
-              April 2026 · Greece
+            <p className="font-display font-black text-primary uppercase leading-none tracking-tight text-6xl md:text-8xl lg:text-9xl -mt-1 md:-mt-2">
+              WORSHIP
+            </p>
+            <p
+              className="text-white leading-none -mt-3 md:-mt-5 text-5xl md:text-7xl lg:text-8xl"
+              style={{ fontFamily: "'Dancing Script', cursive" }}
+            >
+              night
             </p>
           </motion.div>
 
-          {/* Event Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 max-w-3xl mx-auto">
+          {/* Divider */}
+          <div className="border-t border-white/20 mb-10" />
+
+          {/* Event columns */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16 max-w-3xl">
 
             {/* Thessaloniki */}
             <motion.div
-              initial={{ opacity: 0, x: -30 }}
-              whileInView={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.1 }}
-              className="group relative border border-white/10 bg-white/5 backdrop-blur-sm rounded-2xl p-8 flex flex-col hover:border-white/20 transition-colors"
+              className="flex flex-col gap-3"
             >
-              <span className="text-primary text-[11px] uppercase tracking-[0.3em] font-bold mb-5">
-                Thessaloniki
-              </span>
-              <div className="flex items-baseline gap-3 mb-2">
-                <span className="font-display text-5xl font-black text-white">16</span>
-                <span className="font-display text-2xl font-bold text-white/60">
-                  {i18n.language === 'gr' ? 'Απριλίου' : 'April'}
-                </span>
+              <div>
+                <p className="text-white/50 text-xs uppercase tracking-[0.25em]">Ομιλητής</p>
+                <p className="text-white font-bold text-sm uppercase tracking-wider mt-0.5">
+                  ΣΩΤΗΡΗΣ ΜΠΟΥΚΗΣ
+                </p>
               </div>
-              <div className="flex items-center gap-1.5 text-white/50 text-sm mb-5">
-                <Clock className="h-3.5 w-3.5 shrink-0" />
-                19:00
+              <div>
+                <p className="font-display font-black text-white text-3xl md:text-4xl leading-tight">
+                  16 Απριλίου, 2026
+                </p>
+                <p className="font-display font-black text-white text-2xl md:text-3xl">19:00</p>
               </div>
               <a
                 href="https://maps.app.goo.gl/TnRvy1PA2Ki6Pe4YA"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-start gap-1.5 text-white/50 text-sm hover:text-primary transition-colors"
+                className="inline-block mt-1"
               >
-                <MapPin className="h-3.5 w-3.5 shrink-0 mt-0.5" />
-                Ioannis Vellidis (Δ.Ε.Θ.)
-              </a>
-              <div className="mt-8 pt-6 border-t border-white/10">
-                <span className="text-white/30 text-xs uppercase tracking-widest">
-                  {i18n.language === 'gr' ? 'Ελεύθερη Είσοδος' : 'Free Entry'}
+                <span className="bg-primary text-black font-black text-sm uppercase tracking-wide px-5 py-2.5 rounded-md hover:bg-primary/90 transition-colors block text-center leading-tight">
+                  ΘΕΣΣΑΛΟΝΙΚΗ<br />
+                  <span className="font-semibold">ΙΩΑΝΝΗΣ ΒΕΛΛΙΔΗΣ (Δ.Ε.Θ.)</span>
                 </span>
-              </div>
+              </a>
+              <p className="text-white/60 text-sm mt-1">
+                ΕΙΣΟΔΟΣ <strong className="text-white">ΕΛΕΥΘΕΡΗ</strong>
+              </p>
             </motion.div>
 
             {/* Athens */}
             <motion.div
-              initial={{ opacity: 0, x: 30 }}
-              whileInView={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="group relative border border-primary/30 bg-primary/5 backdrop-blur-sm rounded-2xl p-8 flex flex-col hover:border-primary/50 transition-colors"
+              className="flex flex-col gap-3"
             >
-              {/* Subtle glow behind Athens card */}
-              <div className="absolute inset-0 rounded-2xl bg-[radial-gradient(ellipse_70%_60%_at_50%_100%,rgba(0,194,204,0.08),transparent)] pointer-events-none" />
-              <span className="text-primary text-[11px] uppercase tracking-[0.3em] font-bold mb-5">
-                Athens
-              </span>
-              <div className="flex items-baseline gap-3 mb-2">
-                <span className="font-display text-5xl font-black text-white">18</span>
-                <span className="font-display text-2xl font-bold text-white/60">
-                  {i18n.language === 'gr' ? 'Απριλίου' : 'April'}
-                </span>
+              <div>
+                <p className="text-white/50 text-xs uppercase tracking-[0.25em]">Ομιλητής</p>
+                <p className="text-white font-bold text-sm uppercase tracking-wider mt-0.5">
+                  ΘΕΟΔΟΣΗΣ ΚΑΡΒΟΥΝΑΚΗΣ
+                </p>
               </div>
-              <div className="flex items-center gap-1.5 text-white/50 text-sm mb-5">
-                <Clock className="h-3.5 w-3.5 shrink-0" />
-                18:00 &amp; 20:30
+              <div>
+                <p className="font-display font-black text-white text-3xl md:text-4xl leading-tight">
+                  18 Απριλίου, 2026
+                </p>
+                <p className="font-display font-black text-white text-2xl md:text-3xl">18:00 &amp; 20:30</p>
               </div>
               <a
                 href="https://maps.app.goo.gl/eo1Uq9KSuMnUULjK9"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-start gap-1.5 text-white/50 text-sm hover:text-primary transition-colors"
+                className="inline-block mt-1"
               >
-                <MapPin className="h-3.5 w-3.5 shrink-0 mt-0.5" />
-                Kallithea, Athens
+                <span className="bg-primary text-black font-black text-sm uppercase tracking-wide px-5 py-2.5 rounded-md hover:bg-primary/90 transition-colors block text-center leading-tight">
+                  ΑΘΗΝΑ<br />
+                  <span className="font-semibold">ΛΑΣΚΑΡΙΔΟΥ 112, ΚΑΛΛΙΘΕΑ</span>
+                </span>
               </a>
-              <div className="mt-8 pt-6 border-t border-white/10">
-                <a
-                  href="https://www.eventbrite.com/e/elpis-worship-night-tickets-1984665483888?aff=oddtdtcreator"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 bg-primary text-black font-bold px-6 py-2.5 rounded-lg text-sm hover:bg-primary/90 transition-colors"
-                >
-                  <Ticket className="h-4 w-4" />
-                  {t('home.get_tickets')}
-                </a>
-              </div>
+              <p className="text-white/60 text-sm mt-1">
+                ΕΙΣΟΔΟΣ <strong className="text-white">ΔΩΡΕΑΝ ΜΕ ΚΡΑΤΗΣΗ ΘΕΣΗΣ</strong>
+              </p>
+              <a
+                href="https://www.eventbrite.com/e/elpis-worship-night-tickets-1984665483888?aff=oddtdtcreator"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 bg-white/10 border border-white/20 text-white font-semibold px-5 py-2.5 rounded-md text-sm hover:bg-white/20 transition-colors w-fit"
+              >
+                <Ticket className="h-4 w-4" />
+                {t('home.get_tickets')}
+              </a>
             </motion.div>
           </div>
         </div>
