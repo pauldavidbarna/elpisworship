@@ -15,7 +15,7 @@ const initialLang = (savedLang === 'en' || savedLang === 'gr')
   ? savedLang
   : (detectedLang === 'en' || detectedLang === 'gr')
     ? detectedLang
-    : 'en';
+    : 'gr';
 
 i18n
   .use(initReactI18next)
@@ -46,7 +46,7 @@ if (!savedLang && !detectedLang) {
       localStorage.setItem('elpis-lang-detected', lang);
       i18n.changeLanguage(lang);
     })
-    .catch(() => {/* stay on default 'en' */});
+    .catch(() => {/* stay on default 'gr' */});
 }
 
 export default i18n;
