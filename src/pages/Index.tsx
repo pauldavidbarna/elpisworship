@@ -300,7 +300,7 @@ const Index = () => {
                       </div>
                       {event.ticketUrl && (
                         <a href={event.ticketUrl} target="_blank" rel="noopener noreferrer" className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium bg-primary text-primary-foreground px-4 py-2 rounded-md hover:bg-primary/90 transition-colors">
-                          <Ticket className="h-4 w-4" /> {t('home.get_tickets')}
+                          <Ticket className="h-4 w-4" /> {t('home.free_ticket_cta')}
                         </a>
                       )}
                     </CardContent>
