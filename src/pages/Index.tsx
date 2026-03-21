@@ -59,7 +59,7 @@ const Index = () => {
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-10%,rgba(0,194,204,0.12),transparent)]" />
         </div>
 
-        <div className="relative z-10 container mx-auto px-8 py-[60px] md:py-2">
+        <div className="relative z-10 container mx-auto px-8 py-[66px] md:py-2">
           {/* Header */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
