@@ -86,7 +86,7 @@ const Index = () => {
               initial={{ opacity: 0, x: -30 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6, delay: 0.3 }}
-              className="relative border border-white/10 bg-white/5 backdrop-blur-sm rounded-2xl p-8 flex flex-col hover:border-white/20 transition-colors"
+              className="relative border border-white/10 bg-white/5 backdrop-blur-sm rounded-2xl p-8 flex flex-col hover:border-white/20 transition-colors order-2 md:order-1"
             >
               <span className="text-primary text-[11px] uppercase tracking-[0.3em] font-bold mb-5">
                 {t('home.thessaloniki')}
@@ -124,7 +124,7 @@ const Index = () => {
               initial={{ opacity: 0, x: 30 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6, delay: 0.4 }}
-              className="relative border border-primary/30 bg-primary/5 backdrop-blur-sm rounded-2xl p-8 flex flex-col hover:border-primary/50 transition-colors"
+              className="relative border border-primary/30 bg-primary/5 backdrop-blur-sm rounded-2xl p-8 flex flex-col hover:border-primary/50 transition-colors order-1 md:order-2"
             >
               <div className="absolute inset-0 rounded-2xl bg-[radial-gradient(ellipse_70%_60%_at_50%_100%,rgba(0,194,204,0.07),transparent)] pointer-events-none" />
               <span className="text-primary text-[11px] uppercase tracking-[0.3em] font-bold mb-5">
