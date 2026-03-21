@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
-import { ArrowRight, Calendar, MapPin, Clock, Instagram, Ticket } from 'lucide-react';
+import { ArrowRight, Calendar, MapPin, Clock, Instagram, Ticket, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Layout } from '@/components/layout';
@@ -114,6 +114,7 @@ const Index = () => {
                 <p className="text-white/40 text-[11px] uppercase tracking-widest mb-1">{t('home.speaker')}</p>
                 <p className="text-white font-semibold text-sm mb-4">{t('home.speaker_thessaloniki')}</p>
                 <span className="inline-flex items-center gap-2 border border-white/15 bg-white/5 text-white/50 px-5 py-2.5 rounded-lg text-sm">
+                  <Check className="h-4 w-4" />
                   {t('home.free_entry')}
                 </span>
               </div>
