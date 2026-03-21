@@ -112,10 +112,10 @@ const Index = () => {
               </a>
               <div className="mt-auto pt-5 border-t border-white/10">
                 <p className="text-white/40 text-[11px] uppercase tracking-widest mb-1">{t('home.speaker')}</p>
-                <p className="text-white font-semibold text-sm">{t('home.speaker_thessaloniki')}</p>
-                <p className="text-white/30 text-xs uppercase tracking-widest mt-3">
+                <p className="text-white font-semibold text-sm mb-4">{t('home.speaker_thessaloniki')}</p>
+                <span className="inline-flex items-center gap-2 border border-white/15 bg-white/5 text-white/50 px-5 py-2.5 rounded-lg text-sm">
                   {t('home.free_entry')}
-                </p>
+                </span>
               </div>
             </motion.div>
 
