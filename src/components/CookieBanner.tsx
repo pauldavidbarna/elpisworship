@@ -4,8 +4,6 @@ import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Cookie } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { loadAnalytics } from '@/hooks/useAnalytics';
-
 const CONSENT_KEY = 'elpis_cookie_consent';
 
 export function useCookieConsent() {
@@ -20,14 +18,11 @@ const CookieBanner = () => {
     const consent = localStorage.getItem(CONSENT_KEY);
     if (!consent) {
       setVisible(true);
-    } else if (consent === 'accepted') {
-      loadAnalytics();
     }
   }, []);
 
   const accept = () => {
     localStorage.setItem(CONSENT_KEY, 'accepted');
-    loadAnalytics();
     setVisible(false);
   };
 
