@@ -69,7 +69,6 @@ function AnimatedRoutes() {
 }
 
 const App = () => {
-  const [ready, setReady] = useState(false);
   const [splashDone, setSplashDone] = useState(() => {
     if (sessionStorage.getItem('splash-shown')) return true;
     sessionStorage.setItem('splash-shown', '1');
@@ -81,7 +80,6 @@ const App = () => {
       if (data && Object.keys(data).length > 0) {
         saveResourcesData(data);
       }
-      setReady(true);
     });
   }, []);
 
@@ -89,16 +87,6 @@ const App = () => {
     return (
       <ThemeProvider>
         <SplashScreen onDone={() => setSplashDone(true)} />
-      </ThemeProvider>
-    );
-  }
-
-  if (!ready) {
-    return (
-      <ThemeProvider>
-        <div className="min-h-screen flex items-center justify-center bg-background">
-          <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin" />
-        </div>
       </ThemeProvider>
     );
   }
