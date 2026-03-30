@@ -10,6 +10,7 @@ import heroImage from '@/assets/hero-worship.jpg';
 import worshipNightBg from '@/assets/worship-night-bg.png';
 import { getResourcesData } from '@/lib/resourcesData';
 import { usePageMeta } from '@/hooks/usePageMeta';
+import { fetchCached } from '@/lib/apiCache';
 
 interface IGPost {
   id: string;
@@ -29,8 +30,7 @@ const Index = () => {
   const [igPosts, setIgPosts] = useState<IGPost[]>([]);
 
   useEffect(() => {
-    fetch('/api/instagram-feed')
-      .then((r) => r.json())
+    fetchCached<IGPost[]>('/api/instagram-feed')
       .then((data) => { if (Array.isArray(data)) setIgPosts(data.slice(0, 6)); })
       .catch(() => {});
   }, []);

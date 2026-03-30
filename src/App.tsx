@@ -12,6 +12,7 @@ import { ThemeProvider } from "@/contexts/ThemeContext";
 import SplashScreen from "@/components/SplashScreen";
 import CookieBanner from "@/components/CookieBanner";
 import JsonLd from "@/components/JsonLd";
+import { prefetchApi } from "@/lib/apiCache";
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -82,6 +83,9 @@ const App = () => {
         saveResourcesData(data);
       }
     });
+    // Prefetch API data before the user navigates to those pages
+    prefetchApi('/api/youtube-playlist');
+    prefetchApi('/api/instagram-feed');
   }, []);
 
   if (!splashDone) {

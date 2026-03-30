@@ -7,6 +7,7 @@ import { Play, X, ExternalLink, Youtube, RefreshCw } from 'lucide-react';
 import { Layout } from '@/components/layout';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { fetchCached } from '@/lib/apiCache';
 
 const PLAYLIST_ID = 'PLRX8hHCncTbi-bPiUtoCDGgTW5i-a_2IN';
 
@@ -16,11 +17,8 @@ interface YTVideo {
   thumbnail: string;
 }
 
-async function fetchPlaylistVideos(): Promise<YTVideo[]> {
-  const res = await fetch('/api/youtube-playlist');
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
-  return data as YTVideo[];
+function fetchPlaylistVideos(): Promise<YTVideo[]> {
+  return fetchCached<YTVideo[]>('/api/youtube-playlist');
 }
 
 const ElpisPlay = () => {
@@ -99,12 +97,21 @@ const ElpisPlay = () => {
                     onClick={() => setActiveVideo(video)}
                   >
                     <div className="relative aspect-video bg-muted">
-                      <img
-                        src={video.thumbnail}
-                        alt={video.title}
-                        loading="lazy"
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                      />
+                      <picture>
+                        <source
+                          type="image/webp"
+                          srcSet={`https://i.ytimg.com/vi/${video.videoId}/mqdefault.webp 320w, https://i.ytimg.com/vi/${video.videoId}/hqdefault.webp 480w, https://i.ytimg.com/vi/${video.videoId}/maxresdefault.webp 1280w`}
+                          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                        />
+                        <img
+                          src={video.thumbnail}
+                          srcSet={`https://i.ytimg.com/vi/${video.videoId}/mqdefault.jpg 320w, https://i.ytimg.com/vi/${video.videoId}/hqdefault.jpg 480w, https://i.ytimg.com/vi/${video.videoId}/maxresdefault.jpg 1280w`}
+                          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                          alt={video.title}
+                          loading="lazy"
+                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        />
+                      </picture>
                       <div className="absolute inset-0 bg-black/30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                         <div className="w-14 h-14 rounded-full bg-primary flex items-center justify-center">
                           <Play className="h-6 w-6 text-white ml-1" />
