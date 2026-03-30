@@ -100,13 +100,10 @@ const ElpisPlay = () => {
                       <picture>
                         <source
                           type="image/webp"
-                          srcSet={`https://i.ytimg.com/vi/${video.videoId}/mqdefault.webp 320w, https://i.ytimg.com/vi/${video.videoId}/hqdefault.webp 480w, https://i.ytimg.com/vi/${video.videoId}/maxresdefault.webp 1280w`}
-                          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                          srcSet={`https://i.ytimg.com/vi/${video.videoId}/hqdefault.webp`}
                         />
                         <img
                           src={video.thumbnail}
-                          srcSet={`https://i.ytimg.com/vi/${video.videoId}/mqdefault.jpg 320w, https://i.ytimg.com/vi/${video.videoId}/hqdefault.jpg 480w, https://i.ytimg.com/vi/${video.videoId}/maxresdefault.jpg 1280w`}
-                          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                           alt={video.title}
                           loading="lazy"
                           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
