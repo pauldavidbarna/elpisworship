@@ -97,7 +97,7 @@ const ElpisPlay = () => {
                     onClick={() => setActiveVideo(video)}
                   >
                     <div className="relative aspect-video bg-muted">
-                      <picture>
+                      <picture className="w-full h-full">
                         <source
                           type="image/webp"
                           srcSet={`https://i.ytimg.com/vi/${video.videoId}/hqdefault.webp`}
