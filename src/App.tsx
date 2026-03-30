@@ -11,6 +11,7 @@ import { saveResourcesData } from "@/lib/resourcesData";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import SplashScreen from "@/components/SplashScreen";
 import CookieBanner from "@/components/CookieBanner";
+import JsonLd from "@/components/JsonLd";
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -97,6 +98,7 @@ const App = () => {
     <TooltipProvider>
       <Toaster />
       <Sonner />
+      <JsonLd />
       <BrowserRouter>
         <ScrollToTop />
         <AnimatedRoutes />

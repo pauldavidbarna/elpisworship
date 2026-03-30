@@ -8,9 +8,12 @@ const resources = {
   gr: { translation: gr },
 };
 
+const urlLang = new URLSearchParams(window.location.search).get('lang');
 const savedLang = localStorage.getItem('elpis-lang');
 
-const initialLang = (savedLang === 'en' || savedLang === 'gr') ? savedLang : 'gr';
+const initialLang =
+  urlLang === 'en' || urlLang === 'gr' ? urlLang :
+  savedLang === 'en' || savedLang === 'gr' ? savedLang : 'gr';
 
 i18n
   .use(initReactI18next)
