@@ -97,18 +97,12 @@ const ElpisPlay = () => {
                     onClick={() => setActiveVideo(video)}
                   >
                     <div className="relative aspect-video bg-muted">
-                      <picture className="w-full h-full">
-                        <source
-                          type="image/webp"
-                          srcSet={`https://i.ytimg.com/vi/${video.videoId}/hqdefault.webp`}
-                        />
-                        <img
-                          src={video.thumbnail}
-                          alt={video.title}
-                          loading="lazy"
-                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                        />
-                      </picture>
+                      <img
+                        src={video.thumbnail}
+                        alt={video.title}
+                        loading="lazy"
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
                       <div className="absolute inset-0 bg-black/30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                         <div className="w-14 h-14 rounded-full bg-primary flex items-center justify-center">
                           <Play className="h-6 w-6 text-white ml-1" />
