@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion'; // AnimatePresence used for PdfViewer
 import { Music, Download, Search, X, Play, Loader2 } from 'lucide-react';
@@ -10,6 +10,7 @@ import { usePageMeta } from '@/hooks/usePageMeta';
 import { useFocusTrap } from '@/hooks/useFocusTrap';
 import { getResourcesData, type Song } from '@/lib/resourcesData';
 import { downloadPdf, getPdfURL } from '@/lib/pdfStorage';
+import { trackEvent } from '@/hooks/useAnalytics';
 
 // ── PDF Viewer Modal ────────────────────────────────────────────────────────
 
@@ -27,12 +28,17 @@ function PdfViewer({ song, onClose }: { song: Song; onClose: () => void }) {
   const activeKey = mode === 'chords' ? song.chordsPdfKey : song.lyricsPdfKey;
   const pdfUrl = activeKey ? getPdfURL(activeKey) : null;
 
+  useEffect(() => {
+    trackEvent('song_view', { song_title: song.title });
+  }, [song.title]);
+
   const handleDownload = async () => {
     if (!activeKey) return;
     setDownloading(true);
     const filename = mode === 'chords'
       ? `${song.title} - Lyrics & Chords.pdf`
       : `${song.title} - Lyrics.pdf`;
+    trackEvent('pdf_download', { song_title: song.title, pdf_type: mode });
     try { await downloadPdf(activeKey, filename); }
     finally { setDownloading(false); }
   };
@@ -44,7 +50,10 @@ function PdfViewer({ song, onClose }: { song: Song; onClose: () => void }) {
       const q = encodeURIComponent(`${song.title} - Elpis Worship`);
       const res = await fetch(`/api/youtube-search?q=${q}`);
       const data = await res.json();
-      if (data.videoId) setYtVideoId(data.videoId);
+      if (data.videoId) {
+        setYtVideoId(data.videoId);
+        trackEvent('song_play', { song_title: song.title });
+      }
     } catch (e) {
       console.error(e);
     } finally {

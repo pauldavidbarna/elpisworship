@@ -21,6 +21,7 @@ import { usePageMeta } from '@/hooks/usePageMeta';
 import { useFocusTrap } from '@/hooks/useFocusTrap';
 import LazyImage from '@/components/ui/lazy-image';
 import { getVideoURL } from '@/lib/videoDB';
+import { trackEvent } from '@/hooks/useAnalytics';
 
 function VideoPlayer({ video }: { video: VideoType }) {
   const [url, setUrl] = useState<string | null>(null);
@@ -57,7 +58,10 @@ const Resources = () => {
   // Lightbox state
   const [lightbox, setLightbox] = useState<{ images: string[]; index: number } | null>(null);
 
-  const openLightbox = (images: string[], index: number) => setLightbox({ images, index });
+  const openLightbox = (images: string[], index: number, galleryTitle?: string) => {
+    setLightbox({ images, index });
+    trackEvent('photo_view', { gallery_title: galleryTitle ?? 'unknown' });
+  };
   const closeLightbox = () => setLightbox(null);
   const lightboxRef = useFocusTrap(lightbox ? closeLightbox : undefined);
   const prevPhoto = () => lightbox && setLightbox({ ...lightbox, index: (lightbox.index - 1 + lightbox.images.length) % lightbox.images.length });
@@ -88,7 +92,7 @@ const Resources = () => {
       {/* Tabs */}
       <section className="py-20">
         <div className="container mx-auto px-4">
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="max-w-5xl mx-auto">
+          <Tabs value={activeTab} onValueChange={(tab) => { setActiveTab(tab); trackEvent('tab_view', { tab_name: tab, page: 'resources' }); }} className="max-w-5xl mx-auto">
             <TabsList className="grid grid-cols-4 w-full mb-8">
               <TabsTrigger value="photos" className="flex items-center gap-2">
                 <Image className="h-4 w-4" />
@@ -117,7 +121,7 @@ const Resources = () => {
                       {/* Cover image or placeholder */}
                       <div className="aspect-video overflow-hidden bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center">
                         {gallery.images.length > 0
-                          ? <LazyImage src={gallery.images[0]} alt={gallery.title} loading="lazy" wrapperClassName="w-full h-full" className="w-full h-full object-cover" />
+                          ? <LazyImage src={gallery.images[0]} alt={gallery.title} loading="lazy" wrapperClassName="w-full h-full" className="w-full h-full object-cover" onClick={() => openLightbox(gallery.images, 0, gallery.title)} />
                           : <Image className="h-12 w-12 text-primary/30" />
                         }
                       </div>
@@ -131,7 +135,7 @@ const Resources = () => {
                               <div
                                 key={idx}
                                 className="aspect-square overflow-hidden rounded cursor-pointer relative"
-                                onClick={() => openLightbox(gallery.images, idx)}
+                                onClick={() => openLightbox(gallery.images, idx, gallery.title)}
                               >
                                 <LazyImage src={src} alt={gallery.title} loading="lazy" wrapperClassName="w-full h-full" className="w-full h-full object-cover hover:scale-105 transition-transform" />
                                 {idx === 3 && gallery.images.length > 4 && (

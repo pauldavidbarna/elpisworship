@@ -8,6 +8,7 @@ import { Layout } from '@/components/layout';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { fetchCached } from '@/lib/apiCache';
+import { trackEvent } from '@/hooks/useAnalytics';
 
 const PLAYLIST_ID = 'PLRX8hHCncTbi-bPiUtoCDGgTW5i-a_2IN';
 
@@ -94,7 +95,7 @@ const ElpisPlay = () => {
                 >
                   <Card
                     className="overflow-hidden border-0 shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer group"
-                    onClick={() => setActiveVideo(video)}
+                    onClick={() => { setActiveVideo(video); trackEvent('video_play', { video_title: video.title, video_id: video.videoId }); }}
                   >
                     <div className="relative aspect-video bg-muted">
                       <img
