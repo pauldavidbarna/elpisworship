@@ -1,8 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
-import { Image, Video, Calendar, Megaphone, LogOut, Plus, Pencil, Trash2, Lock, X, Upload, Film, Users, LayoutTemplate, Music } from 'lucide-react';
+import { Image, Video, Calendar, Megaphone, LogOut, Plus, Pencil, Trash2, Lock, X, Upload, Film, Users, LayoutTemplate, Music, BarChart2 } from 'lucide-react';
 import { saveVideo, deleteVideo } from '@/lib/videoDB';
 import { uploadPdf, deletePdf } from '@/lib/pdfStorage';
-import { saveToSupabase } from '@/lib/supabase';
+import { saveToSupabase, getAnalyticsEvents, type AnalyticsEvent } from '@/lib/supabase';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -1074,6 +1074,167 @@ function SongsAdmin({ data, onChange }: { data: ResourcesData; onChange: (d: Res
   );
 }
 
+// ── Analytics Admin ────────────────────────────────────────────────────────
+
+const EVENT_LABELS: Record<string, string> = {
+  song_view:    'Song viewed',
+  pdf_download: 'PDF downloaded',
+  song_play:    'Song played (YouTube)',
+  video_play:   'Video played',
+  photo_view:   'Photo viewed',
+  tab_view:     'Tab navigation',
+};
+
+function AnalyticsAdmin() {
+  const [events, setEvents] = useState<AnalyticsEvent[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    getAnalyticsEvents(500).then(setEvents).catch(() => {}).finally(() => setLoading(false));
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="flex justify-center py-20">
+        <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
+
+  if (events.length === 0) {
+    return (
+      <div className="text-center py-20 text-muted-foreground">
+        <BarChart2 className="h-12 w-12 mx-auto mb-3 opacity-30" />
+        <p className="font-medium">No analytics events yet</p>
+        <p className="text-xs mt-1">Events will appear here as users interact with the site.</p>
+      </div>
+    );
+  }
+
+  // Count by event type
+  const byType: Record<string, number> = {};
+  for (const e of events) byType[e.event_name] = (byType[e.event_name] ?? 0) + 1;
+  const maxCount = Math.max(...Object.values(byType));
+
+  // Top songs (across song_view + pdf_download + song_play)
+  const songCounts: Record<string, number> = {};
+  for (const e of events) {
+    const title = e.params?.song_title as string | undefined;
+    if (title) songCounts[title] = (songCounts[title] ?? 0) + 1;
+  }
+
+  // Top videos
+  const videoCounts: Record<string, number> = {};
+  for (const e of events.filter((e) => e.event_name === 'video_play')) {
+    const title = e.params?.video_title as string | undefined;
+    if (title) videoCounts[title] = (videoCounts[title] ?? 0) + 1;
+  }
+
+  const topSongs = Object.entries(songCounts).sort((a, b) => b[1] - a[1]).slice(0, 10);
+  const topVideos = Object.entries(videoCounts).sort((a, b) => b[1] - a[1]).slice(0, 10);
+
+  return (
+    <div className="max-w-3xl mx-auto space-y-6">
+      <div>
+        <h2 className="font-semibold text-lg mb-1">Analytics</h2>
+        <p className="text-sm text-muted-foreground">Last {events.length} events recorded on the site</p>
+      </div>
+
+      {/* Summary cards */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+        {[
+          { label: 'Total events',    value: events.length },
+          { label: 'Videos played',   value: byType['video_play']   ?? 0 },
+          { label: 'PDFs downloaded', value: byType['pdf_download'] ?? 0 },
+          { label: 'Songs viewed',    value: byType['song_view']    ?? 0 },
+          { label: 'Songs played',    value: byType['song_play']    ?? 0 },
+          { label: 'Photos viewed',   value: byType['photo_view']   ?? 0 },
+        ].map(({ label, value }) => (
+          <div key={label} className="rounded-xl border bg-background p-4 text-center">
+            <p className="text-2xl font-bold text-primary">{value}</p>
+            <p className="text-xs text-muted-foreground mt-1">{label}</p>
+          </div>
+        ))}
+      </div>
+
+      {/* Events by type */}
+      <Card>
+        <CardHeader><CardTitle className="text-base">Events by type</CardTitle></CardHeader>
+        <CardContent className="space-y-3">
+          {Object.entries(byType).sort((a, b) => b[1] - a[1]).map(([name, count]) => (
+            <div key={name} className="flex items-center gap-3">
+              <span className="text-sm w-44 truncate shrink-0 text-muted-foreground">{EVENT_LABELS[name] ?? name}</span>
+              <div className="flex-1 bg-muted rounded-full h-2">
+                <div className="bg-primary rounded-full h-2 transition-all" style={{ width: `${(count / maxCount) * 100}%` }} />
+              </div>
+              <span className="text-sm font-bold w-8 text-right shrink-0">{count}</span>
+            </div>
+          ))}
+        </CardContent>
+      </Card>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {/* Top songs */}
+        {topSongs.length > 0 && (
+          <Card>
+            <CardHeader><CardTitle className="text-base">Top songs</CardTitle></CardHeader>
+            <CardContent className="space-y-2">
+              {topSongs.map(([title, count]) => (
+                <div key={title} className="flex items-center justify-between gap-2 text-sm">
+                  <span className="truncate text-muted-foreground">{title}</span>
+                  <Badge variant="outline" className="shrink-0">{count}</Badge>
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Top videos */}
+        {topVideos.length > 0 && (
+          <Card>
+            <CardHeader><CardTitle className="text-base">Top videos</CardTitle></CardHeader>
+            <CardContent className="space-y-2">
+              {topVideos.map(([title, count]) => (
+                <div key={title} className="flex items-center justify-between gap-2 text-sm">
+                  <span className="truncate text-muted-foreground">{title}</span>
+                  <Badge variant="outline" className="shrink-0">{count}</Badge>
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+        )}
+      </div>
+
+      {/* Recent activity */}
+      <Card>
+        <CardHeader><CardTitle className="text-base">Recent activity</CardTitle></CardHeader>
+        <CardContent>
+          <div className="space-y-0">
+            {events.slice(0, 30).map((e) => {
+              const detail =
+                (e.params?.song_title as string) ||
+                (e.params?.video_title as string) ||
+                (e.params?.gallery_title as string) ||
+                (e.params?.tab_name as string) || '';
+              return (
+                <div key={e.id} className="flex items-center justify-between gap-3 py-2 border-b last:border-0 text-sm">
+                  <div className="flex items-center gap-2 min-w-0">
+                    <span className="font-medium shrink-0">{EVENT_LABELS[e.event_name] ?? e.event_name}</span>
+                    {detail && <span className="text-muted-foreground truncate">— {detail}</span>}
+                  </div>
+                  <span className="text-xs text-muted-foreground shrink-0">
+                    {new Date(e.created_at).toLocaleString('el-GR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
 // ── Main Admin ─────────────────────────────────────────────────────────────
 
 const Admin = () => {
@@ -1137,6 +1298,7 @@ const Admin = () => {
 
   const navItems = [
     { value: 'dashboard',     label: 'Dashboard',     icon: Lock,           dividerAfter: true },
+    { value: 'analytics',     label: 'Analytics',     icon: BarChart2,      dividerAfter: true },
     { value: 'hero',          label: 'Hero',          icon: LayoutTemplate },
     { value: 'team',          label: 'Team',          icon: Users },
     { value: 'photos',        label: 'Photos',        icon: Image },
@@ -1149,6 +1311,7 @@ const Admin = () => {
   const renderContent = () => {
     switch (activeTab) {
       case 'dashboard':     return <Dashboard onNavigate={setActiveTab} data={data} />;
+      case 'analytics':     return <AnalyticsAdmin />;
       case 'hero':          return <HeroAdmin data={data} onChange={setData} />;
       case 'team':          return <TeamAdmin data={data} onChange={setData} />;
       case 'photos':        return <PhotosAdmin data={data} onChange={setData} />;
