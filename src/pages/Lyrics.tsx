@@ -72,59 +72,71 @@ function PdfViewer({ song, onClose }: { song: Song; onClose: () => void }) {
     >
       {/* Toolbar */}
       <div
-        className="flex items-center justify-between px-4 py-3 bg-background border-b shrink-0 gap-2"
+        className="flex flex-col sm:flex-row sm:items-center sm:justify-between px-4 py-3 bg-background border-b shrink-0 gap-2"
         onClick={(e) => e.stopPropagation()}
       >
-        <p className="font-semibold text-sm truncate max-w-[25%] shrink-0">{displayTitle}</p>
-
-        {/* PDF toggle */}
-        <div className="flex items-center gap-1 bg-muted rounded-lg p-1">
+        {/* Row 1 (mobile): Title + Close */}
+        <div className="flex items-center justify-between gap-2">
+          <p className="font-semibold text-sm truncate">{displayTitle}</p>
           <button
-            className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${
-              mode === 'chords' ? 'bg-background shadow text-foreground' : 'text-muted-foreground hover:text-foreground'
-            }`}
-            onClick={() => setMode('chords')}
-            disabled={!song.chordsPdfKey}
-          >
-            {t('lyrics.view_chords')}
-          </button>
-          <button
-            className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${
-              mode === 'lyrics' ? 'bg-background shadow text-foreground' : 'text-muted-foreground hover:text-foreground'
-            }`}
-            onClick={() => setMode('lyrics')}
-            disabled={!song.lyricsPdfKey}
-          >
-            {t('lyrics.view_lyrics')}
-          </button>
-        </div>
-
-        <div className="flex items-center gap-2 shrink-0">
-          {/* Play button */}
-          <Button
-            size="sm"
-            variant={ytVideoId ? 'default' : 'outline'}
-            onClick={handlePlay}
-            disabled={loadingYt}
-          >
-            {loadingYt
-              ? <Loader2 className="h-4 w-4 animate-spin" />
-              : <Play className="h-4 w-4 mr-1" fill={ytVideoId ? 'currentColor' : 'none'} />
-            }
-            <span className="hidden sm:inline">{ytVideoId ? t('lyrics.stop') : t('lyrics.play')}</span>
-          </Button>
-
-          <Button size="sm" variant="outline" onClick={handleDownload} disabled={!activeKey || downloading}>
-            <Download className="h-4 w-4 mr-1" />
-            <span className="hidden sm:inline">{downloading ? '...' : t('lyrics.download')}</span>
-          </Button>
-
-          <button
-            className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-muted transition-colors"
+            className="sm:hidden w-8 h-8 rounded-full flex items-center justify-center hover:bg-muted transition-colors shrink-0"
             onClick={onClose}
           >
             <X className="h-5 w-5" />
           </button>
+        </div>
+
+        {/* Row 2 (mobile) / rest of row (desktop): Toggle + Actions */}
+        <div className="flex items-center justify-between sm:justify-end gap-2">
+          {/* PDF toggle */}
+          <div className="flex items-center gap-1 bg-muted rounded-lg p-1">
+            <button
+              className={`px-3 py-1 rounded-md text-xs sm:text-sm font-medium transition-colors ${
+                mode === 'chords' ? 'bg-background shadow text-foreground' : 'text-muted-foreground hover:text-foreground'
+              }`}
+              onClick={() => setMode('chords')}
+              disabled={!song.chordsPdfKey}
+            >
+              {t('lyrics.view_chords')}
+            </button>
+            <button
+              className={`px-3 py-1 rounded-md text-xs sm:text-sm font-medium transition-colors ${
+                mode === 'lyrics' ? 'bg-background shadow text-foreground' : 'text-muted-foreground hover:text-foreground'
+              }`}
+              onClick={() => setMode('lyrics')}
+              disabled={!song.lyricsPdfKey}
+            >
+              {t('lyrics.view_lyrics')}
+            </button>
+          </div>
+
+          <div className="flex items-center gap-2 shrink-0">
+            <Button
+              size="sm"
+              variant={ytVideoId ? 'default' : 'outline'}
+              onClick={handlePlay}
+              disabled={loadingYt}
+            >
+              {loadingYt
+                ? <Loader2 className="h-4 w-4 animate-spin" />
+                : <Play className="h-4 w-4 sm:mr-1" fill={ytVideoId ? 'currentColor' : 'none'} />
+              }
+              <span className="hidden sm:inline">{ytVideoId ? t('lyrics.stop') : t('lyrics.play')}</span>
+            </Button>
+
+            <Button size="sm" variant="outline" onClick={handleDownload} disabled={!activeKey || downloading}>
+              <Download className="h-4 w-4 sm:mr-1" />
+              <span className="hidden sm:inline">{downloading ? '...' : t('lyrics.download')}</span>
+            </Button>
+
+            {/* Close — desktop only */}
+            <button
+              className="hidden sm:flex w-8 h-8 rounded-full items-center justify-center hover:bg-muted transition-colors"
+              onClick={onClose}
+            >
+              <X className="h-5 w-5" />
+            </button>
+          </div>
         </div>
       </div>
 
@@ -133,7 +145,7 @@ function PdfViewer({ song, onClose }: { song: Song; onClose: () => void }) {
         {pdfUrl ? (
           <iframe
             key={pdfUrl}
-            src={pdfUrl}
+            src={`${pdfUrl}#view=FitH&toolbar=0`}
             className="w-full h-full border-0"
             title={song.title}
           />
