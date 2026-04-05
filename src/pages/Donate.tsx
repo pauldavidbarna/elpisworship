@@ -41,7 +41,7 @@ const Donate = () => {
             className="max-w-3xl mx-auto text-center"
           >
             <Card className="border-0 shadow-xl">
-              <CardContent className="p-8 md:p-12">
+              <CardContent className="p-6 md:p-12">
                 <Coffee className="h-12 w-12 mx-auto mb-6 text-primary" />
                 <p className="text-lg md:text-xl text-muted-foreground leading-relaxed mb-8">
                   {t('donate.message')}
@@ -49,7 +49,7 @@ const Donate = () => {
                 <Button
                   asChild
                   size="lg"
-                  className="text-lg px-8 py-6 glow-effect"
+                  className="text-lg px-8 py-6 glow-effect w-full sm:w-auto"
                 >
                   <a
                     href="https://buymeacoffee.com/elpisworship"
