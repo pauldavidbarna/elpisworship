@@ -2,12 +2,12 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
-import { ArrowRight, Calendar, MapPin, Clock, Instagram, Ticket, Check } from 'lucide-react';
+import { ArrowRight, Calendar, MapPin, Clock, Instagram, Ticket } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Layout } from '@/components/layout';
 import heroImage from '@/assets/hero-worship.jpg';
-import worshipNightBg from '@/assets/worship-night-bg.png';
+
 import { getResourcesData } from '@/lib/resourcesData';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { fetchCached } from '@/lib/apiCache';
@@ -50,142 +50,8 @@ const Index = () => {
 
   return (
     <Layout>
-      {/* Worship Night Hero */}
-      <section className="relative min-h-screen md:min-h-[90vh] flex items-center justify-center overflow-hidden">
-        {/* Background photo */}
-        <div className="absolute inset-0">
-          <img src={worshipNightBg} alt="Worship Night" className="w-full h-full object-cover object-center" loading="eager" fetchPriority="high" />
-          <div className="absolute inset-0 bg-black/75" />
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-10%,rgba(0,194,204,0.12),transparent)]" />
-        </div>
-
-        <div className="relative z-10 container mx-auto px-8 py-[66px] md:py-2">
-          {/* Header */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7 }}
-            className="text-center mb-10"
-          >
-            <p className="text-primary text-xs uppercase tracking-[0.4em] font-bold mb-4">
-              Elpis Worship {t('home.presents')}
-            </p>
-            <h1 className="font-display text-6xl md:text-8xl lg:text-9xl font-black text-white uppercase tracking-tighter leading-none">
-              Worship Night
-            </h1>
-            <p className="text-white/40 mt-4 text-base tracking-widest uppercase">
-              {t('home.worship_night_date_label')}
-            </p>
-          </motion.div>
-
-          {/* Event Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 max-w-3xl mx-auto">
-
-            {/* Thessaloniki */}
-            <motion.div
-              initial={{ opacity: 0, x: -30 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.3 }}
-              className="relative border border-white/10 bg-white/5 backdrop-blur-sm rounded-2xl p-8 flex flex-col hover:border-white/20 transition-colors order-2 md:order-1"
-            >
-              <span className="text-primary text-[11px] uppercase tracking-[0.3em] font-bold mb-5">
-                {t('home.thessaloniki')}
-              </span>
-              <div className="flex items-baseline gap-3 mb-2">
-                <span className="font-display text-5xl font-black text-white">16</span>
-                <span className="font-display text-2xl font-bold text-white/60">
-                  {t('home.april')}
-                </span>
-              </div>
-              <div className="flex items-center gap-1.5 text-white/50 text-sm mb-4">
-                <Clock className="h-3.5 w-3.5 shrink-0" />
-                19:00
-              </div>
-              <a
-                href="https://maps.app.goo.gl/TnRvy1PA2Ki6Pe4YA"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-start gap-1.5 text-white/50 text-sm hover:text-primary transition-colors mb-5"
-              >
-                <MapPin className="h-3.5 w-3.5 shrink-0 mt-0.5" />
-                {t('home.thessaloniki_venue')}
-              </a>
-              <div className="mt-auto pt-5 border-t border-white/10">
-                <p className="text-white/40 text-[11px] uppercase tracking-widest mb-1">{t('home.speaker')}</p>
-                <p className="text-white font-semibold text-sm mb-4">{t('home.speaker_thessaloniki')}</p>
-                <span className="inline-flex items-center gap-2 border border-white/15 bg-white/5 text-white/50 px-5 py-2.5 rounded-lg text-sm">
-                  <Check className="h-4 w-4" />
-                  {t('home.free_entry')}
-                </span>
-              </div>
-            </motion.div>
-
-            {/* Athens */}
-            <motion.div
-              initial={{ opacity: 0, x: 30 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-              className="relative border border-primary/30 bg-primary/5 backdrop-blur-sm rounded-2xl p-8 flex flex-col hover:border-primary/50 transition-colors order-1 md:order-2"
-            >
-              <div className="absolute inset-0 rounded-2xl bg-[radial-gradient(ellipse_70%_60%_at_50%_100%,rgba(0,194,204,0.07),transparent)] pointer-events-none" />
-              <span className="text-primary text-[11px] uppercase tracking-[0.3em] font-bold mb-5">
-                {t('home.athens')}
-              </span>
-              <div className="flex items-baseline gap-3 mb-2">
-                <span className="font-display text-5xl font-black text-white">18</span>
-                <span className="font-display text-2xl font-bold text-white/60">
-                  {t('home.april')}
-                </span>
-              </div>
-              <div className="flex items-center gap-1.5 text-white/50 text-sm mb-4">
-                <Clock className="h-3.5 w-3.5 shrink-0" />
-                18:00 &amp; 20:30
-              </div>
-              <a
-                href="https://maps.app.goo.gl/eo1Uq9KSuMnUULjK9"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-start gap-1.5 text-white/50 text-sm hover:text-primary transition-colors mb-5"
-              >
-                <MapPin className="h-3.5 w-3.5 shrink-0 mt-0.5" />
-                {t('home.athens_venue')}
-              </a>
-              <div className="mt-auto pt-5 border-t border-white/10">
-                <p className="text-white/40 text-[11px] uppercase tracking-widest mb-1">{t('home.speaker')}</p>
-                <p className="text-white font-semibold text-sm mb-4">{t('home.speaker_athens')}</p>
-                <a
-                  href="https://www.eventbrite.com/e/elpis-worship-night-tickets-1984665483888?aff=oddtdtcreator"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 bg-primary text-black font-bold px-5 py-2.5 rounded-lg text-sm hover:bg-primary/90 transition-colors"
-                >
-                  <Ticket className="h-4 w-4" />
-                  {t('home.free_ticket_cta')}
-                </a>
-              </div>
-            </motion.div>
-          </div>
-        </div>
-
-        {/* Scroll Indicator */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.5 }}
-          className="absolute bottom-8 left-1/2 -translate-x-1/2"
-        >
-          <motion.div
-            animate={{ y: [0, 10, 0] }}
-            transition={{ repeat: Infinity, duration: 2 }}
-            className="w-6 h-10 rounded-full border-2 border-white/50 flex items-start justify-center p-2"
-          >
-            <motion.div className="w-1.5 h-1.5 rounded-full bg-white/50" />
-          </motion.div>
-        </motion.div>
-      </section>
-
-      {/* Hero Section — hidden temporarily */}
-      <section className="relative h-[90vh] min-h-[600px] flex items-center justify-center overflow-hidden hidden">
+      {/* Hero Section */}
+      <section className="relative h-[90vh] min-h-[600px] flex items-center justify-center overflow-hidden">
         {/* Background Carousel */}
         <div className="absolute inset-0">
           {slides.map((slide, idx) => (
