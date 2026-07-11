@@ -68,7 +68,7 @@ function PhotosAdmin({ data, onChange }: { data: ResourcesData; onChange: (d: Re
       setImages((prev) => [...prev, ...urls]);
     } catch (err) {
       console.error('Photo upload failed', err);
-      alert('Upload failed. Please try again.');
+      alert(`Upload failed: ${err instanceof Error ? err.message : String(err)}`);
     } finally {
       setUploading(false);
     }
@@ -471,7 +471,7 @@ function AnnouncementsAdmin({ data, onChange }: { data: ResourcesData; onChange:
       setForm((f) => ({ ...f, image: url }));
     } catch (err) {
       console.error('Announcement upload failed', err);
-      alert('Upload failed. Please try again.');
+      alert(`Upload failed: ${err instanceof Error ? err.message : String(err)}`);
     } finally {
       setUploading(false);
     }
@@ -612,7 +612,7 @@ function TeamAdmin({ data, onChange }: { data: ResourcesData; onChange: (d: Reso
       setForm((f) => ({ ...f, image: url, imagePosX: 50, imagePosY: 50 }));
     } catch (err) {
       console.error('Team photo upload failed', err);
-      alert('Upload failed. Please try again.');
+      alert(`Upload failed: ${err instanceof Error ? err.message : String(err)}`);
     } finally {
       setUploading(false);
     }
@@ -859,7 +859,7 @@ function HeroAdmin({ data, onChange }: { data: ResourcesData; onChange: (d: Reso
       setPreviewIdx(newImages.length - 1);
     } catch (err) {
       console.error('Hero upload failed', err);
-      alert('Upload failed. Please try again.');
+      alert(`Upload failed: ${err instanceof Error ? err.message : String(err)}`);
     } finally {
       setUploading(false);
     }
