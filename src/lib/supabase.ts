@@ -37,10 +37,11 @@ export async function logAnalyticsEvent(
 }
 
 export async function getAnalyticsEvents(limit = 500): Promise<AnalyticsEvent[]> {
-  const { data } = await supabase
+  const { data, error } = await supabase
     .from('analytics_events')
     .select('*')
     .order('created_at', { ascending: false })
     .limit(limit);
+  if (error) throw new Error(error.message);
   return (data ?? []) as AnalyticsEvent[];
 }

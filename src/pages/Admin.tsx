@@ -1177,15 +1177,26 @@ const EVENT_LABELS: Record<string, string> = {
 function AnalyticsAdmin() {
   const [events, setEvents] = useState<AnalyticsEvent[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    getAnalyticsEvents(500).then(setEvents).catch(() => {}).finally(() => setLoading(false));
+    getAnalyticsEvents(500).then(setEvents).catch((e) => setError(String(e))).finally(() => setLoading(false));
   }, []);
 
   if (loading) {
     return (
       <div className="flex justify-center py-20">
         <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="text-center py-20 text-destructive">
+        <BarChart2 className="h-12 w-12 mx-auto mb-3 opacity-30" />
+        <p className="font-medium">Analytics error</p>
+        <p className="text-xs mt-1 font-mono break-all max-w-md mx-auto">{error}</p>
       </div>
     );
   }
