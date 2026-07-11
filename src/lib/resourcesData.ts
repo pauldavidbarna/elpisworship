@@ -69,8 +69,9 @@ export interface TeamMember {
 }
 
 export interface HeroImage {
-  src: string;  // base64 data URL
-  posY: number; // 0-100, vertical focus point, default 50
+  src: string;   // base64 data URL
+  posY: number;  // 0-100, vertical focus point, default 50
+  enabled: boolean; // whether this image appears in the carousel
 }
 
 export interface ResourcesData {
@@ -131,7 +132,7 @@ export function getResourcesData(): ResourcesData {
       if (!parsed.heroImages) parsed.heroImages = [];
       // migrate old string[] format to HeroImage[]
       parsed.heroImages = parsed.heroImages.map((img: unknown) =>
-        typeof img === 'string' ? { src: img, posY: 50 } : img
+        typeof img === 'string' ? { src: img, posY: 50, enabled: true } : { enabled: true, ...(img as object) }
       ) as HeroImage[];
       if (!parsed.songs) parsed.songs = [];
       if (!parsed.team) {

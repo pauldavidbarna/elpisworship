@@ -25,7 +25,8 @@ const Index = () => {
   usePageMeta('Home', 'Elpis Worship — worship band dedicated to glorifying God through music.');
   const { events, heroImages } = useResourcesData();
   const upcomingEvents = events.filter((e) => isUpcomingEvent(e)).sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-  const slides = heroImages.length > 0 ? heroImages : [{ src: heroImage, posY: 50 }];
+  const activeHero = heroImages.filter((img) => img.enabled !== false);
+  const slides = activeHero.length > 0 ? activeHero : [{ src: heroImage, posY: 50, enabled: true }];
 
   const [current, setCurrent] = useState(0);
   const [igPosts, setIgPosts] = useState<IGPost[]>([]);

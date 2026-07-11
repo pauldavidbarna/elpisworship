@@ -854,7 +854,7 @@ function HeroAdmin({ data, onChange }: { data: ResourcesData; onChange: (d: Reso
     setUploading(true);
     try {
       const uploaded = await Promise.all(
-        Array.from(files).map(async (f) => ({ src: await uploadPhoto(f, 1920, 0.9), posY: 50 }))
+        Array.from(files).map(async (f) => ({ src: await uploadPhoto(f, 1920, 0.9), posY: 50, enabled: true }))
       );
       const newImages = [...data.heroImages, ...uploaded];
       onChange({ ...data, heroImages: newImages });
@@ -865,6 +865,11 @@ function HeroAdmin({ data, onChange }: { data: ResourcesData; onChange: (d: Reso
     } finally {
       setUploading(false);
     }
+  };
+
+  const toggleEnabled = (idx: number) => {
+    const imgs = data.heroImages.map((img, i) => i === idx ? { ...img, enabled: !img.enabled } : img);
+    onChange({ ...data, heroImages: imgs });
   };
 
   const remove = (idx: number) => {
@@ -954,16 +959,25 @@ function HeroAdmin({ data, onChange }: { data: ResourcesData; onChange: (d: Reso
         {data.heroImages.map((img, idx) => (
           <Card
             key={idx}
-            className={`border shadow-sm cursor-pointer transition-all ${previewIdx === idx ? 'ring-2 ring-primary' : 'hover:border-primary/50'}`}
+            className={`border shadow-sm cursor-pointer transition-all ${!img.enabled ? 'opacity-40' : ''} ${previewIdx === idx ? 'ring-2 ring-primary' : 'hover:border-primary/50'}`}
             onClick={() => setPreviewIdx(previewIdx === idx ? null : idx)}
           >
             <CardContent className="p-3 flex items-center gap-3">
               <img src={img.src} className="w-24 h-14 object-cover rounded shrink-0" style={{ objectPosition: `50% ${img.posY}%` }} />
               <div className="flex-1 text-sm text-muted-foreground">
                 Image {idx + 1}
+                {!img.enabled && <span className="ml-2 text-xs text-muted-foreground">(hidden)</span>}
                 {previewIdx === idx && <span className="ml-2 text-primary text-xs font-medium">● editing</span>}
               </div>
               <div className="flex gap-1 shrink-0" onClick={(e) => e.stopPropagation()}>
+                <Button
+                  size="sm"
+                  variant={img.enabled ? 'outline' : 'secondary'}
+                  className="text-xs h-8 px-2"
+                  onClick={() => toggleEnabled(idx)}
+                >
+                  {img.enabled ? 'Hide' : 'Show'}
+                </Button>
                 <Button size="icon" variant="ghost" onClick={() => moveUp(idx)} disabled={idx === 0}>↑</Button>
                 <Button size="icon" variant="ghost" onClick={() => moveDown(idx)} disabled={idx === data.heroImages.length - 1}>↓</Button>
                 <Button size="icon" variant="ghost" className="text-destructive" onClick={() => remove(idx)}><Trash2 className="h-4 w-4" /></Button>
