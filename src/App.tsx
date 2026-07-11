@@ -1,0 +1,117 @@
+import { useEffect, useState, lazy, Suspense } from "react";
+import { Toaster } from "@/components/ui/toaster";
+import { Toaster as Sonner } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { AnimatePresence, motion } from "framer-motion";
+import "@/i18n";
+import { loadFromSupabase } from "@/lib/supabase";
+import { saveResourcesData } from "@/lib/resourcesData";
+import { ThemeProvider } from "@/contexts/ThemeContext";
+import SplashScreen from "@/components/SplashScreen";
+import CookieBanner from "@/components/CookieBanner";
+import JsonLd from "@/components/JsonLd";
+import { prefetchApi } from "@/lib/apiCache";
+
+function ScrollToTop() {
+  const { pathname } = useLocation();
+  useEffect(() => { window.scrollTo(0, 0); }, [pathname]);
+  return null;
+}
+
+const Index = lazy(() => import("./pages/Index"));
+const About = lazy(() => import("./pages/About"));
+const ElpisPlay = lazy(() => import("./pages/ElpisPlay"));
+const Donate = lazy(() => import("./pages/Donate"));
+const Shop = lazy(() => import("./pages/Shop"));
+const Contact = lazy(() => import("./pages/Contact"));
+const Resources = lazy(() => import("./pages/Resources"));
+const NotFound = lazy(() => import("./pages/NotFound"));
+const Admin = lazy(() => import("./pages/Admin"));
+const Lyrics = lazy(() => import("./pages/Lyrics"));
+const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
+
+const queryClient = new QueryClient();
+
+const suspenseFallback = (
+  <div className="min-h-screen flex items-center justify-center bg-background">
+    <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+  </div>
+);
+
+function AnimatedRoutes() {
+  const location = useLocation();
+  return (
+    <AnimatePresence>
+      <motion.div
+        key={location.pathname}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.15 }}
+      >
+        <Suspense fallback={suspenseFallback}>
+          <Routes location={location}>
+            <Route path="/" element={<Index />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/play" element={<ElpisPlay />} />
+            <Route path="/donate" element={<Donate />} />
+            <Route path="/shop" element={<Shop />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/lyrics" element={<Lyrics />} />
+            <Route path="/resources" element={<Resources />} />
+            <Route path="/admin" element={<Admin />} />
+            <Route path="/privacy" element={<PrivacyPolicy />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </Suspense>
+      </motion.div>
+    </AnimatePresence>
+  );
+}
+
+const App = () => {
+  const [splashDone, setSplashDone] = useState(() => {
+    if (sessionStorage.getItem('splash-shown')) return true;
+    sessionStorage.setItem('splash-shown', '1');
+    return false;
+  });
+
+  useEffect(() => {
+    loadFromSupabase().then((data) => {
+      if (data && Object.keys(data).length > 0) {
+        saveResourcesData(data);
+      }
+    });
+    // Prefetch API data before the user navigates to those pages
+    prefetchApi('/api/youtube-playlist');
+    prefetchApi('/api/instagram-feed');
+  }, []);
+
+  if (!splashDone) {
+    return (
+      <ThemeProvider>
+        <SplashScreen onDone={() => setSplashDone(true)} />
+      </ThemeProvider>
+    );
+  }
+
+  return (
+  <ThemeProvider>
+  <QueryClientProvider client={queryClient}>
+    <TooltipProvider>
+      <Toaster />
+      <Sonner />
+      <JsonLd />
+      <BrowserRouter>
+        <ScrollToTop />
+        <AnimatedRoutes />
+        <CookieBanner />
+      </BrowserRouter>
+    </TooltipProvider>
+  </QueryClientProvider>
+  </ThemeProvider>
+  );
+};
+
+export default App;

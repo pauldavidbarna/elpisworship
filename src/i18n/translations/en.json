@@ -1,0 +1,159 @@
+{
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "play": "Elpis Play",
+    "lyrics": "Lyrics",
+    "donate": "Donate",
+    "shop": "Shop",
+    "resources": "Resources",
+    "contact": "Contact"
+  },
+  "lyrics": {
+    "title": "Lyrics & Chords",
+    "subtitle": "View and download PDF sheets for our worship songs",
+    "search": "Search songs...",
+    "view": "View PDF",
+    "view_chords": "Lyrics + Chords",
+    "view_lyrics": "Lyrics only",
+    "play": "Play",
+    "stop": "Stop",
+    "download": "Download",
+    "download_lyrics": "Download Lyrics",
+    "download_chords": "Download Lyrics + Chords",
+    "no_songs": "No songs available yet.",
+    "no_pdf": "Not available"
+  },
+  "hero": {
+    "title": "Made to Worship",
+    "subtitle": "Bringing hope through Christian music in Greece",
+    "cta_primary": "Know Us",
+    "cta_secondary": "Support Us"
+  },
+  "home": {
+    "who_we_are_title": "Who We Are",
+    "who_we_are_text": "Elpis Worship is a Christian worship band born in Athens, dedicated to serving Greece through music that brings hope, encouragement, and inspiration.",
+    "read_more": "Read More",
+    "upcoming_events": "Upcoming Events",
+    "get_tickets": "Get Tickets",
+    "view_all_events": "View All Events",
+    "presents": "Presents",
+    "worship_night_date_label": "April 2026 · Greece",
+    "thessaloniki": "Thessaloniki",
+    "athens": "Athens",
+    "april": "April",
+    "thessaloniki_venue": "Ioannis Vellidis (Δ.Ε.Θ.)",
+    "athens_venue": "Laskaridon 112, Kallithea",
+    "speaker": "Speaker",
+    "speaker_thessaloniki": "SOTIRIS MPOUKIS",
+    "speaker_athens": "THEODOSIS KARVOUNAKIS",
+    "free_entry": "Free Entry",
+    "free_ticket_cta": "Get your free ticket",
+    "instagram_title": "Follow Us on Instagram",
+    "instagram_cta": "View Profile"
+  },
+  "about": {
+    "title": "About Us",
+    "who_we_are": "Who We Are",
+    "who_we_are_text": "We were born and raised in Athens. We are members of the Romanian church in Kallithea. We started music as children - first in children's choirs, then at conservatories. About ten years ago, an orchestra was formed in our church. During the lockdown, the need for a worship band was born, and we realized that God has called us to serve Greece through Christian music.",
+    "our_name": "Our Name - \"Elpis\"",
+    "our_name_text": "We wanted a Greek name, melodic and meaningful. One day, our eyes fell on a stained glass window in our church with the word \"elpis\" (hope). Through our music, we want to bring hope to people!",
+    "our_mission": "Our Mission",
+    "mission_1_title": "Evangelism",
+    "mission_1": "Evangelism - to spread the message of salvation",
+    "mission_2_title": "Encouragement",
+    "mission_2": "Encouragement - to bring hope to believers and churches",
+    "mission_3_title": "Inspiration",
+    "mission_3": "Inspiration - to inspire young people to create music bands for His glory!",
+    "what_we_believe": "What We Believe",
+    "motto": "Everything for His glory!",
+    "meet_the_team": "Meet the Team"
+  },
+  "donate": {
+    "title": "Support Our Ministry",
+    "subtitle": "Help us continue bringing hope through worship",
+    "message": "Our church trusted and invested in our vision. None of us does this full-time - we all work or study. Your support helps us continue spreading the gospel and bringing hope!",
+    "cta": "Support Our Ministry",
+    "why_support": "Why Support Us",
+    "support_1_title": "Equipment",
+    "support_1_desc": "Sound, instruments, and technical equipment",
+    "support_2_title": "Production",
+    "support_2_desc": "Recording, mixing, and video production",
+    "support_3_title": "Events",
+    "support_3_desc": "Organizing concerts and worship events"
+  },
+  "shop": {
+    "title": "Shop",
+    "collection_subtitle": "Made to Worship Collection",
+    "coming_soon": "More products coming soon!",
+    "products": "Products",
+    "size": "Size",
+    "color": "Color",
+    "add_to_cart": "Add to Cart",
+    "buy_now": "Buy Now",
+    "in_stock": "In Stock",
+    "few_left": "Few Left",
+    "out_of_stock": "Out of Stock"
+  },
+  "contact": {
+    "title": "Contact Us",
+    "name": "Name",
+    "name_placeholder": "Your name",
+    "email": "Email",
+    "subject": "Subject",
+    "subject_placeholder": "Message subject",
+    "message": "Message",
+    "message_placeholder": "Your message...",
+    "send": "Send Message",
+    "sending": "Sending...",
+    "success_title": "Success!",
+    "success_message": "Your message has been sent.",
+    "error_title": "Error",
+    "error_message": "Something went wrong. Please try again.",
+    "booking_info": "For booking and collaborations, send us an email or reach out through social media.",
+    "follow_us": "Follow Us"
+  },
+  "resources": {
+    "title": "Resources",
+    "photos": "Photo Gallery",
+    "photo": "photo",
+    "photos_count": "photos",
+    "videos": "Videos",
+    "events": "Events",
+    "announcements": "Announcements",
+    "upcoming": "Upcoming Events",
+    "past": "Past Events"
+  },
+  "footer": {
+    "copyright": "© 2026 Elpis Worship. All rights reserved.",
+    "tagline": "Everything for His glory!",
+    "quick_links": "Quick Links"
+  },
+  "cookie": {
+    "message": "We use cookies for analytics (Google Analytics, Microsoft Clarity) to improve your experience. See our",
+    "privacy": "Privacy Policy",
+    "accept": "Accept",
+    "decline": "Decline"
+  },
+  "not_found": {
+    "title": "Page not found",
+    "message": "The page does not exist.",
+    "back_home": "Back to Home"
+  },
+  "play": {
+    "title": "Elpis Play",
+    "subtitle": "Listen to our worship songs and experience hope through music",
+    "description": "All our videos — worship sessions, live recordings and more.",
+    "open_youtube": "Open on YouTube",
+    "subscribe_text": "Subscribe to our YouTube channel for new releases!",
+    "subscribe": "Subscribe on YouTube",
+    "no_videos": "No videos found.",
+    "error_title": "Could not load videos",
+    "error_message": "Something went wrong while loading our videos. Please try again or visit us directly on YouTube.",
+    "retry": "Try Again"
+  },
+  "privacy": {
+    "title": "Privacy Policy",
+    "last_updated": "Last updated: March 2026"
+  }
+}
