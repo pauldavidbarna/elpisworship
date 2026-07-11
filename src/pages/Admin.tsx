@@ -343,8 +343,10 @@ function EventsAdmin({ data, onChange }: { data: ResourcesData; onChange: (d: Re
 
   const remove = (id: number) => onChange({ ...data, events: data.events.filter((e) => e.id !== id) });
 
-  const upcoming = data.events.filter((e) => e.type === 'upcoming');
-  const past = data.events.filter((e) => e.type === 'past');
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const isPast = (e: ResourceEvent) => { const d = new Date(e.date); d.setHours(0, 0, 0, 0); return e.type === 'past' || d < today; };
+  const upcoming = data.events.filter((e) => !isPast(e)).sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+  const past = data.events.filter(isPast).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
   const EventRow = ({ e }: { e: ResourceEvent }) => (
     <Card className="border shadow-sm">
