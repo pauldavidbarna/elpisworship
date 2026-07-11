@@ -41,7 +41,7 @@ export async function uploadPhoto(file: File, maxWidth = 1400, quality = 0.82): 
   const { error } = await supabase.storage
     .from(BUCKET)
     .upload(key, blob, { upsert: false, contentType: 'image/jpeg' });
-  if (error) throw error;
+  if (error) throw new Error(error.message ?? JSON.stringify(error));
   const { data } = supabase.storage.from(BUCKET).getPublicUrl(key);
   return data.publicUrl;
 }
