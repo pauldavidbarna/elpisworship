@@ -50,7 +50,8 @@ const Resources = () => {
   usePageMeta('Resources', 'Browse Elpis Worship photos, videos, upcoming events and announcements.');
   const { t, i18n } = useTranslation();
   const [activeTab, setActiveTab] = useState('photos');
-  const { photos, videos, events: allEvents, announcements } = useResourcesData();
+  const { photos: rawPhotos, videos, events: allEvents, announcements } = useResourcesData();
+  const photos = [...rawPhotos].reverse();
   const events = {
     upcoming: allEvents.filter((e) => isUpcomingEvent(e)).sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()),
     past: allEvents.filter((e) => isPastEvent(e)).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()),
