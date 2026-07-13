@@ -122,7 +122,8 @@
     "events": "Events",
     "announcements": "Announcements",
     "upcoming": "Upcoming Events",
-    "past": "Past Events"
+    "past": "Past Events",
+    "read_more": "Learn more →"
   },
   "footer": {
     "copyright": "© 2026 Elpis Worship. All rights reserved.",
