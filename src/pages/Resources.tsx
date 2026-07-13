@@ -236,19 +236,29 @@ const Resources = () => {
 
             {/* Announcements Tab */}
             <TabsContent value="announcements">
-              <div className="space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 {announcements.map((announcement) => (
-                  <motion.div key={announcement.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-                    <Card className="border-0 shadow-md overflow-hidden">
+                  <motion.div key={announcement.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="flex">
+                    <Card className="border-0 shadow-md overflow-hidden flex flex-col w-full">
                       {announcement.image && (
-                        <img src={announcement.image} alt={announcement.title} className="w-full max-h-72 object-cover" />
+                        <img src={announcement.image} alt={announcement.title} className="w-full h-48 object-cover" />
                       )}
-                      <CardContent className="p-6">
-                        <div className="flex justify-between items-start mb-2">
-                          <h3 className="font-display font-semibold text-lg">{announcement.title}</h3>
-                          <Badge variant="outline">{formatDate(announcement.date)}</Badge>
+                      <CardContent className="p-5 flex flex-col flex-1">
+                        <div className="flex justify-between items-start mb-2 gap-2">
+                          <h3 className="font-display font-semibold text-base">{announcement.title}</h3>
+                          <Badge variant="outline" className="shrink-0 text-xs">{formatDate(announcement.date)}</Badge>
                         </div>
-                        <p className="text-muted-foreground">{announcement.content}</p>
+                        <p className="text-muted-foreground text-sm flex-1">{announcement.content}</p>
+                        {announcement.link && (
+                          <a
+                            href={announcement.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline"
+                          >
+                            Află mai mult →
+                          </a>
+                        )}
                       </CardContent>
                     </Card>
                   </motion.div>

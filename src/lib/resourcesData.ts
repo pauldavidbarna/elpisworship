@@ -46,7 +46,8 @@ export interface Announcement {
   title: string;
   date: string;
   content: string;
-  image?: string; // base64 data URL
+  image?: string;
+  link?: string;
 }
 
 export interface Song {

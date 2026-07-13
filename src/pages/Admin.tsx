@@ -456,12 +456,12 @@ function EventsAdmin({ data, onChange }: { data: ResourcesData; onChange: (d: Re
 function AnnouncementsAdmin({ data, onChange }: { data: ResourcesData; onChange: (d: ResourcesData) => void }) {
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<Announcement | null>(null);
-  const [form, setForm] = useState({ title: '', date: '', content: '', image: '' });
+  const [form, setForm] = useState({ title: '', date: '', content: '', image: '', link: '' });
   const [uploading, setUploading] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
 
-  const openAdd = () => { setEditing(null); setForm({ title: '', date: new Date().toISOString().split('T')[0], content: '', image: '' }); setOpen(true); };
-  const openEdit = (a: Announcement) => { setEditing(a); setForm({ title: a.title, date: a.date, content: a.content, image: a.image || '' }); setOpen(true); };
+  const openAdd = () => { setEditing(null); setForm({ title: '', date: new Date().toISOString().split('T')[0], content: '', image: '', link: '' }); setOpen(true); };
+  const openEdit = (a: Announcement) => { setEditing(a); setForm({ title: a.title, date: a.date, content: a.content, image: a.image || '', link: a.link || '' }); setOpen(true); };
 
   const handleFile = async (files: FileList | null) => {
     if (!files?.[0]) return;
@@ -546,6 +546,10 @@ function AnnouncementsAdmin({ data, onChange }: { data: ResourcesData; onChange:
             <div className="space-y-1">
               <Label>Content</Label>
               <Textarea rows={4} value={form.content} onChange={(e) => setForm({ ...form, content: e.target.value })} />
+            </div>
+            <div className="space-y-1">
+              <Label>Link <span className="text-muted-foreground font-normal">(optional)</span></Label>
+              <Input value={form.link} onChange={(e) => setForm({ ...form, link: e.target.value })} placeholder="https://..." />
             </div>
             <div className="space-y-1">
               <Label>Image (optional)</Label>
