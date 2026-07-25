@@ -31,8 +31,6 @@ const NotFound = lazy(() => import("./pages/NotFound"));
 const Admin = lazy(() => import("./pages/Admin"));
 const Lyrics = lazy(() => import("./pages/Lyrics"));
 const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
-const KenSongs = lazy(() => import("./pages/KenSongs"));
-
 const queryClient = new QueryClient();
 
 const suspenseFallback = (
@@ -62,9 +60,7 @@ function AnimatedRoutes() {
             <Route path="/lyrics" element={<Lyrics />} />
             <Route path="/resources" element={<Resources />} />
             <Route path="/admin" element={<Admin />} />
-            <Route path="/privacy" element={<PrivacyPolicy />} />
-            <Route path="/ken-songs" element={<KenSongs />} />
-            <Route path="*" element={<NotFound />} />
+            <Route path="/privacy" element={<PrivacyPolicy />} />            <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>
       </motion.div>
