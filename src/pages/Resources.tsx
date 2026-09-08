@@ -261,7 +261,7 @@ const Resources = () => {
                           <h3 className="font-display font-semibold text-base">{announcement.title}</h3>
                           <Badge variant="outline" className="shrink-0 text-xs">{formatDate(announcement.date)}</Badge>
                         </div>
-                        <p className="text-muted-foreground text-sm flex-1 line-clamp-3">{announcement.content}</p>
+                        <p className="text-muted-foreground text-sm flex-1 line-clamp-2">{announcement.content}</p>
                         <span className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-primary">
                           {t('resources.read_more')}
                         </span>
