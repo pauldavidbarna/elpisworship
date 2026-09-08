@@ -327,12 +327,32 @@ function VideosAdmin({ data, onChange }: { data: ResourcesData; onChange: (d: Re
 function EventsAdmin({ data, onChange }: { data: ResourcesData; onChange: (d: ResourcesData) => void }) {
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<ResourceEvent | null>(null);
-  const [form, setForm] = useState({ title: '', date: '', times: [''] as string[], location: '', locationUrl: '', ticketUrl: '', type: 'upcoming' as 'upcoming' | 'past' });
+  const [form, setForm] = useState({ title: '', date: '', times: [''] as string[], location: '', locationUrl: '', ticketUrl: '', type: 'upcoming' as 'upcoming' | 'past', image: '', description: '' });
+  const [uploading, setUploading] = useState(false);
+  const fileRef = useRef<HTMLInputElement>(null);
 
-  const openAdd = () => { setEditing(null); setForm({ title: '', date: '', times: [''], location: '', locationUrl: '', ticketUrl: '', type: 'upcoming' }); setOpen(true); };
-  const openEdit = (e: ResourceEvent) => { setEditing(e); setForm({ title: e.title, date: e.date, times: e.times && e.times.length > 0 ? e.times : [''], location: e.location, locationUrl: e.locationUrl ?? '', ticketUrl: e.ticketUrl ?? '', type: e.type }); setOpen(true); };
+  const openAdd = () => { setEditing(null); setForm({ title: '', date: '', times: [''], location: '', locationUrl: '', ticketUrl: '', type: 'upcoming', image: '', description: '' }); setOpen(true); };
+  const openEdit = (e: ResourceEvent) => { setEditing(e); setForm({ title: e.title, date: e.date, times: e.times && e.times.length > 0 ? e.times : [''], location: e.location, locationUrl: e.locationUrl ?? '', ticketUrl: e.ticketUrl ?? '', type: e.type, image: e.image ?? '', description: e.description ?? '' }); setOpen(true); };
+
+  const handleFile = async (files: FileList | null) => {
+    if (!files?.[0]) return;
+    setUploading(true);
+    try {
+      const url = await uploadPhoto(files[0]);
+      if (form.image) deletePhoto(form.image).catch(() => {});
+      setForm((f) => ({ ...f, image: url }));
+    } catch (err) {
+      console.error('Event image upload failed', err);
+      alert(`Upload failed: ${err instanceof Error ? err.message : String(err)}`);
+    } finally {
+      setUploading(false);
+    }
+  };
 
   const save = () => {
+    if (editing && editing.image && editing.image !== form.image) {
+      deletePhoto(editing.image).catch(() => {});
+    }
     const cleanedForm = { ...form, times: form.times.filter((t) => t.trim() !== '') };
     const updated = editing
       ? data.events.map((e) => e.id === editing.id ? { ...e, ...cleanedForm } : e)
@@ -341,7 +361,11 @@ function EventsAdmin({ data, onChange }: { data: ResourcesData; onChange: (d: Re
     setOpen(false);
   };
 
-  const remove = (id: number) => onChange({ ...data, events: data.events.filter((e) => e.id !== id) });
+  const remove = (id: number) => {
+    const e = data.events.find((x) => x.id === id);
+    if (e?.image) deletePhoto(e.image).catch(() => {});
+    onChange({ ...data, events: data.events.filter((x) => x.id !== id) });
+  };
 
   const today = new Date(); today.setHours(0, 0, 0, 0);
   const isPast = (e: ResourceEvent) => { const d = new Date(e.date); d.setHours(0, 0, 0, 0); return e.type === 'past' || d < today; };
@@ -351,9 +375,15 @@ function EventsAdmin({ data, onChange }: { data: ResourcesData; onChange: (d: Re
   const EventRow = ({ e }: { e: ResourceEvent }) => (
     <Card className="border shadow-sm">
       <CardContent className="p-4 flex justify-between items-center">
-        <div>
-          <p className="font-medium">{e.title}</p>
-          <p className="text-sm text-muted-foreground">{e.location} · {e.date}</p>
+        <div className="flex items-center gap-3">
+          {e.image
+            ? <img src={e.image} className="w-14 h-10 object-cover rounded shrink-0" />
+            : <div className="w-14 h-10 bg-muted rounded shrink-0" />
+          }
+          <div>
+            <p className="font-medium">{e.title}</p>
+            <p className="text-sm text-muted-foreground">{e.location} · {e.date}</p>
+          </div>
         </div>
         <div className="flex gap-2">
           <Button size="icon" variant="ghost" onClick={() => openEdit(e)}><Pencil className="h-4 w-4" /></Button>
@@ -431,6 +461,33 @@ function EventsAdmin({ data, onChange }: { data: ResourcesData; onChange: (d: Re
               <Input value={form.ticketUrl} onChange={(e) => setForm({ ...form, ticketUrl: e.target.value })} placeholder="https://www.eventbrite.com/e/..." />
             </div>
             <div className="space-y-1">
+              <Label>Description <span className="text-muted-foreground text-xs">(optional)</span></Label>
+              <Textarea rows={4} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} placeholder="More details about the event, shown when someone clicks it..." />
+            </div>
+            <div className="space-y-1">
+              <Label>Photo <span className="text-muted-foreground text-xs">(optional, landscape works best)</span></Label>
+              <div
+                className="border-2 border-dashed rounded-lg p-4 text-center cursor-pointer hover:border-primary transition-colors"
+                onClick={() => fileRef.current?.click()}
+              >
+                {form.image
+                  ? <img src={form.image} className="max-h-40 mx-auto rounded object-cover" />
+                  : (
+                    <>
+                      <Upload className="h-6 w-6 mx-auto mb-1 text-muted-foreground" />
+                      <p className="text-sm text-muted-foreground">{uploading ? 'Processing...' : 'Click to add a photo'}</p>
+                    </>
+                  )
+                }
+              </div>
+              {form.image && (
+                <button type="button" className="text-xs text-destructive underline mt-1" onClick={() => setForm((f) => ({ ...f, image: '' }))}>
+                  Remove photo
+                </button>
+              )}
+              <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={(e) => handleFile(e.target.files)} />
+            </div>
+            <div className="space-y-1">
               <Label>Type</Label>
               <Select value={form.type} onValueChange={(v) => setForm({ ...form, type: v as 'upcoming' | 'past' })}>
                 <SelectTrigger><SelectValue /></SelectTrigger>
@@ -443,7 +500,7 @@ function EventsAdmin({ data, onChange }: { data: ResourcesData; onChange: (d: Re
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
-            <Button onClick={save}>Save</Button>
+            <Button onClick={save} disabled={uploading}>Save</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

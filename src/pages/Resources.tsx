@@ -16,13 +16,67 @@ import { Layout } from '@/components/layout';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { isUpcomingEvent, isPastEvent, type Video as VideoType } from '@/lib/resourcesData';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { isUpcomingEvent, isPastEvent, type ResourceEvent, type Video as VideoType } from '@/lib/resourcesData';
 import { useResourcesData } from '@/hooks/useResourcesData';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { useFocusTrap } from '@/hooks/useFocusTrap';
 import LazyImage from '@/components/ui/lazy-image';
 import { getVideoURL } from '@/lib/videoDB';
 import { trackEvent } from '@/hooks/useAnalytics';
+
+function EventCard({ event, past, onSelect, formatDate }: { event: ResourceEvent; past?: boolean; onSelect: (event: ResourceEvent) => void; formatDate: (date: string) => string }) {
+  const { t } = useTranslation();
+  return (
+    <Card
+      className={`border-0 shadow-md overflow-hidden cursor-pointer hover:shadow-lg transition-shadow ${past ? 'opacity-75' : ''}`}
+      onClick={() => onSelect(event)}
+    >
+      <div className="flex flex-col sm:flex-row">
+        {event.image && (
+          <div className="sm:w-56 aspect-video shrink-0 overflow-hidden">
+            <LazyImage src={event.image} alt={event.title} loading="lazy" wrapperClassName="w-full h-full" className="w-full h-full object-cover" />
+          </div>
+        )}
+        <CardContent className="p-4 flex justify-between items-start gap-4 flex-1">
+          <div className="space-y-1 flex-1">
+            <h4 className="font-semibold">{event.title}</h4>
+            <div className="flex flex-wrap gap-x-4 gap-y-1">
+              {event.locationUrl ? (
+                <a
+                  href={event.locationUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={(e) => e.stopPropagation()}
+                  className="flex items-center gap-1 text-sm text-primary hover:underline"
+                >
+                  <MapPin className="h-3.5 w-3.5" />{event.location}
+                </a>
+              ) : (
+                <span className="flex items-center gap-1 text-sm text-muted-foreground"><MapPin className="h-3.5 w-3.5" />{event.location}</span>
+              )}
+              <EventTimes times={event.times} />
+            </div>
+          </div>
+          <div className="flex flex-col items-end gap-2 shrink-0">
+            <Badge variant="outline">{formatDate(event.date)}</Badge>
+            {event.ticketUrl && !past && (
+              <a
+                href={event.ticketUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={(e) => e.stopPropagation()}
+                className="flex items-center gap-1 text-xs font-medium bg-primary text-primary-foreground px-3 py-1.5 rounded-md hover:bg-primary/90 transition-colors"
+              >
+                <Ticket className="h-3.5 w-3.5" /> {t('home.get_tickets')}
+              </a>
+            )}
+          </div>
+        </CardContent>
+      </div>
+    </Card>
+  );
+}
 
 function VideoPlayer({ video }: { video: VideoType }) {
   const [url, setUrl] = useState<string | null>(null);
@@ -59,6 +113,13 @@ const Resources = () => {
 
   // Lightbox state
   const [lightbox, setLightbox] = useState<{ images: string[]; index: number } | null>(null);
+
+  // Event detail dialog state
+  const [selectedEvent, setSelectedEvent] = useState<ResourceEvent | null>(null);
+  const openEvent = (event: ResourceEvent) => {
+    setSelectedEvent(event);
+    trackEvent('event_view', { event_title: event.title });
+  };
 
   const openLightbox = (images: string[], index: number, galleryTitle?: string) => {
     setLightbox({ images, index });
@@ -176,31 +237,9 @@ const Resources = () => {
                   </h3>
                   <div className="grid gap-4">
                     {events.upcoming.map((event) => (
-                      <Card key={event.id} className="border-0 shadow-md">
-                        <CardContent className="p-4 flex justify-between items-start gap-4">
-                          <div className="space-y-1 flex-1">
-                            <h4 className="font-semibold">{event.title}</h4>
-                            <div className="flex flex-wrap gap-x-4 gap-y-1">
-                              {event.locationUrl ? (
-                                <a href={event.locationUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-sm text-primary hover:underline">
-                                  <MapPin className="h-3.5 w-3.5" />{event.location}
-                                </a>
-                              ) : (
-                                <span className="flex items-center gap-1 text-sm text-muted-foreground"><MapPin className="h-3.5 w-3.5" />{event.location}</span>
-                              )}
-                              <EventTimes times={event.times} />
-                            </div>
-                          </div>
-                          <div className="flex flex-col items-end gap-2 shrink-0">
-                            <Badge variant="outline">{formatDate(event.date)}</Badge>
-                            {event.ticketUrl && (
-                              <a href={event.ticketUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-xs font-medium bg-primary text-primary-foreground px-3 py-1.5 rounded-md hover:bg-primary/90 transition-colors">
-                                <Ticket className="h-3.5 w-3.5" /> Get Tickets
-                              </a>
-                            )}
-                          </div>
-                        </CardContent>
-                      </Card>
+                      <motion.div key={event.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+                        <EventCard event={event} onSelect={openEvent} formatDate={formatDate} />
+                      </motion.div>
                     ))}
                   </div>
                 </div>
@@ -210,24 +249,9 @@ const Resources = () => {
                   </h3>
                   <div className="grid gap-4">
                     {events.past.map((event) => (
-                      <Card key={event.id} className="border-0 shadow-md opacity-75">
-                        <CardContent className="p-4 flex justify-between items-start gap-4">
-                          <div className="space-y-1">
-                            <h4 className="font-semibold">{event.title}</h4>
-                            <div className="flex flex-wrap gap-x-4 gap-y-1">
-                              {event.locationUrl ? (
-                                <a href={event.locationUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-sm text-primary hover:underline">
-                                  <MapPin className="h-3.5 w-3.5" />{event.location}
-                                </a>
-                              ) : (
-                                <span className="flex items-center gap-1 text-sm text-muted-foreground"><MapPin className="h-3.5 w-3.5" />{event.location}</span>
-                              )}
-                              <EventTimes times={event.times} />
-                            </div>
-                          </div>
-                          <Badge variant="outline" className="shrink-0">{formatDate(event.date)}</Badge>
-                        </CardContent>
-                      </Card>
+                      <motion.div key={event.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+                        <EventCard event={event} past onSelect={openEvent} formatDate={formatDate} />
+                      </motion.div>
                     ))}
                   </div>
                 </div>
@@ -268,6 +292,55 @@ const Resources = () => {
           </Tabs>
         </div>
       </section>
+
+      {/* Event detail dialog */}
+      <Dialog open={!!selectedEvent} onOpenChange={(open) => !open && setSelectedEvent(null)}>
+        <DialogContent className="max-w-xl max-h-[90vh] overflow-y-auto">
+          {selectedEvent && (
+            <>
+              <DialogHeader className="text-left">
+                <div className="flex items-center gap-2 flex-wrap mb-1">
+                  <Badge variant="outline">{formatDate(selectedEvent.date)}</Badge>
+                  {isPastEvent(selectedEvent) && <Badge variant="secondary">{t('resources.past')}</Badge>}
+                </div>
+                <DialogTitle className="text-2xl font-display">{selectedEvent.title}</DialogTitle>
+              </DialogHeader>
+
+              {selectedEvent.image && (
+                <div className="aspect-video w-full overflow-hidden rounded-lg bg-muted">
+                  <img src={selectedEvent.image} alt={selectedEvent.title} className="w-full h-full object-cover" />
+                </div>
+              )}
+
+              <div className="flex flex-wrap gap-x-4 gap-y-2">
+                {selectedEvent.locationUrl ? (
+                  <a href={selectedEvent.locationUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-sm text-primary hover:underline">
+                    <MapPin className="h-3.5 w-3.5" />{selectedEvent.location}
+                  </a>
+                ) : (
+                  <span className="flex items-center gap-1 text-sm text-muted-foreground"><MapPin className="h-3.5 w-3.5" />{selectedEvent.location}</span>
+                )}
+                <EventTimes times={selectedEvent.times} />
+              </div>
+
+              {selectedEvent.description && (
+                <p className="text-muted-foreground whitespace-pre-line">{selectedEvent.description}</p>
+              )}
+
+              {selectedEvent.ticketUrl && isUpcomingEvent(selectedEvent) && (
+                <a
+                  href={selectedEvent.ticketUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 self-start text-sm font-medium bg-primary text-primary-foreground px-4 py-2 rounded-md hover:bg-primary/90 transition-colors"
+                >
+                  <Ticket className="h-4 w-4" /> {t('home.get_tickets')}
+                </a>
+              )}
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
 
       {/* Lightbox */}
       {lightbox && (
