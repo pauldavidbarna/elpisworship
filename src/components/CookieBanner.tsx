@@ -13,12 +13,24 @@ export function useCookieConsent() {
 const CookieBanner = () => {
   const { t } = useTranslation();
   const [visible, setVisible] = useState(false);
+  // Radix dialogs mark <body data-scroll-locked> while open (e.g. a deep-linked
+  // announcement on first visit) — stay hidden then so we don't cover its content
+  // or block its buttons, and reappear once the dialog closes.
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   useEffect(() => {
     const consent = localStorage.getItem(CONSENT_KEY);
     if (!consent) {
       setVisible(true);
     }
+  }, []);
+
+  useEffect(() => {
+    const check = () => setDialogOpen(document.body.hasAttribute('data-scroll-locked'));
+    check();
+    const observer = new MutationObserver(check);
+    observer.observe(document.body, { attributes: true, attributeFilter: ['data-scroll-locked'] });
+    return () => observer.disconnect();
   }, []);
 
   const accept = () => {
@@ -33,7 +45,7 @@ const CookieBanner = () => {
 
   return (
     <AnimatePresence>
-      {visible && (
+      {visible && !dialogOpen && (
         <motion.div
           initial={{ y: 100, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
