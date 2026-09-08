@@ -301,7 +301,7 @@ const Resources = () => {
 
       {/* Announcement detail dialog */}
       <Dialog open={!!selectedAnnouncement} onOpenChange={(open) => !open && closeAnnouncement()}>
-        <DialogContent className="w-[95vw] sm:max-w-3xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="w-[95vw] sm:max-w-3xl">
           {selectedAnnouncement && (
             <>
               <DialogHeader className="text-left">
