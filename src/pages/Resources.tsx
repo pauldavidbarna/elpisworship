@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { Image, Video, Calendar, Megaphone, X, ChevronLeft, ChevronRight, MapPin, Clock, Ticket } from 'lucide-react';
@@ -50,7 +51,8 @@ function VideoPlayer({ video }: { video: VideoType }) {
 const Resources = () => {
   usePageMeta('Resources', 'Browse Elpis Worship photos, videos, upcoming events and announcements.');
   const { t, i18n } = useTranslation();
-  const [activeTab, setActiveTab] = useState('photos');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [activeTab, setActiveTab] = useState(() => searchParams.get('announcement') ? 'announcements' : 'photos');
   const { photos: rawPhotos, videos, events: allEvents, announcements: rawAnnouncements } = useResourcesData();
   const photos = [...rawPhotos].reverse();
   const announcements = [...rawAnnouncements].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
@@ -62,12 +64,33 @@ const Resources = () => {
   // Lightbox state
   const [lightbox, setLightbox] = useState<{ images: string[]; index: number } | null>(null);
 
-  // Announcement detail dialog state
+  // Announcement detail dialog state — synced to ?announcement=<id> so it can be
+  // shared directly (e.g. as an ad destination URL) and opens straight to the card.
   const [selectedAnnouncement, setSelectedAnnouncement] = useState<Announcement | null>(null);
   const openAnnouncement = (announcement: Announcement) => {
     setSelectedAnnouncement(announcement);
     trackEvent('announcement_view', { announcement_title: announcement.title });
+    const next = new URLSearchParams(searchParams);
+    next.set('announcement', String(announcement.id));
+    setSearchParams(next, { replace: true });
   };
+  const closeAnnouncement = () => {
+    setSelectedAnnouncement(null);
+    const next = new URLSearchParams(searchParams);
+    next.delete('announcement');
+    setSearchParams(next, { replace: true });
+  };
+
+  // Auto-open the announcement named in the URL (deep link from an ad, etc.)
+  useEffect(() => {
+    const id = searchParams.get('announcement');
+    if (!id) return;
+    const found = announcements.find((a) => String(a.id) === id);
+    if (found) {
+      setActiveTab('announcements');
+      setSelectedAnnouncement(found);
+    }
+  }, [searchParams, announcements]);
 
   const openLightbox = (images: string[], index: number, galleryTitle?: string) => {
     setLightbox({ images, index });
@@ -277,7 +300,7 @@ const Resources = () => {
       </section>
 
       {/* Announcement detail dialog */}
-      <Dialog open={!!selectedAnnouncement} onOpenChange={(open) => !open && setSelectedAnnouncement(null)}>
+      <Dialog open={!!selectedAnnouncement} onOpenChange={(open) => !open && closeAnnouncement()}>
         <DialogContent className="w-[95vw] sm:max-w-3xl max-h-[90vh] overflow-y-auto">
           {selectedAnnouncement && (
             <>

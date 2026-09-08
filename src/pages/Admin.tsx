@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Image, Video, Calendar, Megaphone, LogOut, Plus, Pencil, Trash2, Lock, X, Upload, Film, Users, LayoutTemplate, Music, BarChart2 } from 'lucide-react';
+import { Image, Video, Calendar, Megaphone, LogOut, Plus, Pencil, Trash2, Lock, X, Upload, Film, Users, LayoutTemplate, Music, BarChart2, Link2, Check } from 'lucide-react';
 import { saveVideo, deleteVideo } from '@/lib/videoDB';
 import { uploadPdf, deletePdf } from '@/lib/pdfStorage';
 import { uploadPhoto, deletePhoto } from '@/lib/photoStorage';
@@ -458,10 +458,19 @@ function AnnouncementsAdmin({ data, onChange }: { data: ResourcesData; onChange:
   const [editing, setEditing] = useState<Announcement | null>(null);
   const [form, setForm] = useState({ title: '', date: '', content: '', image: '', link: '' });
   const [uploading, setUploading] = useState(false);
+  const [copiedId, setCopiedId] = useState<number | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
 
   const openAdd = () => { setEditing(null); setForm({ title: '', date: new Date().toISOString().split('T')[0], content: '', image: '', link: '' }); setOpen(true); };
   const openEdit = (a: Announcement) => { setEditing(a); setForm({ title: a.title, date: a.date, content: a.content, image: a.image || '', link: a.link || '' }); setOpen(true); };
+
+  const copyLink = (a: Announcement) => {
+    const url = `${window.location.origin}/resources?announcement=${a.id}`;
+    navigator.clipboard.writeText(url).then(() => {
+      setCopiedId(a.id);
+      setTimeout(() => setCopiedId((id) => (id === a.id ? null : id)), 1500);
+    });
+  };
 
   const handleFile = async (files: FileList | null) => {
     if (!files?.[0]) return;
@@ -522,6 +531,9 @@ function AnnouncementsAdmin({ data, onChange }: { data: ResourcesData; onChange:
                   </div>
                 </div>
                 <div className="flex gap-2 shrink-0">
+                  <Button size="icon" variant="ghost" title="Copy ad link" onClick={() => copyLink(a)}>
+                    {copiedId === a.id ? <Check className="h-4 w-4 text-green-600" /> : <Link2 className="h-4 w-4" />}
+                  </Button>
                   <Button size="icon" variant="ghost" onClick={() => openEdit(a)}><Pencil className="h-4 w-4" /></Button>
                   <Button size="icon" variant="ghost" className="text-destructive" onClick={() => remove(a.id)}><Trash2 className="h-4 w-4" /></Button>
                 </div>
