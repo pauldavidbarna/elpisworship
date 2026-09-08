@@ -16,7 +16,8 @@ import { Layout } from '@/components/layout';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { isUpcomingEvent, isPastEvent, type Video as VideoType } from '@/lib/resourcesData';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { isUpcomingEvent, isPastEvent, type Announcement, type Video as VideoType } from '@/lib/resourcesData';
 import { useResourcesData } from '@/hooks/useResourcesData';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { useFocusTrap } from '@/hooks/useFocusTrap';
@@ -59,6 +60,13 @@ const Resources = () => {
 
   // Lightbox state
   const [lightbox, setLightbox] = useState<{ images: string[]; index: number } | null>(null);
+
+  // Announcement detail dialog state
+  const [selectedAnnouncement, setSelectedAnnouncement] = useState<Announcement | null>(null);
+  const openAnnouncement = (announcement: Announcement) => {
+    setSelectedAnnouncement(announcement);
+    trackEvent('announcement_view', { announcement_title: announcement.title });
+  };
 
   const openLightbox = (images: string[], index: number, galleryTitle?: string) => {
     setLightbox({ images, index });
@@ -239,26 +247,24 @@ const Resources = () => {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 {announcements.map((announcement) => (
                   <motion.div key={announcement.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="flex">
-                    <Card className="border-0 shadow-md overflow-hidden flex flex-col w-full">
+                    <Card
+                      className="border-0 shadow-md overflow-hidden flex flex-col w-full cursor-pointer hover:shadow-lg transition-shadow"
+                      onClick={() => openAnnouncement(announcement)}
+                    >
                       {announcement.image && (
-                        <img src={announcement.image} alt={announcement.title} className="w-full h-48 object-cover" />
+                        <div className="aspect-video overflow-hidden">
+                          <LazyImage src={announcement.image} alt={announcement.title} loading="lazy" wrapperClassName="w-full h-full" className="w-full h-full object-cover" />
+                        </div>
                       )}
                       <CardContent className="p-5 flex flex-col flex-1">
                         <div className="flex justify-between items-start mb-2 gap-2">
                           <h3 className="font-display font-semibold text-base">{announcement.title}</h3>
                           <Badge variant="outline" className="shrink-0 text-xs">{formatDate(announcement.date)}</Badge>
                         </div>
-                        <p className="text-muted-foreground text-sm flex-1">{announcement.content}</p>
-                        {announcement.link && (
-                          <a
-                            href={announcement.link}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline"
-                          >
-                            {t('resources.read_more')}
-                          </a>
-                        )}
+                        <p className="text-muted-foreground text-sm flex-1 line-clamp-3">{announcement.content}</p>
+                        <span className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-primary">
+                          {t('resources.read_more')}
+                        </span>
                       </CardContent>
                     </Card>
                   </motion.div>
@@ -268,6 +274,39 @@ const Resources = () => {
           </Tabs>
         </div>
       </section>
+
+      {/* Announcement detail dialog */}
+      <Dialog open={!!selectedAnnouncement} onOpenChange={(open) => !open && setSelectedAnnouncement(null)}>
+        <DialogContent className="max-w-xl max-h-[90vh] overflow-y-auto">
+          {selectedAnnouncement && (
+            <>
+              <DialogHeader className="text-left">
+                <Badge variant="outline" className="w-fit mb-1">{formatDate(selectedAnnouncement.date)}</Badge>
+                <DialogTitle className="text-2xl font-display">{selectedAnnouncement.title}</DialogTitle>
+              </DialogHeader>
+
+              {selectedAnnouncement.image && (
+                <div className="aspect-video w-full overflow-hidden rounded-lg bg-muted">
+                  <img src={selectedAnnouncement.image} alt={selectedAnnouncement.title} className="w-full h-full object-cover" />
+                </div>
+              )}
+
+              <p className="text-muted-foreground whitespace-pre-line">{selectedAnnouncement.content}</p>
+
+              {selectedAnnouncement.link && (
+                <a
+                  href={selectedAnnouncement.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 self-start text-sm font-medium bg-primary text-primary-foreground px-4 py-2 rounded-md hover:bg-primary/90 transition-colors"
+                >
+                  {t('resources.read_more')}
+                </a>
+              )}
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
 
       {/* Lightbox */}
       {lightbox && (
