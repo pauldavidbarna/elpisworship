@@ -39,8 +39,6 @@ export interface ResourceEvent {
   locationUrl?: string;
   ticketUrl?: string;
   type: 'upcoming' | 'past';
-  image?: string;
-  description?: string;
 }
 
 export interface Announcement {
