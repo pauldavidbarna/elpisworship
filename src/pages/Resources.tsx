@@ -277,7 +277,7 @@ const Resources = () => {
 
       {/* Announcement detail dialog */}
       <Dialog open={!!selectedAnnouncement} onOpenChange={(open) => !open && setSelectedAnnouncement(null)}>
-        <DialogContent className="max-w-xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="w-[95vw] sm:max-w-3xl max-h-[90vh] overflow-y-auto">
           {selectedAnnouncement && (
             <>
               <DialogHeader className="text-left">
@@ -285,24 +285,26 @@ const Resources = () => {
                 <DialogTitle className="text-2xl font-display">{selectedAnnouncement.title}</DialogTitle>
               </DialogHeader>
 
-              {selectedAnnouncement.image && (
-                <div className="aspect-video w-full overflow-hidden rounded-lg bg-muted">
-                  <img src={selectedAnnouncement.image} alt={selectedAnnouncement.title} className="w-full h-full object-cover" />
-                </div>
-              )}
+              <div className="space-y-4">
+                {selectedAnnouncement.image && (
+                  <div className="aspect-video w-full overflow-hidden rounded-lg bg-muted">
+                    <img src={selectedAnnouncement.image} alt={selectedAnnouncement.title} className="w-full h-full object-cover" />
+                  </div>
+                )}
 
-              <p className="text-muted-foreground whitespace-pre-line">{selectedAnnouncement.content}</p>
+                <p className="text-muted-foreground whitespace-pre-line">{selectedAnnouncement.content}</p>
 
-              {selectedAnnouncement.link && (
-                <a
-                  href={selectedAnnouncement.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 self-start text-sm font-medium bg-primary text-primary-foreground px-4 py-2 rounded-md hover:bg-primary/90 transition-colors"
-                >
-                  {t('resources.read_more')}
-                </a>
-              )}
+                {selectedAnnouncement.link && (
+                  <a
+                    href={selectedAnnouncement.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 self-start text-sm font-medium bg-primary text-primary-foreground px-4 py-2 rounded-md hover:bg-primary/90 transition-colors"
+                  >
+                    {t('resources.read_more')}
+                  </a>
+                )}
+              </div>
             </>
           )}
         </DialogContent>
