@@ -14,7 +14,7 @@ const PrivacyPolicy = () => {
       <section className="py-20 md:py-28 hero-gradient text-white text-center">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="container mx-auto px-4">
           <Shield className="h-14 w-14 mx-auto mb-4 text-primary" />
-          <h1 className="font-display text-4xl md:text-5xl font-bold">
+          <h1 className="font-display text-[42px] md:text-[62px] font-bold">
             {t('privacy.title')}
           </h1>
           <p className="text-white/60 mt-3 text-sm">

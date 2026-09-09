@@ -21,7 +21,7 @@ const Donate = () => {
             animate={{ opacity: 1, y: 0 }}
           >
             <Heart className="h-16 w-16 mx-auto mb-6 text-primary" />
-            <h1 className="font-display text-4xl md:text-6xl font-bold mb-6">
+            <h1 className="font-display text-[42px] md:text-[62px] font-bold mb-6">
               {t('donate.title')}
             </h1>
             <p className="text-xl text-white/80 max-w-2xl mx-auto">
@@ -76,7 +76,7 @@ const Donate = () => {
             viewport={{ once: true }}
             className="max-w-4xl mx-auto"
           >
-            <h2 className="font-display text-3xl md:text-4xl font-bold mb-8 text-center">
+            <h2 className="font-display text-[32px] md:text-[44px] font-semibold mb-8 text-center">
               {t('donate.why_support')}
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

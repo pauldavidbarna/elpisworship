@@ -45,7 +45,7 @@ const Header = () => {
                 key={item.path}
                 to={item.path}
                 className={cn(
-                  'px-4 py-2 text-sm font-medium transition-colors rounded-md',
+                  'px-4 py-2 text-[15px] font-medium transition-colors rounded-md',
                   isActive(item.path)
                     ? 'text-primary bg-primary/10'
                     : 'text-muted-foreground hover:text-foreground hover:bg-muted'

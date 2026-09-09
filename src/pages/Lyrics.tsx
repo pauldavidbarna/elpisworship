@@ -225,7 +225,7 @@ const Lyrics = () => {
           className="container mx-auto px-4"
         >
           <Music className="h-14 w-14 mx-auto mb-4 text-primary" />
-          <h1 className="font-display text-4xl md:text-6xl font-bold mb-4">
+          <h1 className="font-display text-[42px] md:text-[62px] font-bold mb-4">
             {t('lyrics.title')}
           </h1>
           <p className="text-white/70 text-lg max-w-xl mx-auto">

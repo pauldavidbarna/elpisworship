@@ -78,9 +78,9 @@ const Index = () => {
             transition={{ duration: 0.8 }}
             className="max-w-4xl mx-auto"
           >
-            <h2 className="font-display text-5xl md:text-7xl lg:text-8xl font-black text-white mb-6 tracking-tight">
+            <h1 className="font-display text-[42px] md:text-[62px] font-bold text-white mb-6 tracking-tight">
               {t('hero.title')}
-            </h2>
+            </h1>
             <p className="text-lg md:text-xl text-white/80 mb-8 max-w-2xl mx-auto">
               {t('hero.subtitle')}
             </p>
@@ -109,7 +109,7 @@ const Index = () => {
             transition={{ duration: 0.6 }}
             className="max-w-4xl mx-auto text-center"
           >
-            <h2 className="font-display text-3xl md:text-5xl font-bold mb-6">
+            <h2 className="font-display text-[32px] md:text-[44px] font-semibold mb-6">
               {t('home.who_we_are_title')}
             </h2>
             <p className="text-lg md:text-xl text-muted-foreground mb-8 leading-relaxed">
@@ -134,7 +134,7 @@ const Index = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <h2 className="font-display text-3xl md:text-4xl font-bold text-center mb-12">
+            <h2 className="font-display text-[32px] md:text-[44px] font-semibold text-center mb-12">
               {t('home.upcoming_events')}
             </h2>
 
@@ -202,7 +202,7 @@ const Index = () => {
             >
               <div className="flex items-center justify-center gap-2 mb-2">
                 <Instagram className="h-6 w-6 text-primary" />
-                <h2 className="font-display text-3xl md:text-4xl font-bold">{t('home.instagram_title')}</h2>
+                <h2 className="font-display text-[32px] md:text-[44px] font-semibold">{t('home.instagram_title')}</h2>
               </div>
             </motion.div>
             <div className="grid grid-cols-3 gap-1 sm:gap-2 max-w-3xl mx-auto">
@@ -252,7 +252,7 @@ const Index = () => {
             transition={{ duration: 0.6 }}
             className="max-w-3xl mx-auto"
           >
-            <h2 className="font-display text-3xl md:text-5xl font-bold mb-6">
+            <h2 className="font-display text-[32px] md:text-[44px] font-semibold mb-6">
               {t('about.motto')}
             </h2>
             <p className="text-lg text-white/80 mb-8">

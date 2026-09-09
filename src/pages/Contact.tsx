@@ -71,7 +71,7 @@ const Contact = () => {
             animate={{ opacity: 1, y: 0 }}
           >
             <Mail className="h-16 w-16 mx-auto mb-6 text-primary" />
-            <h1 className="font-display text-4xl md:text-6xl font-bold mb-6">
+            <h1 className="font-display text-[42px] md:text-[62px] font-bold mb-6">
               {t('contact.title')}
             </h1>
           </motion.div>
@@ -158,7 +158,7 @@ const Contact = () => {
               viewport={{ once: true }}
               className="flex flex-col justify-center"
             >
-              <h2 className="font-display text-2xl md:text-3xl font-bold mb-8">
+              <h2 className="font-display text-[32px] md:text-[44px] font-semibold mb-8">
                 {t('contact.follow_us')}
               </h2>
               <div className="space-y-4">

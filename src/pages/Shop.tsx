@@ -60,7 +60,7 @@ const Shop = () => {
             animate={{ opacity: 1, y: 0 }}
           >
             <ShoppingBag className="h-16 w-16 mx-auto mb-6 text-primary" />
-            <h1 className="font-display text-4xl md:text-6xl font-bold mb-6">
+            <h1 className="font-display text-[42px] md:text-[62px] font-bold mb-6">
               {t('shop.title')}
             </h1>
             <p className="text-xl text-white/80">
@@ -96,7 +96,7 @@ const Shop = () => {
                     {/* Product Details */}
                     <CardContent className="p-8 flex flex-col justify-center">
                       <div className="flex justify-between items-start mb-4">
-                        <h3 className="font-display font-bold text-2xl md:text-3xl">
+                        <h3 className="font-display font-semibold text-[26px] md:text-[30px]">
                           {product.name}
                         </h3>
                         {getStockBadge(product.stock)}

@@ -49,7 +49,7 @@ const About = () => {
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="font-display text-4xl md:text-6xl font-bold mb-6"
+            className="font-display text-[42px] md:text-[62px] font-bold mb-6"
           >
             {t('about.title')}
           </motion.h1>
@@ -73,7 +73,7 @@ const About = () => {
             viewport={{ once: true }}
             className="max-w-4xl mx-auto"
           >
-            <h2 className="font-display text-3xl md:text-4xl font-bold mb-8 text-center">
+            <h2 className="font-display text-[32px] md:text-[44px] font-semibold mb-8 text-center">
               {t('about.who_we_are')}
             </h2>
             <p className="text-lg text-muted-foreground leading-relaxed text-center">
@@ -92,7 +92,7 @@ const About = () => {
             viewport={{ once: true }}
             className="max-w-4xl mx-auto text-center"
           >
-            <h2 className="font-display text-3xl md:text-4xl font-bold mb-8">
+            <h2 className="font-display text-[32px] md:text-[44px] font-semibold mb-8">
               {t('about.our_name')}
             </h2>
             <div className="inline-block mb-8">
@@ -115,7 +115,7 @@ const About = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <h2 className="font-display text-3xl md:text-4xl font-bold mb-12 text-center">
+            <h2 className="font-display text-[32px] md:text-[44px] font-semibold mb-12 text-center">
               {t('about.our_mission')}
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
@@ -155,7 +155,7 @@ const About = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <h2 className="font-display text-3xl md:text-4xl font-bold mb-12 text-center">
+            <h2 className="font-display text-[32px] md:text-[44px] font-semibold mb-12 text-center">
               {t('about.meet_the_team')}
             </h2>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 max-w-5xl mx-auto">

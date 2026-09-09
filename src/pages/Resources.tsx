@@ -116,7 +116,7 @@ const Resources = () => {
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="font-display text-4xl md:text-6xl font-bold mb-6"
+            className="font-display text-[42px] md:text-[62px] font-bold mb-6"
           >
             {t('resources.title')}
           </motion.h1>
