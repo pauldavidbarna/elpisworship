@@ -2,13 +2,21 @@ import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import logo from '@/assets/logo.svg';
 
-const SplashScreen = ({ onDone }: { onDone: () => void }) => {
+// ready=false keeps the splash up past the minimum duration so the app's real
+// data (from Supabase) is in place before the page underneath is revealed —
+// otherwise a stale localStorage snapshot flashes first on slow connections.
+const SplashScreen = ({ onDone, ready }: { onDone: () => void; ready: boolean }) => {
   const [visible, setVisible] = useState(true);
+  const [minTimeElapsed, setMinTimeElapsed] = useState(false);
 
   useEffect(() => {
-    const timer = setTimeout(() => setVisible(false), 1400);
+    const timer = setTimeout(() => setMinTimeElapsed(true), 1400);
     return () => clearTimeout(timer);
   }, []);
+
+  useEffect(() => {
+    if (minTimeElapsed && ready) setVisible(false);
+  }, [minTimeElapsed, ready]);
 
   return (
     <AnimatePresence onExitComplete={onDone}>

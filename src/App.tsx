@@ -74,13 +74,22 @@ const App = () => {
     sessionStorage.setItem('splash-shown', '1');
     return false;
   });
+  // Was the splash already skipped this session? Then Supabase data from that
+  // earlier load is already in place, so there's nothing to wait for now.
+  const [dataReady, setDataReady] = useState(splashDone);
 
   useEffect(() => {
-    loadFromSupabase().then((data) => {
-      if (data && Object.keys(data).length > 0) {
-        saveResourcesData(data);
-      }
-    });
+    // Don't let a hung/slow Supabase request block the app forever.
+    const timeout = new Promise<null>((resolve) => setTimeout(() => resolve(null), 4000));
+    Promise.race([loadFromSupabase(), timeout])
+      .then((data) => {
+        if (data && Object.keys(data).length > 0) {
+          saveResourcesData(data);
+        }
+      })
+      .catch((err) => console.error('loadFromSupabase failed', err))
+      .finally(() => setDataReady(true));
+
     // Prefetch API data before the user navigates to those pages
     prefetchApi('/api/youtube-playlist');
     prefetchApi('/api/instagram-feed');
@@ -89,7 +98,7 @@ const App = () => {
   if (!splashDone) {
     return (
       <ThemeProvider>
-        <SplashScreen onDone={() => setSplashDone(true)} />
+        <SplashScreen onDone={() => setSplashDone(true)} ready={dataReady} />
       </ThemeProvider>
     );
   }
