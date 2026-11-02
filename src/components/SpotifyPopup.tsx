@@ -2,10 +2,12 @@ import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Music, Minus, X } from 'lucide-react';
+import { Music, Minus, X, ExternalLink } from 'lucide-react';
 
 // Spotify embed: https://open.spotify.com/embed/{album,playlist,artist}/<ID>
 const SPOTIFY_EMBED_URL = 'https://open.spotify.com/embed/album/4nsIsjUtBM0Jjcnfcv62NQ?utm_source=generator&theme=0';
+// The embed only plays 30s previews for visitors not logged in to Spotify, so offer the full album.
+const SPOTIFY_OPEN_URL = 'https://open.spotify.com/album/4nsIsjUtBM0Jjcnfcv62NQ';
 const DISMISSED_KEY = 'elpis_spotify_dismissed';
 const CONSENT_KEY = 'elpis_cookie_consent';
 const SHOW_DELAY_MS = 2500;
@@ -95,6 +97,15 @@ const SpotifyPopup = () => {
               allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
               className="block border-0"
             />
+            <a
+              href={SPOTIFY_OPEN_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-center gap-2 bg-[#1DB954] px-3 py-2.5 text-sm font-semibold text-black hover:bg-[#1ed760] transition-colors"
+            >
+              {t('spotify.open_in_app')}
+              <ExternalLink className="h-4 w-4" />
+            </a>
           </div>
           {minimized && (
             <button

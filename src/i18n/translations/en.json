@@ -161,6 +161,7 @@
     "title": "Listen to Elpis Worship",
     "close": "Close player",
     "minimize": "Minimize player",
-    "open": "Open Spotify player"
+    "open": "Open Spotify player",
+    "open_in_app": "Open in Spotify"
   }
 }
