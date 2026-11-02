@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
-import { Mail, Send, Instagram, Youtube, Music } from 'lucide-react';
+import { Mail, Send, Instagram, Youtube, Music, Facebook } from 'lucide-react';
+import TikTokIcon from '@/components/TikTokIcon';
 import { Layout } from '@/components/layout';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -59,6 +60,8 @@ const Contact = () => {
     { href: 'https://instagram.com/elpisworship', icon: Instagram, label: 'Instagram', color: 'hover:text-pink-500' },
     { href: 'https://youtube.com/@elpisworship', icon: Youtube, label: 'YouTube', color: 'hover:text-red-500' },
     { href: 'https://open.spotify.com/artist/6Vpsb6n5cBmH3midkqMeE0?si=8WeWEnprTZWeZfXx1cRt1g', icon: Music, label: 'Spotify', color: 'hover:text-green-500' },
+    { href: 'https://www.facebook.com/elpisworship2022', icon: Facebook, label: 'Facebook', color: 'hover:text-blue-600' },
+    { href: 'https://www.tiktok.com/@elpis_worship', icon: TikTokIcon, label: 'TikTok', color: 'hover:text-foreground' },
   ];
 
   return (

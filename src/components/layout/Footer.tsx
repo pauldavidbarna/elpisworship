@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Instagram, Youtube, Music } from 'lucide-react';
+import { Instagram, Youtube, Music, Facebook } from 'lucide-react';
+import TikTokIcon from '@/components/TikTokIcon';
 import logo from '@/assets/logo.svg';
 
 const Footer = () => {
@@ -19,6 +20,8 @@ const Footer = () => {
     { href: 'https://instagram.com/elpisworship', icon: Instagram, label: 'Instagram' },
     { href: 'https://youtube.com/@elpisworship', icon: Youtube, label: 'YouTube' },
     { href: 'https://open.spotify.com/artist/6Vpsb6n5cBmH3midkqMeE0?si=8WeWEnprTZWeZfXx1cRt1g', icon: Music, label: 'Spotify' },
+    { href: 'https://www.facebook.com/elpisworship2022', icon: Facebook, label: 'Facebook' },
+    { href: 'https://www.tiktok.com/@elpis_worship', icon: TikTokIcon, label: 'TikTok' },
   ];
 
   return (
