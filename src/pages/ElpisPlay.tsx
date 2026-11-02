@@ -72,7 +72,7 @@ const ElpisPlay = () => {
                 <p className="text-lg font-semibold mb-1">{t('play.error_title')}</p>
                 <p className="text-muted-foreground text-sm max-w-xs mx-auto">{t('play.error_message')}</p>
               </div>
-              <div className="flex gap-3">
+              <div className="flex flex-wrap justify-center gap-3">
                 <Button variant="outline" size="sm" onClick={() => window.location.reload()}>
                   <RefreshCw className="h-4 w-4 mr-2" />{t('play.retry')}
                 </Button>

@@ -2,13 +2,8 @@ import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Music, Minus, X, ExternalLink } from 'lucide-react';
 
-// Spotify embed: https://open.spotify.com/embed/{album,playlist,artist}/<ID>
-const SPOTIFY_EMBED_URL = 'https://open.spotify.com/embed/album/4nsIsjUtBM0Jjcnfcv62NQ?utm_source=generator&theme=0';
-// The embed only plays 30s previews for visitors not logged in to Spotify, so offer the full album.
-const SPOTIFY_OPEN_URL = 'https://open.spotify.com/album/4nsIsjUtBM0Jjcnfcv62NQ';
-const DISMISSED_KEY = 'elpis_spotify_dismissed';
+const SPOTIFY_ARTIST_URL = 'https://open.spotify.com/artist/6Vpsb6n5cBmH3midkqMeE0';
 const CONSENT_KEY = 'elpis_cookie_consent';
 const SHOW_DELAY_MS = 2500;
 
@@ -17,9 +12,7 @@ const SpotifyPopup = () => {
   const { pathname } = useLocation();
   const [hasConsentChoice, setHasConsentChoice] = useState(() => !!localStorage.getItem(CONSENT_KEY));
   const [visible, setVisible] = useState(false);
-  const [minimized, setMinimized] = useState(false);
-  // Same as CookieBanner: step aside while a Radix dialog is open (hidden, not
-  // unmounted, so the music keeps playing).
+  // Same as CookieBanner: step aside while a Radix dialog is open.
   const [dialogOpen, setDialogOpen] = useState(false);
 
   // Wait for the cookie banner to be answered so the two don't stack at the bottom.
@@ -30,7 +23,7 @@ const SpotifyPopup = () => {
   }, []);
 
   useEffect(() => {
-    if (!hasConsentChoice || sessionStorage.getItem(DISMISSED_KEY)) return;
+    if (!hasConsentChoice) return;
     const timer = setTimeout(() => setVisible(true), SHOW_DELAY_MS);
     return () => clearTimeout(timer);
   }, [hasConsentChoice]);
@@ -43,81 +36,27 @@ const SpotifyPopup = () => {
     return () => observer.disconnect();
   }, []);
 
-  const close = () => {
-    sessionStorage.setItem(DISMISSED_KEY, '1');
-    setVisible(false);
-  };
-
   if (pathname.startsWith('/admin')) return null;
 
   return (
     <AnimatePresence>
-      {visible && (
-        <motion.div
+      {visible && !dialogOpen && (
+        <motion.a
+          href={SPOTIFY_ARTIST_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={t('spotify.open_in_app')}
+          title={t('spotify.open_in_app')}
           initial={{ x: 120, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           exit={{ x: 120, opacity: 0 }}
           transition={{ duration: 0.35, ease: 'easeOut' }}
-          className={`fixed bottom-4 right-4 z-[80] flex flex-col items-end gap-2 ${dialogOpen ? 'hidden' : ''}`}
+          className="fixed bottom-4 right-4 z-[80] flex h-14 w-14 items-center justify-center rounded-full bg-black shadow-xl hover:scale-105 transition-transform"
         >
-          {/* The iframe stays mounted while minimized so playback isn't interrupted. */}
-          <div
-            className={`w-[min(352px,calc(100vw-2rem))] rounded-2xl border border-border bg-background shadow-2xl overflow-hidden ${minimized ? 'hidden' : ''}`}
-          >
-            <div className="flex items-center justify-between gap-2 px-3 py-2">
-              <span className="flex items-center gap-2 text-sm font-medium text-foreground">
-                <Music className="h-4 w-4 text-[#1DB954]" />
-                {t('spotify.title')}
-              </span>
-              <div className="flex items-center gap-1">
-                <button
-                  type="button"
-                  onClick={() => setMinimized(true)}
-                  aria-label={t('spotify.minimize')}
-                  className="rounded-md p-1 text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
-                >
-                  <Minus className="h-4 w-4" />
-                </button>
-                <button
-                  type="button"
-                  onClick={close}
-                  aria-label={t('spotify.close')}
-                  className="rounded-md p-1 text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
-                >
-                  <X className="h-4 w-4" />
-                </button>
-              </div>
-            </div>
-            <iframe
-              title="Spotify"
-              src={SPOTIFY_EMBED_URL}
-              width="100%"
-              height="352"
-              loading="lazy"
-              allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-              className="block border-0"
-            />
-            <a
-              href={SPOTIFY_OPEN_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 bg-[#1DB954] px-3 py-2.5 text-sm font-semibold text-black hover:bg-[#1ed760] transition-colors"
-            >
-              {t('spotify.open_in_app')}
-              <ExternalLink className="h-4 w-4" />
-            </a>
-          </div>
-          {minimized && (
-            <button
-              type="button"
-              onClick={() => setMinimized(false)}
-              aria-label={t('spotify.open')}
-              className="flex h-12 w-12 items-center justify-center rounded-full bg-[#1DB954] text-white shadow-xl hover:scale-105 transition-transform"
-            >
-              <Music className="h-5 w-5" />
-            </button>
-          )}
-        </motion.div>
+          <svg viewBox="0 0 24 24" className="h-14 w-14" fill="#1DB954" aria-hidden="true">
+            <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z" />
+          </svg>
+        </motion.a>
       )}
     </AnimatePresence>
   );
