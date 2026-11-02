@@ -156,5 +156,11 @@
   "privacy": {
     "title": "Πολιτική Απορρήτου",
     "last_updated": "Τελευταία ενημέρωση: Μάρτιος 2026"
+  },
+  "spotify": {
+    "title": "Ακούστε τους Elpis Worship",
+    "close": "Κλείσιμο",
+    "minimize": "Ελαχιστοποίηση",
+    "open": "Άνοιγμα Spotify"
   }
 }

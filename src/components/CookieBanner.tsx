@@ -35,11 +35,13 @@ const CookieBanner = () => {
 
   const accept = () => {
     localStorage.setItem(CONSENT_KEY, 'accepted');
+    window.dispatchEvent(new Event('elpis-consent'));
     setVisible(false);
   };
 
   const decline = () => {
     localStorage.setItem(CONSENT_KEY, 'declined');
+    window.dispatchEvent(new Event('elpis-consent'));
     setVisible(false);
   };
 

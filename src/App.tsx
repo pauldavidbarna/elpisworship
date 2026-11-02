@@ -11,6 +11,7 @@ import { saveResourcesData } from "@/lib/resourcesData";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import SplashScreen from "@/components/SplashScreen";
 import CookieBanner from "@/components/CookieBanner";
+import SpotifyPopup from "@/components/SpotifyPopup";
 import JsonLd from "@/components/JsonLd";
 import { prefetchApi } from "@/lib/apiCache";
 
@@ -114,6 +115,7 @@ const App = () => {
         <ScrollToTop />
         <AnimatedRoutes />
         <CookieBanner />
+        <SpotifyPopup />
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
