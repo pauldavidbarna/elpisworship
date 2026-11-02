@@ -60,7 +60,7 @@ const SpotifyPopup = () => {
         >
           {/* The iframe stays mounted while minimized so playback isn't interrupted. */}
           <div
-            className={`w-[min(300px,calc(100vw-2rem))] rounded-2xl border border-border bg-background shadow-2xl overflow-hidden ${minimized ? 'hidden' : ''}`}
+            className={`w-[min(352px,calc(100vw-2rem))] rounded-2xl border border-border bg-background shadow-2xl overflow-hidden ${minimized ? 'hidden' : ''}`}
           >
             <div className="flex items-center justify-between gap-2 px-3 py-2">
               <span className="flex items-center gap-2 text-sm font-medium text-foreground">
@@ -90,7 +90,7 @@ const SpotifyPopup = () => {
               title="Spotify"
               src={SPOTIFY_EMBED_URL}
               width="100%"
-              height="152"
+              height="352"
               loading="lazy"
               allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
               className="block border-0"
