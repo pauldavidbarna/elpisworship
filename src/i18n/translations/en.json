@@ -157,7 +157,9 @@
     "title": "Privacy Policy",
     "last_updated": "Last updated: March 2026"
   },
-  "spotify": {
-    "open_in_app": "Open in Spotify"
+  "a11y": {
+    "toggle_menu": "Toggle menu",
+    "toggle_theme": "Toggle theme",
+    "photo_viewer": "Photo viewer"
   }
 }

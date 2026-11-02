@@ -340,7 +340,7 @@ const Resources = () => {
           ref={lightboxRef}
           role="dialog"
           aria-modal="true"
-          aria-label="Photo viewer"
+          aria-label={t('a11y.photo_viewer')}
           className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center"
           onClick={closeLightbox}
         >

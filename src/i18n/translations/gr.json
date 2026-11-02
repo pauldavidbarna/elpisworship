@@ -126,7 +126,7 @@
     "read_more": "Μάθε περισσότερα →"
   },
   "footer": {
-    "copyright": "© 2026 Elpis Worship. All rights deserved.",
+    "copyright": "© 2026 Elpis Worship. All rights reserved.",
     "tagline": "Τα πάντα για τη δόξα Του!",
     "quick_links": "Γρήγοροι Σύνδεσμοι"
   },
@@ -157,7 +157,9 @@
     "title": "Πολιτική Απορρήτου",
     "last_updated": "Τελευταία ενημέρωση: Μάρτιος 2026"
   },
-  "spotify": {
-    "open_in_app": "Άνοιγμα στο Spotify"
+  "a11y": {
+    "toggle_menu": "Εναλλαγή μενού",
+    "toggle_theme": "Εναλλαγή θέματος",
+    "photo_viewer": "Προβολή φωτογραφιών"
   }
 }
