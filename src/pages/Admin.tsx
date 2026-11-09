@@ -1039,6 +1039,9 @@ function SongsAdmin({ data, onChange }: { data: ResourcesData; onChange: (d: Res
   const save = () => {
     if (!title.trim()) return;
     if (editing) {
+      // Replaced PDFs get a new key on upload, so drop the old files from storage.
+      if (editing.lyricsPdfKey && editing.lyricsPdfKey !== lyricsPdfKey) deletePdf(editing.lyricsPdfKey);
+      if (editing.chordsPdfKey && editing.chordsPdfKey !== chordsPdfKey) deletePdf(editing.chordsPdfKey);
       onChange({ ...data, songs: songs.map((s) => s.id === editing.id ? { ...s, title, titleEn: titleEn || undefined, lyricsPdfKey, chordsPdfKey } : s) });
     } else {
       onChange({ ...data, songs: [...songs, { id: draftId, title, titleEn: titleEn || undefined, lyricsPdfKey, chordsPdfKey }] });
@@ -1054,7 +1057,9 @@ function SongsAdmin({ data, onChange }: { data: ResourcesData; onChange: (d: Res
   };
 
   const handlePdf = async (file: File, type: 'lyrics' | 'chords') => {
-    const key = `${draftId}-${type}.pdf`;
+    // Unique key per upload: reusing the same key keeps the same public URL,
+    // and the CDN/browser cache would keep serving the old PDF.
+    const key = `${draftId}-${type}-${Date.now()}.pdf`;
     setUploadError(null);
     if (type === 'lyrics') {
       setUploadingLyrics(true);
