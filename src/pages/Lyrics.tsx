@@ -12,6 +12,40 @@ import { type Song } from '@/lib/resourcesData';
 import { useResourcesData } from '@/hooks/useResourcesData';
 import { downloadPdf, getPdfURL } from '@/lib/pdfStorage';
 import { trackEvent } from '@/hooks/useAnalytics';
+import { fetchCached } from '@/lib/apiCache';
+
+// Latin letters that look like Greek capitals sometimes slip into video titles
+// (e.g. "H Καλοσύνη"), so fold them before comparing.
+const LATIN_TO_GREEK: Record<string, string> = {
+  a: 'α', b: 'β', e: 'ε', h: 'η', i: 'ι', k: 'κ', m: 'μ', n: 'ν',
+  o: 'ο', p: 'ρ', t: 'τ', x: 'χ', y: 'υ', z: 'ζ',
+};
+
+function normalizeTitle(s: string): string {
+  return s
+    .replace(/-\s*elpis worship.*$/i, '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/ς/g, 'σ')
+    .replace(/[a-z]/g, (c) => LATIN_TO_GREEK[c] ?? c)
+    .replace(/[^\p{L}\p{N}]+/gu, '');
+}
+
+// Prefer the channel playlist: YouTube search can miss newly uploaded videos.
+async function findVideoId(title: string): Promise<string | null> {
+  const wanted = normalizeTitle(title);
+  try {
+    const playlist = await fetchCached<{ videoId: string; title: string }[]>('/api/youtube-playlist');
+    const match = playlist.find((v) => normalizeTitle(v.title) === wanted);
+    if (match) return match.videoId;
+  } catch (e) {
+    console.error(e);
+  }
+  const res = await fetch(`/api/youtube-search?q=${encodeURIComponent(`${title} - Elpis Worship`)}`);
+  const data = await res.json();
+  return data.videoId ?? null;
+}
 
 // ── PDF Viewer Modal ────────────────────────────────────────────────────────
 
@@ -48,11 +82,9 @@ function PdfViewer({ song, onClose }: { song: Song; onClose: () => void }) {
     if (ytVideoId) { setYtVideoId(null); return; }
     setLoadingYt(true);
     try {
-      const q = encodeURIComponent(`${song.title} - Elpis Worship`);
-      const res = await fetch(`/api/youtube-search?q=${q}`);
-      const data = await res.json();
-      if (data.videoId) {
-        setYtVideoId(data.videoId);
+      const videoId = await findVideoId(song.title);
+      if (videoId) {
+        setYtVideoId(videoId);
         trackEvent('song_play', { song_title: song.title });
       }
     } catch (e) {
