@@ -245,7 +245,7 @@ const Lyrics = () => {
       const q = normalize(search);
       return normalize(s.title).includes(q) || normalize(s.titleEn ?? '').includes(q);
     })
-    .sort((a, b) => a.title.localeCompare(b.title));
+    .sort((a, b) => songTitle(a).localeCompare(songTitle(b), i18n.language === 'en' ? 'en' : 'el'));
 
   return (
     <Layout>
