@@ -14,6 +14,10 @@ import { useResourcesData } from '@/hooks/useResourcesData';
 import { downloadPdf, getPdfURL } from '@/lib/pdfStorage';
 import { trackEvent } from '@/hooks/useAnalytics';
 import { fetchCached } from '@/lib/apiCache';
+import PdfPages from '@/components/PdfPages';
+
+// Phones and tablets can't fit an <iframe> PDF to the screen width, so draw the pages ourselves.
+const isTouchDevice = () => window.matchMedia('(pointer: coarse)').matches;
 
 // Latin letters that look like Greek capitals sometimes slip into video titles
 // (e.g. "H Καλοσύνη"), so fold them before comparing.
@@ -176,7 +180,9 @@ function PdfViewer({ song, onClose }: { song: Song; onClose: () => void }) {
 
       {/* PDF embed */}
       <div className="flex-1 overflow-hidden relative" onClick={(e) => e.stopPropagation()}>
-        {pdfUrl ? (
+        {pdfUrl && isTouchDevice() ? (
+          <PdfPages key={pdfUrl} url={pdfUrl} title={displayTitle} />
+        ) : pdfUrl ? (
           <iframe
             key={pdfUrl}
             src={`${pdfUrl}#view=FitH&toolbar=0`}
