@@ -10,7 +10,7 @@ import { Input } from '@/components/ui/input';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { useFocusTrap } from '@/hooks/useFocusTrap';
 import { type Song } from '@/lib/resourcesData';
-import { useResourcesData } from '@/hooks/useResourcesData';
+import { useResourcesData, useResourcesLoaded } from '@/hooks/useResourcesData';
 import { downloadPdf, getPdfURL } from '@/lib/pdfStorage';
 import { trackEvent } from '@/hooks/useAnalytics';
 import { fetchCached } from '@/lib/apiCache';
@@ -238,6 +238,7 @@ const Lyrics = () => {
   usePageMeta('Lyrics & Chords', 'View and download PDF lyrics and chord sheets for Elpis Worship songs.');
   const { t, i18n } = useTranslation();
   const { songs } = useResourcesData();
+  const loaded = useResourcesLoaded();
   const [search, setSearch] = useState('');
   const [viewing, setViewing] = useState<Song | null>(null);
 
@@ -295,17 +296,16 @@ const Lyrics = () => {
           </div>
 
           {/* Song list */}
-          {filtered.length === 0 ? (
+          {songs.length === 0 && !loaded ? (
+            <div className="flex justify-center py-16">
+              <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+            </div>
+          ) : filtered.length === 0 ? (
             <p className="text-center text-muted-foreground py-16">{t('lyrics.no_songs')}</p>
           ) : (
             <div className="space-y-3">
-              {filtered.map((song, index) => (
-                <motion.div
-                  key={song.id}
-                  initial={{ opacity: 0, y: 16 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.04 }}
-                >
+              {filtered.map((song) => (
+                <div key={song.id}>
                   <Card
                     className="border-0 shadow-md overflow-hidden cursor-pointer select-none hover:shadow-lg transition-shadow"
                     tabIndex={0}
@@ -323,7 +323,7 @@ const Lyrics = () => {
                       </div>
                     </CardContent>
                   </Card>
-                </motion.div>
+                </div>
               ))}
             </div>
           )}

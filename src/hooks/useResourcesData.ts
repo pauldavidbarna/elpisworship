@@ -1,6 +1,7 @@
 import { useSyncExternalStore } from 'react';
 import {
   getResourcesData,
+  isResourcesLoaded,
   RESOURCES_UPDATED_EVENT,
   type ResourcesData,
 } from '@/lib/resourcesData';
@@ -28,4 +29,8 @@ function getServerSnapshot(): ResourcesData {
 
 export function useResourcesData(): ResourcesData {
   return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+}
+
+export function useResourcesLoaded(): boolean {
+  return useSyncExternalStore(subscribe, isResourcesLoaded, isResourcesLoaded);
 }

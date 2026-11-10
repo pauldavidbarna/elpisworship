@@ -7,7 +7,7 @@ import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { AnimatePresence, MotionConfig, motion } from "framer-motion";
 import "@/i18n";
 import { loadFromSupabase } from "@/lib/supabase";
-import { saveResourcesData } from "@/lib/resourcesData";
+import { markResourcesLoaded, saveResourcesData } from "@/lib/resourcesData";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import SplashScreen from "@/components/SplashScreen";
 import CookieBanner from "@/components/CookieBanner";
@@ -84,16 +84,18 @@ const App = () => {
   const [dataReady, setDataReady] = useState(splashDone);
 
   useEffect(() => {
-    // Don't let a hung/slow Supabase request block the app forever.
-    const timeout = new Promise<null>((resolve) => setTimeout(() => resolve(null), 4000));
-    Promise.race([loadFromSupabase(), timeout])
+    // Apply Supabase data whenever it arrives, even if that's after the splash gave up.
+    const remote = loadFromSupabase()
       .then((data) => {
         if (data && Object.keys(data).length > 0) {
           saveResourcesData(data);
         }
       })
       .catch((err) => console.error('loadFromSupabase failed', err))
-      .finally(() => setDataReady(true));
+      .finally(markResourcesLoaded);
+    // Don't let a hung/slow Supabase request block the app forever.
+    const timeout = new Promise<void>((resolve) => setTimeout(resolve, 4000));
+    Promise.race([remote, timeout]).finally(() => setDataReady(true));
 
     // Prefetch API data before the user navigates to those pages
     prefetchApi('/api/youtube-playlist');

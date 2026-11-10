@@ -152,8 +152,37 @@ export function getResourcesData(): ResourcesData {
       return parsed;
     }
   } catch {}
-  currentData = defaultData;
-  return defaultData;
+  currentData = { ...defaultData, songs: readSongsCache() };
+  return currentData;
+}
+
+// The full payload often exceeds localStorage's quota (base64 photos), which left the
+// Lyrics page empty until Supabase answered. The song list is small, so it's cached
+// on its own and shown straight away on the next visit.
+const SONGS_CACHE_KEY = 'elpis-songs-cache';
+
+function readSongsCache(): Song[] {
+  try {
+    const stored = localStorage.getItem(SONGS_CACHE_KEY);
+    return stored ? (JSON.parse(stored) as Song[]) : [];
+  } catch {
+    return [];
+  }
+}
+
+// Whether this page load has heard back from Supabase yet (successfully or not), so
+// pages can tell "still loading" apart from "really empty".
+let remoteLoaded = false;
+
+export function isResourcesLoaded(): boolean {
+  return remoteLoaded;
+}
+
+export function markResourcesLoaded(): void {
+  remoteLoaded = true;
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new CustomEvent(RESOURCES_UPDATED_EVENT));
+  }
 }
 
 export const RESOURCES_UPDATED_EVENT = 'elpis-resources-updated';
@@ -164,6 +193,9 @@ let currentData: ResourcesData | null = null;
 
 export function saveResourcesData(data: ResourcesData): void {
   currentData = data;
+  try {
+    localStorage.setItem(SONGS_CACHE_KEY, JSON.stringify(data.songs ?? []));
+  } catch {}
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
   } catch (err) {
