@@ -1,8 +1,8 @@
 import { useTranslation } from 'react-i18next';
-import { motion } from 'framer-motion';
 import { Shield } from 'lucide-react';
 import { Layout } from '@/components/layout';
 import { usePageMeta } from '@/hooks/usePageMeta';
+import { PopIn, RevealText } from '@/components/motion';
 
 const PrivacyPolicy = () => {
   usePageMeta('Privacy Policy', 'Privacy policy for Elpis Worship website.');
@@ -12,15 +12,26 @@ const PrivacyPolicy = () => {
   return (
     <Layout>
       <section className="py-20 md:py-28 hero-gradient text-white text-center">
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="container mx-auto px-4">
-          <Shield className="h-14 w-14 mx-auto mb-4 text-primary" />
-          <h1 className="font-display text-[42px] md:text-[62px] font-bold">
-            {t('privacy.title')}
-          </h1>
-          <p className="text-white/60 mt-3 text-sm">
-            {t('privacy.last_updated')}
-          </p>
-        </motion.div>
+        <div className="container mx-auto px-4">
+          <PopIn trigger="mount" className="mb-4">
+            <Shield className="h-14 w-14 text-primary" />
+          </PopIn>
+          <RevealText
+            as="h1"
+            trigger="mount"
+            text={t('privacy.title')}
+            delay={0.15}
+            className="font-display text-[42px] md:text-[62px] font-bold"
+          />
+          <RevealText
+            as="p"
+            split={false}
+            trigger="mount"
+            text={t('privacy.last_updated')}
+            delay={0.45}
+            className="text-white/60 mt-3 text-sm"
+          />
+        </div>
       </section>
 
       <section className="py-16">

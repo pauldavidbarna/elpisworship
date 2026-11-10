@@ -142,3 +142,31 @@
     box-shadow: 0 25px 50px -12px hsl(0 0% 0% / 0.5);
   }
 }
+
+/* two26.studio-style interactions (see src/components/motion) */
+@layer components {
+  /* A circle grows from the button's centre to fill it on hover. */
+  .btn-fill {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    --btn-fill: hsl(var(--elpis-cyan-dark));
+  }
+  .btn-fill::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 20%;
+    aspect-ratio: 1;
+    border-radius: 9999px;
+    background: var(--btn-fill);
+    transform: translate(-50%, -50%) scale(0);
+    transition: transform 0.45s cubic-bezier(0.33, 1, 0.68, 1);
+    z-index: -1;
+  }
+  .btn-fill:hover::before {
+    transform: translate(-50%, -50%) scale(10);
+    transition-duration: 0.55s;
+  }
+}

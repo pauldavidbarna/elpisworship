@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { motion } from 'framer-motion';
 import { Image, Video, Calendar, Megaphone, X, ChevronLeft, ChevronRight, MapPin, Clock, Ticket } from 'lucide-react';
 
 function EventTimes({ times }: { times?: string[] }) {
@@ -25,6 +24,7 @@ import { useFocusTrap } from '@/hooks/useFocusTrap';
 import LazyImage from '@/components/ui/lazy-image';
 import { getVideoURL } from '@/lib/videoDB';
 import { trackEvent } from '@/hooks/useAnalytics';
+import { ClipReveal, RevealText } from '@/components/motion';
 
 function VideoPlayer({ video }: { video: VideoType }) {
   const [url, setUrl] = useState<string | null>(null);
@@ -113,13 +113,12 @@ const Resources = () => {
       {/* Hero */}
       <section className="py-20 md:py-32 hero-gradient text-white">
         <div className="container mx-auto px-4 text-center">
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+          <RevealText
+            as="h1"
+            trigger="mount"
+            text={t('resources.title')}
             className="font-display text-[42px] md:text-[62px] font-bold mb-6"
-          >
-            {t('resources.title')}
-          </motion.h1>
+          />
         </div>
       </section>
 
@@ -149,9 +148,9 @@ const Resources = () => {
             {/* Photos Tab */}
             <TabsContent value="photos">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {photos.map((gallery) => (
-                  <motion.div key={gallery.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-                    <Card className="overflow-hidden border-0 shadow-lg hover:shadow-xl transition-shadow">
+                {photos.map((gallery, index) => (
+                  <ClipReveal key={gallery.id} delay={(index % 3) * 0.08}>
+                    <Card className="h-full overflow-hidden border-0 shadow-lg hover:shadow-xl transition-shadow">
                       {/* Cover image or placeholder */}
                       <div className="aspect-video overflow-hidden bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center">
                         {gallery.images.length > 0
@@ -183,7 +182,7 @@ const Resources = () => {
                         )}
                       </CardContent>
                     </Card>
-                  </motion.div>
+                  </ClipReveal>
                 ))}
               </div>
             </TabsContent>
@@ -191,10 +190,10 @@ const Resources = () => {
             {/* Videos Tab */}
             <TabsContent value="videos">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {videos.map((video) => (
-                  <motion.div key={video.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+                {videos.map((video, index) => (
+                  <ClipReveal key={video.id} delay={(index % 2) * 0.08}>
                     <VideoPlayer video={video} />
-                  </motion.div>
+                  </ClipReveal>
                 ))}
               </div>
             </TabsContent>
@@ -269,8 +268,8 @@ const Resources = () => {
             {/* Announcements Tab */}
             <TabsContent value="announcements">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                {announcements.map((announcement) => (
-                  <motion.div key={announcement.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="flex">
+                {announcements.map((announcement, index) => (
+                  <ClipReveal key={announcement.id} delay={(index % 2) * 0.08} innerClassName="flex">
                     <Card
                       className="border-0 shadow-md overflow-hidden flex flex-col w-full cursor-pointer hover:shadow-lg transition-shadow"
                       onClick={() => openAnnouncement(announcement)}
@@ -291,7 +290,7 @@ const Resources = () => {
                         </span>
                       </CardContent>
                     </Card>
-                  </motion.div>
+                  </ClipReveal>
                 ))}
               </div>
             </TabsContent>

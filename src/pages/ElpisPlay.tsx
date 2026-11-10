@@ -2,13 +2,13 @@ import { useState, useEffect } from 'react';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { useFocusTrap } from '@/hooks/useFocusTrap';
 import { useTranslation } from 'react-i18next';
-import { motion } from 'framer-motion';
 import { Play, X, ExternalLink, Youtube, RefreshCw } from 'lucide-react';
 import { Layout } from '@/components/layout';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { fetchCached } from '@/lib/apiCache';
 import { trackEvent } from '@/hooks/useAnalytics';
+import { ClipReveal, PopIn, RevealText } from '@/components/motion';
 
 const PLAYLIST_ID = 'PLRX8hHCncTbi-bPiUtoCDGgTW5i-a_2IN';
 
@@ -44,18 +44,33 @@ const ElpisPlay = () => {
     <Layout>
       {/* Hero */}
       <section className="py-20 md:py-28 hero-gradient text-white text-center">
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="container mx-auto px-4">
-          <Play className="h-14 w-14 mx-auto mb-4 text-primary" />
-          <h1 className="font-display text-[42px] md:text-[62px] font-bold mb-4">{t('play.title')}</h1>
-          <p className="text-white/70 text-lg max-w-xl mx-auto mb-6">
-            {t('play.description')}
-          </p>
-          <Button asChild className="bg-white text-black hover:bg-white/90">
-            <a href="https://www.youtube.com/@ElpisWorship" target="_blank" rel="noopener noreferrer">
-              <ExternalLink className="mr-2 h-4 w-4" /> {t('play.open_youtube')}
-            </a>
-          </Button>
-        </motion.div>
+        <div className="container mx-auto px-4">
+          <PopIn trigger="mount" className="mb-4">
+            <Play className="h-14 w-14 text-primary" />
+          </PopIn>
+          <RevealText
+            as="h1"
+            trigger="mount"
+            text={t('play.title')}
+            delay={0.15}
+            className="font-display text-[42px] md:text-[62px] font-bold mb-4"
+          />
+          <RevealText
+            as="p"
+            split={false}
+            trigger="mount"
+            text={t('play.description')}
+            delay={0.45}
+            className="text-white/70 text-lg max-w-xl mx-auto mb-6"
+          />
+          <PopIn trigger="mount" delay={0.8}>
+            <Button asChild className="btn-fill [--btn-fill:hsl(var(--primary))] bg-white text-black hover:bg-white hover:text-white transition-colors duration-300">
+              <a href="https://www.youtube.com/@ElpisWorship" target="_blank" rel="noopener noreferrer">
+                <ExternalLink className="mr-2 h-4 w-4" /> {t('play.open_youtube')}
+              </a>
+            </Button>
+          </PopIn>
+        </div>
       </section>
 
       {/* Videos Grid */}
@@ -86,13 +101,7 @@ const ElpisPlay = () => {
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {videos.map((video, index) => (
-                <motion.div
-                  key={video.videoId}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: (index % 6) * 0.05 }}
-                >
+                <ClipReveal key={video.videoId} delay={(index % 3) * 0.08}>
                   <Card
                     className="overflow-hidden border-0 shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer group"
                     onClick={() => { setActiveVideo(video); trackEvent('video_play', { video_title: video.title, video_id: video.videoId }); }}
@@ -114,7 +123,7 @@ const ElpisPlay = () => {
                       <p className="font-medium text-sm line-clamp-2">{video.title}</p>
                     </CardContent>
                   </Card>
-                </motion.div>
+                </ClipReveal>
               ))}
             </div>
           )}

@@ -1,12 +1,12 @@
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { motion } from 'framer-motion';
 import { Target, Heart, Lightbulb, Instagram } from 'lucide-react';
 import { Layout } from '@/components/layout';
 import { Card, CardContent } from '@/components/ui/card';
 import LazyImage from '@/components/ui/lazy-image';
 import { useResourcesData } from '@/hooks/useResourcesData';
 import { usePageMeta } from '@/hooks/usePageMeta';
+import { ClipReveal, RevealText } from '@/components/motion';
 
 function shuffle<T>(arr: T[]): T[] {
   const a = [...arr];
@@ -46,87 +46,82 @@ const About = () => {
       {/* Hero */}
       <section className="py-20 md:py-32 hero-gradient text-white">
         <div className="container mx-auto px-4 text-center">
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+          <RevealText
+            as="h1"
+            trigger="mount"
+            text={t('about.title')}
             className="font-display text-[42px] md:text-[62px] font-bold mb-6"
-          >
-            {t('about.title')}
-          </motion.h1>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
+          />
+          <RevealText
+            as="p"
+            split={false}
+            trigger="mount"
+            text={t('about.motto')}
+            delay={0.35}
             className="text-xl text-white/80"
-          >
-            {t('about.motto')}
-          </motion.p>
+          />
         </div>
       </section>
 
       {/* Who We Are */}
       <section className="py-20">
         <div className="container mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="max-w-4xl mx-auto"
-          >
-            <h2 className="font-display text-[32px] md:text-[44px] font-semibold mb-8 text-center">
-              {t('about.who_we_are')}
-            </h2>
-            <p className="text-lg text-muted-foreground leading-relaxed text-center">
-              {t('about.who_we_are_text')}
-            </p>
-          </motion.div>
+          <div className="max-w-4xl mx-auto">
+            <RevealText
+              as="h2"
+              text={t('about.who_we_are')}
+              className="font-display text-[32px] md:text-[44px] font-semibold mb-8 text-center"
+            />
+            <RevealText
+              as="p"
+              split={false}
+              text={t('about.who_we_are_text')}
+              delay={0.2}
+              className="text-lg text-muted-foreground leading-relaxed text-center"
+            />
+          </div>
         </div>
       </section>
 
       {/* Our Name */}
       <section className="py-20 bg-muted/50">
         <div className="container mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="max-w-4xl mx-auto text-center"
-          >
-            <h2 className="font-display text-[32px] md:text-[44px] font-semibold mb-8">
-              {t('about.our_name')}
-            </h2>
+          <div className="max-w-4xl mx-auto text-center">
+            <RevealText
+              as="h2"
+              text={t('about.our_name')}
+              className="font-display text-[32px] md:text-[44px] font-semibold mb-8"
+            />
             <div className="inline-block mb-8">
-              <span className="text-6xl md:text-8xl font-display font-black text-primary">
-                ελπίς
-              </span>
+              <RevealText
+                text="ελπίς"
+                delay={0.2}
+                className="text-6xl md:text-8xl font-display font-black text-primary"
+              />
             </div>
-            <p className="text-lg text-muted-foreground leading-relaxed">
-              {t('about.our_name_text')}
-            </p>
-          </motion.div>
+            <RevealText
+              as="p"
+              split={false}
+              text={t('about.our_name_text')}
+              delay={0.3}
+              className="text-lg text-muted-foreground leading-relaxed"
+            />
+          </div>
         </div>
       </section>
 
       {/* Our Mission */}
       <section className="py-20">
         <div className="container mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
-            <h2 className="font-display text-[32px] md:text-[44px] font-semibold mb-12 text-center">
-              {t('about.our_mission')}
-            </h2>
+          <div>
+            <RevealText
+              as="h2"
+              text={t('about.our_mission')}
+              className="font-display text-[32px] md:text-[44px] font-semibold mb-12 text-center"
+            />
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
               {missionItems.map((item, index) => (
-                <motion.div
-                  key={item.title}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.1 }}
-                >
+                <ClipReveal key={item.title} delay={index * 0.1}>
                   <Card className="h-full text-center border-0 shadow-lg">
                     <CardContent className="pt-8 pb-6 px-6">
                       <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-6">
@@ -140,34 +135,25 @@ const About = () => {
                       </p>
                     </CardContent>
                   </Card>
-                </motion.div>
+                </ClipReveal>
               ))}
             </div>
-          </motion.div>
+          </div>
         </div>
       </section>
 
       {/* Meet the Team */}
       <section className="py-20 bg-muted/50">
         <div className="container mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
-            <h2 className="font-display text-[32px] md:text-[44px] font-semibold mb-12 text-center">
-              {t('about.meet_the_team')}
-            </h2>
+          <div>
+            <RevealText
+              as="h2"
+              text={t('about.meet_the_team')}
+              className="font-display text-[32px] md:text-[44px] font-semibold mb-12 text-center"
+            />
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 max-w-5xl mx-auto">
               {shuffledTeam.map((member, index) => (
-                <motion.div
-                  key={member.id}
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.05 }}
-                  className="group"
-                >
+                <ClipReveal key={member.id} delay={(index % 4) * 0.08} className="group">
                   <Card className="overflow-hidden border-0 shadow-md hover:shadow-xl transition-all duration-300 group-hover:scale-105">
                     <div className="aspect-square overflow-hidden bg-muted">
                       {member.image
@@ -193,11 +179,11 @@ const About = () => {
                       )}
                     </CardContent>
                   </Card>
-                </motion.div>
+                </ClipReveal>
               ))}
             </div>
 
-          </motion.div>
+          </div>
         </div>
       </section>
     </Layout>

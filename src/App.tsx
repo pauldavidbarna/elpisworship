@@ -4,7 +4,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, MotionConfig, motion } from "framer-motion";
 import "@/i18n";
 import { loadFromSupabase } from "@/lib/supabase";
 import { saveResourcesData } from "@/lib/resourcesData";
@@ -13,10 +13,15 @@ import SplashScreen from "@/components/SplashScreen";
 import CookieBanner from "@/components/CookieBanner";
 import JsonLd from "@/components/JsonLd";
 import { prefetchApi } from "@/lib/apiCache";
+import { SmoothScroll, useLenis } from "@/components/motion";
 
 function ScrollToTop() {
   const { pathname } = useLocation();
-  useEffect(() => { window.scrollTo(0, 0); }, [pathname]);
+  const lenis = useLenis();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    lenis?.scrollTo(0, { immediate: true });
+  }, [pathname, lenis]);
   return null;
 }
 
@@ -111,9 +116,13 @@ const App = () => {
       <Sonner />
       <JsonLd />
       <BrowserRouter>
-        <ScrollToTop />
-        <AnimatedRoutes />
-        <CookieBanner />
+        <MotionConfig reducedMotion="user">
+          <SmoothScroll>
+            <ScrollToTop />
+            <AnimatedRoutes />
+            <CookieBanner />
+          </SmoothScroll>
+        </MotionConfig>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>

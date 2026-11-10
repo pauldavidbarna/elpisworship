@@ -1,10 +1,9 @@
 import { useTranslation } from 'react-i18next';
-import { motion } from 'framer-motion';
 import { Heart, Coffee, ExternalLink } from 'lucide-react';
 import { Layout } from '@/components/layout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-
+import { ClipReveal, PopIn, RevealText } from '@/components/motion';
 import { usePageMeta } from '@/hooks/usePageMeta';
 
 const Donate = () => {
@@ -16,40 +15,47 @@ const Donate = () => {
       {/* Hero */}
       <section className="py-20 md:py-32 hero-gradient text-white">
         <div className="container mx-auto px-4 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-          >
-            <Heart className="h-16 w-16 mx-auto mb-6 text-primary" />
-            <h1 className="font-display text-[42px] md:text-[62px] font-bold mb-6">
-              {t('donate.title')}
-            </h1>
-            <p className="text-xl text-white/80 max-w-2xl mx-auto">
-              {t('donate.subtitle')}
-            </p>
-          </motion.div>
+          <PopIn trigger="mount" className="mb-6">
+            <Heart className="h-16 w-16 text-primary" />
+          </PopIn>
+          <RevealText
+            as="h1"
+            trigger="mount"
+            text={t('donate.title')}
+            delay={0.15}
+            className="font-display text-[42px] md:text-[62px] font-bold mb-6"
+          />
+          <RevealText
+            as="p"
+            split={false}
+            trigger="mount"
+            text={t('donate.subtitle')}
+            delay={0.45}
+            className="text-xl text-white/80 max-w-2xl mx-auto"
+          />
         </div>
       </section>
 
       {/* Message & CTA */}
       <section className="py-20">
         <div className="container mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="max-w-3xl mx-auto text-center"
-          >
+          <ClipReveal className="max-w-3xl mx-auto text-center">
             <Card className="border-0 shadow-xl">
               <CardContent className="p-6 md:p-12">
-                <Coffee className="h-12 w-12 mx-auto mb-6 text-primary" />
-                <p className="text-lg md:text-xl text-muted-foreground leading-relaxed mb-8">
-                  {t('donate.message')}
-                </p>
+                <PopIn delay={0.5} className="mb-6">
+                  <Coffee className="h-12 w-12 text-primary" />
+                </PopIn>
+                <RevealText
+                  as="p"
+                  split={false}
+                  text={t('donate.message')}
+                  delay={0.5}
+                  className="text-lg md:text-xl text-muted-foreground leading-relaxed mb-8"
+                />
                 <Button
                   asChild
                   size="lg"
-                  className="text-lg px-8 py-6 glow-effect w-full sm:w-auto"
+                  className="btn-fill text-lg px-8 py-6 glow-effect w-full sm:w-auto"
                 >
                   <a
                     href="https://buymeacoffee.com/elpisworship"
@@ -63,22 +69,19 @@ const Donate = () => {
                 </Button>
               </CardContent>
             </Card>
-          </motion.div>
+          </ClipReveal>
         </div>
       </section>
 
       {/* Why Support */}
       <section className="py-20 bg-muted/50">
         <div className="container mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="max-w-4xl mx-auto"
-          >
-            <h2 className="font-display text-[32px] md:text-[44px] font-semibold mb-8 text-center">
-              {t('donate.why_support')}
-            </h2>
+          <div className="max-w-4xl mx-auto">
+            <RevealText
+              as="h2"
+              text={t('donate.why_support')}
+              className="font-display text-[32px] md:text-[44px] font-semibold mb-8 text-center"
+            />
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {[
                 {
@@ -94,19 +97,21 @@ const Donate = () => {
                   description: t('donate.support_3_desc'),
                 },
               ].map((item, index) => (
-                <Card key={item.title} className="border-0 shadow-md">
-                  <CardContent className="p-6 text-center">
-                    <h3 className="font-display font-semibold text-lg mb-2">
-                      {item.title}
-                    </h3>
-                    <p className="text-muted-foreground text-sm">
-                      {item.description}
-                    </p>
-                  </CardContent>
-                </Card>
+                <ClipReveal key={item.title} delay={index * 0.1}>
+                  <Card className="h-full border-0 shadow-md">
+                    <CardContent className="p-6 text-center">
+                      <h3 className="font-display font-semibold text-lg mb-2">
+                        {item.title}
+                      </h3>
+                      <p className="text-muted-foreground text-sm">
+                        {item.description}
+                      </p>
+                    </CardContent>
+                  </Card>
+                </ClipReveal>
               ))}
             </div>
-          </motion.div>
+          </div>
         </div>
       </section>
     </Layout>

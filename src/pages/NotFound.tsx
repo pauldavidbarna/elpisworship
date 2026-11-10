@@ -88,7 +88,7 @@ const NotFound = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6 }}
         >
-          <Button asChild size="lg">
+          <Button asChild size="lg" className="btn-fill">
             <Link to="/">
               <Home className="mr-2 h-4 w-4" />
               {t('not_found.back_home')}

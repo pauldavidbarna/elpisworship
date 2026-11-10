@@ -1,10 +1,10 @@
 import { useTranslation } from 'react-i18next';
-import { motion } from 'framer-motion';
 import { ShoppingBag } from 'lucide-react';
 import { Layout } from '@/components/layout';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { ClipReveal, PopIn, RevealText } from '@/components/motion';
 
 // Import product images
 const tshirtsImage = '/placeholder.svg';
@@ -55,18 +55,24 @@ const Shop = () => {
           <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-black/40" />
         </div>
         <div className="relative container mx-auto px-4 text-center text-white">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-          >
-            <ShoppingBag className="h-16 w-16 mx-auto mb-6 text-primary" />
-            <h1 className="font-display text-[42px] md:text-[62px] font-bold mb-6">
-              {t('shop.title')}
-            </h1>
-            <p className="text-xl text-white/80">
-              {t('shop.collection_subtitle')}
-            </p>
-          </motion.div>
+          <PopIn trigger="mount" className="mb-6">
+            <ShoppingBag className="h-16 w-16 text-primary" />
+          </PopIn>
+          <RevealText
+            as="h1"
+            trigger="mount"
+            text={t('shop.title')}
+            delay={0.15}
+            className="font-display text-[42px] md:text-[62px] font-bold mb-6"
+          />
+          <RevealText
+            as="p"
+            split={false}
+            trigger="mount"
+            text={t('shop.collection_subtitle')}
+            delay={0.45}
+            className="text-xl text-white/80"
+          />
         </div>
       </section>
 
@@ -75,13 +81,7 @@ const Shop = () => {
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
             {products.map((product, index) => (
-              <motion.div
-                key={product.id}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-              >
+              <ClipReveal key={product.id}>
                 <Card className="overflow-hidden border-0 shadow-xl">
                   <div className="grid grid-cols-1 md:grid-cols-2">
                     {/* Product Image */}
@@ -127,7 +127,7 @@ const Shop = () => {
                       
                       <Button 
                         size="lg"
-                        className="w-full text-lg py-6" 
+                        className="btn-fill w-full text-lg py-6" 
                         disabled={product.stock === 'out_of_stock'}
                       >
                         {t('shop.buy_now')}
@@ -135,7 +135,7 @@ const Shop = () => {
                     </CardContent>
                   </div>
                 </Card>
-              </motion.div>
+              </ClipReveal>
             ))}
           </div>
         </div>

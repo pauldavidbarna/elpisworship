@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion'; // AnimatePresence used for PdfViewer
+import { PopIn, RevealText } from '@/components/motion';
 import { Music, Download, Search, X, Play, Loader2 } from 'lucide-react';
 import { Layout } from '@/components/layout';
 import { Card, CardContent } from '@/components/ui/card';
@@ -251,19 +252,26 @@ const Lyrics = () => {
     <Layout>
       {/* Hero */}
       <section className="py-20 md:py-28 hero-gradient text-white text-center">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="container mx-auto px-4"
-        >
-          <Music className="h-14 w-14 mx-auto mb-4 text-primary" />
-          <h1 className="font-display text-[42px] md:text-[62px] font-bold mb-4">
-            {t('lyrics.title')}
-          </h1>
-          <p className="text-white/70 text-lg max-w-xl mx-auto">
-            {t('lyrics.subtitle')}
-          </p>
-        </motion.div>
+        <div className="container mx-auto px-4">
+          <PopIn trigger="mount" className="mb-4">
+            <Music className="h-14 w-14 text-primary" />
+          </PopIn>
+          <RevealText
+            as="h1"
+            trigger="mount"
+            text={t('lyrics.title')}
+            delay={0.15}
+            className="font-display text-[42px] md:text-[62px] font-bold mb-4"
+          />
+          <RevealText
+            as="p"
+            split={false}
+            trigger="mount"
+            text={t('lyrics.subtitle')}
+            delay={0.45}
+            className="text-white/70 text-lg max-w-xl mx-auto"
+          />
+        </div>
       </section>
 
       {/* Content */}

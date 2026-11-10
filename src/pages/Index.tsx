@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { motion } from 'framer-motion';
 import { ArrowRight, Calendar, MapPin, Clock, Instagram, Ticket } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -12,6 +11,8 @@ import { isUpcomingEvent } from '@/lib/resourcesData';
 import { useResourcesData } from '@/hooks/useResourcesData';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { fetchCached } from '@/lib/apiCache';
+import { ClipReveal, PopIn, RevealText } from '@/components/motion';
+import { OUTLINE_FILL } from '@/lib/motion';
 
 interface IGPost {
   id: string;
@@ -71,82 +72,82 @@ const Index = () => {
 
         {/* Hero Content */}
         <div className="relative z-10 container mx-auto px-4 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            className="max-w-4xl mx-auto"
-          >
-            <h1 className="font-display text-[42px] md:text-[62px] font-bold text-white mb-6 tracking-tight">
-              {t('hero.title')}
-            </h1>
-            <p className="text-lg md:text-xl text-white/80 mb-8 max-w-2xl mx-auto">
-              {t('hero.subtitle')}
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button asChild size="lg" className="text-lg px-8 py-6 glow-effect">
-                <Link to="/about">
-                  {t('hero.cta_primary')}
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                </Link>
-              </Button>
-              <Button asChild variant="outline" size="lg" className="text-lg px-8 py-6 bg-transparent border-white text-white hover:bg-white hover:text-black">
-                <Link to="/donate">{t('hero.cta_secondary')}</Link>
-              </Button>
+          <div className="max-w-4xl mx-auto">
+            <RevealText
+              as="h1"
+              trigger="mount"
+              text={t('hero.title')}
+              delay={0.15}
+              className="font-display text-[42px] md:text-[62px] font-bold text-white mb-6 tracking-tight"
+            />
+            <RevealText
+              as="p"
+              split={false}
+              trigger="mount"
+              text={t('hero.subtitle')}
+              delay={0.5}
+              className="text-lg md:text-xl text-white/80 mb-8 max-w-2xl mx-auto"
+            />
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+              <PopIn trigger="mount" delay={0.9}>
+                <Button asChild size="lg" className="btn-fill text-lg px-8 py-6 glow-effect">
+                  <Link to="/about">
+                    {t('hero.cta_primary')}
+                    <ArrowRight className="ml-2 h-5 w-5" />
+                  </Link>
+                </Button>
+              </PopIn>
+              <PopIn trigger="mount" delay={1.05}>
+                <Button asChild variant="outline" size="lg" className="btn-fill [--btn-fill:white] text-lg px-8 py-6 bg-transparent border-white text-white hover:bg-transparent hover:text-black transition-colors duration-300">
+                  <Link to="/donate">{t('hero.cta_secondary')}</Link>
+                </Button>
+              </PopIn>
             </div>
-          </motion.div>
+          </div>
         </div>
       </section>
 
       {/* Who We Are Preview */}
       <section className="py-20 md:py-32">
         <div className="container mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="max-w-4xl mx-auto text-center"
-          >
-            <h2 className="font-display text-[32px] md:text-[44px] font-semibold mb-6">
-              {t('home.who_we_are_title')}
-            </h2>
-            <p className="text-lg md:text-xl text-muted-foreground mb-8 leading-relaxed">
-              {t('home.who_we_are_text')}
-            </p>
-            <Button asChild variant="outline" size="lg">
-              <Link to="/about">
-                {t('home.read_more')}
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Link>
-            </Button>
-          </motion.div>
+          <div className="max-w-4xl mx-auto text-center">
+            <RevealText
+              as="h2"
+              text={t('home.who_we_are_title')}
+              className="font-display text-[32px] md:text-[44px] font-semibold mb-6"
+            />
+            <RevealText
+              as="p"
+              split={false}
+              text={t('home.who_we_are_text')}
+              delay={0.2}
+              className="text-lg md:text-xl text-muted-foreground mb-8 leading-relaxed"
+            />
+            <PopIn delay={0.3}>
+              <Button asChild variant="outline" size="lg" className={OUTLINE_FILL}>
+                <Link to="/about">
+                  {t('home.read_more')}
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+              </Button>
+            </PopIn>
+          </div>
         </div>
       </section>
 
       {/* Upcoming Events */}
       {upcomingEvents.length > 0 && <section className="py-20 bg-muted/50">
         <div className="container mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
-            <h2 className="font-display text-[32px] md:text-[44px] font-semibold text-center mb-12">
-              {t('home.upcoming_events')}
-            </h2>
+          <div>
+            <RevealText
+              as="h2"
+              text={t('home.upcoming_events')}
+              className="font-display text-[32px] md:text-[44px] font-semibold text-center mb-12"
+            />
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
               {upcomingEvents.map((event, index) => (
-                <motion.div
-                  key={event.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                >
+                <ClipReveal key={event.id} delay={(index % 3) * 0.1}>
                   <Card className="h-full hover:shadow-lg transition-shadow border-0 bg-card">
                     <CardContent className="p-6">
                       <div className="flex items-center gap-2 text-primary text-sm font-medium mb-3">
@@ -173,19 +174,21 @@ const Index = () => {
                       )}
                     </CardContent>
                   </Card>
-                </motion.div>
+                </ClipReveal>
               ))}
             </div>
 
             <div className="text-center mt-10">
-              <Button asChild variant="outline">
-                <Link to="/resources">
-                  {t('home.view_all_events')}
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-              </Button>
+              <PopIn>
+                <Button asChild variant="outline" className={OUTLINE_FILL}>
+                  <Link to="/resources">
+                    {t('home.view_all_events')}
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Link>
+                </Button>
+              </PopIn>
             </div>
-          </motion.div>
+          </div>
         </div>
       </section>}
 
@@ -193,50 +196,45 @@ const Index = () => {
       {igPosts.length > 0 && (
         <section className="py-20">
           <div className="container mx-auto px-4">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="text-center mb-10"
-            >
+            <div className="text-center mb-10">
               <div className="flex items-center justify-center gap-2 mb-2">
-                <Instagram className="h-6 w-6 text-primary" />
-                <h2 className="font-display text-[32px] md:text-[44px] font-semibold">{t('home.instagram_title')}</h2>
+                <PopIn>
+                  <Instagram className="h-6 w-6 text-primary" />
+                </PopIn>
+                <RevealText as="h2" text={t('home.instagram_title')} className="font-display text-[32px] md:text-[44px] font-semibold" />
               </div>
-            </motion.div>
+            </div>
             <div className="grid grid-cols-3 gap-1 sm:gap-2 max-w-3xl mx-auto">
               {igPosts.map((post, index) => (
-                <motion.a
-                  key={post.id}
-                  href={post.permalink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: (index % 9) * 0.05 }}
-                  className="relative overflow-hidden group bg-muted" style={{ aspectRatio: '4/5' }}
-                >
-                  <img
-                    src={post.imageUrl}
-                    alt="Elpis Worship on Instagram"
-                    loading="lazy"
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                  />
-                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                    <Instagram className="h-8 w-8 text-white" />
-                  </div>
-                </motion.a>
+                <ClipReveal key={post.id} delay={(index % 3) * 0.08} className="bg-muted" innerClassName="relative">
+                  <a
+                    href={post.permalink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="relative block overflow-hidden group" style={{ aspectRatio: '4/5' }}
+                  >
+                    <img
+                      src={post.imageUrl}
+                      alt="Elpis Worship on Instagram"
+                      loading="lazy"
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    />
+                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                      <Instagram className="h-8 w-8 text-white" />
+                    </div>
+                  </a>
+                </ClipReveal>
               ))}
             </div>
             <div className="text-center mt-8">
-              <Button asChild variant="outline" size="lg">
-                <a href="https://instagram.com/elpisworship" target="_blank" rel="noopener noreferrer">
-                  <Instagram className="mr-2 h-4 w-4" />
-                  {t('home.instagram_cta')}
-                </a>
-              </Button>
+              <PopIn>
+                <Button asChild variant="outline" size="lg" className={OUTLINE_FILL}>
+                  <a href="https://instagram.com/elpisworship" target="_blank" rel="noopener noreferrer">
+                    <Instagram className="mr-2 h-4 w-4" />
+                    {t('home.instagram_cta')}
+                  </a>
+                </Button>
+              </PopIn>
             </div>
           </div>
         </section>
@@ -245,29 +243,31 @@ const Index = () => {
       {/* Call to Action */}
       <section className="py-20 md:py-32 hero-gradient text-white">
         <div className="container mx-auto px-4 text-center">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="max-w-3xl mx-auto"
-          >
-            <h2 className="font-display text-[32px] md:text-[44px] font-semibold mb-6">
-              {t('about.motto')}
-            </h2>
-            <p className="text-lg text-white/80 mb-8">
-              {t('donate.message')}
-            </p>
-            <Button
-              asChild
-              size="lg"
-              className="text-lg px-8 py-6 bg-primary hover:bg-primary/90"
-            >
-              <Link to="/donate">
-                {t('donate.cta')}
-              </Link>
-            </Button>
-          </motion.div>
+          <div className="max-w-3xl mx-auto">
+            <RevealText
+              as="h2"
+              text={t('about.motto')}
+              className="font-display text-[32px] md:text-[44px] font-semibold mb-6"
+            />
+            <RevealText
+              as="p"
+              split={false}
+              text={t('donate.message')}
+              delay={0.2}
+              className="text-lg text-white/80 mb-8"
+            />
+            <PopIn delay={0.3}>
+              <Button
+                asChild
+                size="lg"
+                className="btn-fill text-lg px-8 py-6 bg-primary hover:bg-primary"
+              >
+                <Link to="/donate">
+                  {t('donate.cta')}
+                </Link>
+              </Button>
+            </PopIn>
+          </div>
         </div>
       </section>
     </Layout>

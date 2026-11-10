@@ -11,6 +11,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { usePageMeta } from '@/hooks/usePageMeta';
+import { ClipReveal, PopIn, RevealText } from '@/components/motion';
 
 const Contact = () => {
   usePageMeta('Contact', 'Get in touch with Elpis Worship — send us a message or follow us on social media.');
@@ -69,15 +70,16 @@ const Contact = () => {
       {/* Hero */}
       <section className="py-20 md:py-32 hero-gradient text-white">
         <div className="container mx-auto px-4 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-          >
-            <Mail className="h-16 w-16 mx-auto mb-6 text-primary" />
-            <h1 className="font-display text-[42px] md:text-[62px] font-bold mb-6">
-              {t('contact.title')}
-            </h1>
-          </motion.div>
+          <PopIn trigger="mount" className="mb-6">
+            <Mail className="h-16 w-16 text-primary" />
+          </PopIn>
+          <RevealText
+            as="h1"
+            trigger="mount"
+            text={t('contact.title')}
+            delay={0.15}
+            className="font-display text-[42px] md:text-[62px] font-bold mb-6"
+          />
         </div>
       </section>
 
@@ -86,11 +88,7 @@ const Contact = () => {
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
             {/* Form */}
-            <motion.div
-              initial={{ opacity: 0, x: -30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-            >
+            <ClipReveal>
               <Card className="border-0 shadow-xl">
                 <CardContent className="p-8">
                   <form onSubmit={handleSubmit} className="space-y-6">
@@ -134,7 +132,7 @@ const Contact = () => {
                     </div>
                     <Button 
                       type="submit" 
-                      className="w-full"
+                      className="btn-fill w-full"
                       disabled={isSubmitting}
                     >
                       {isSubmitting ? (
@@ -152,7 +150,7 @@ const Contact = () => {
                   </form>
                 </CardContent>
               </Card>
-            </motion.div>
+            </ClipReveal>
 
             {/* Social Links */}
             <motion.div
@@ -161,9 +159,11 @@ const Contact = () => {
               viewport={{ once: true }}
               className="flex flex-col justify-center"
             >
-              <h2 className="font-display text-[32px] md:text-[44px] font-semibold mb-8">
-                {t('contact.follow_us')}
-              </h2>
+              <RevealText
+                as="h2"
+                text={t('contact.follow_us')}
+                className="font-display text-[32px] md:text-[44px] font-semibold mb-8"
+              />
               <div className="space-y-4">
                 {socialLinks.map((social) => (
                   <a
