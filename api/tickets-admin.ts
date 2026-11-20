@@ -107,6 +107,24 @@ async function resend(b: Body) {
   return { status: 'ok' };
 }
 
+// Sends a sample confirmation to check how it looks. The ticket isn't saved, so its
+// QR code won't pass check-in.
+async function testEmail(b: Body) {
+  const email = normalizeEmail(b.email);
+  if (!isEmail(email)) return { status: 'invalid', field: 'email' };
+  const guests = parseGroupSize(b.guests ?? 1, ticketEvent.maxGroupSize) ?? 1;
+  const sample: TicketRow = {
+    id: 'sample', event_slug: ticketEvent.slug, code: generateCode(),
+    name: cleanText(b.name, 80) || 'Elpis Worship', email, phone: null, guests,
+    guest_name: guests > 1 ? cleanText(b.guestName, 200) || null : null,
+    newsletter_consent: false, lang: b.lang === 'en' ? 'en' : 'gr', source: 'manual',
+    checked_in_at: null, checked_in_by: null, reminder_email_sent_at: null, reminder_sms_sent_at: null,
+    created_at: new Date().toISOString(),
+  };
+  await sendTicketEmail(sample);
+  return { status: 'ok' };
+}
+
 async function remove(b: Body) {
   const { error } = await db().from('event_tickets').delete().eq('id', id(b)).eq('event_slug', ticketEvent.slug);
   if (error) throw new Error(error.message);
@@ -138,6 +156,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       case 'add':     return res.json(await addManual(b));
       case 'resend':  return res.json(await resend(b));
       case 'delete':  return res.json(await remove(b));
+      case 'test_email': return res.json(await testEmail(b));
       default:        return res.status(404).json({ error: 'Unknown action' });
     }
   } catch (err) {
