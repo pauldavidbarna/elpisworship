@@ -5,7 +5,7 @@ import {
 
 // Set before the describe blocks run, since they sign tokens while collecting.
 process.env.TICKET_SECRET = 'test-secret-0123456789';
-process.env.TICKETS_ADMIN_PASSWORD = 'door-pass';
+process.env.TICKETS_DOOR_PASSWORD = 'door-pass';
 
 describe('ticket codes', () => {
   it('are 8 chars without 0/O/1/I', () => {
