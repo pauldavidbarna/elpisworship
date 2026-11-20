@@ -37,13 +37,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
-    await resend.emails.send({
-      from: 'Contact Form <onboarding@resend.dev>',
+    const { error } = await resend.emails.send({
+      from: 'Elpis Worship Contact <contact@elpisworship.com>',
       to: 'worshipelpis@gmail.com',
       replyTo: email,
       subject: `[Contact] ${subject}`,
       text: `From: ${name} (${email})\n\n${message}`,
     });
+    if (error) throw new Error(error.message);
 
     return res.status(200).json({ success: true });
   } catch (error) {

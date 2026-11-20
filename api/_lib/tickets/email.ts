@@ -99,9 +99,7 @@ export function ticketEmailText(ticket: TicketRow, kind: 'confirmation' | 'remin
 }
 
 let resend: Resend | null = null;
-// TICKETS_RESEND_API_KEY must belong to the Resend account where elpisworship.com is
-// verified; RESEND_API_KEY (contact form) is a fallback.
-const client = () => (resend ??= new Resend(process.env.TICKETS_RESEND_API_KEY || process.env.RESEND_API_KEY));
+const client = () => (resend ??= new Resend(process.env.RESEND_API_KEY));
 
 // Must be an address on a domain verified in Resend; onboarding@resend.dev only
 // delivers to the Resend account owner.
