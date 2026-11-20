@@ -61,7 +61,7 @@ export const ticketEvent: TicketEventConfig = {
     landmark: null, // e.g. { en: 'Entrance from the side street', gr: 'Είσοδος από τον πλαϊνό δρόμο' }
     mapsUrl: 'https://maps.google.com/?q=Athens', // TODO
   },
-  capacity: 100, // TODO: seats (people), not tickets
+  capacity: 150, // seats (people), not tickets
   maxGroupSize: 10,
   showCountAfter: 20,
   posterPath: '/events/worship-night/poster.jpg', // TODO: replace the logo placeholder in public/ with the real poster
