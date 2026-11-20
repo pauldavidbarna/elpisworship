@@ -23,7 +23,9 @@ export function ticketEmailHtml(ticket: TicketRow, kind: 'confirmation' | 'remin
   const lang = ticket.lang;
   const t = T[lang];
   const { page, qr } = ticketUrls(ticket.code);
-  const poster = ticketEvent.posterPath ? `${siteUrl()}${ticketEvent.posterPath}` : '';
+  // Gmail caches images by URL forever, so the deploy's commit is added to pick up a new poster.
+  const version = process.env.VERCEL_GIT_COMMIT_SHA?.slice(0, 7);
+  const poster = ticketEvent.posterPath ? `${siteUrl()}${ticketEvent.posterPath}${version ? `?v=${version}` : ''}` : '';
   const landmark = ticketEvent.venue.landmark?.[lang];
   const detail = (label: string, value: string, extra = '') =>
     `<tr><td style="padding:0 0 12px"><div style="font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:${MUTED}">${esc(label)}</div><div style="font-size:15px;color:${INK};margin-top:2px">${esc(value)}</div>${extra}</td></tr>`;
