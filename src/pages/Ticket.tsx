@@ -82,7 +82,7 @@ const Ticket = () => {
           <Card className="border-0 shadow-xl overflow-hidden">
             {ticketEvent.posterPath && (
               <div className="h-32 bg-secondary overflow-hidden">
-                <img src={ticketEvent.artworkPath || ticketEvent.posterPath} alt="" className="w-full h-full object-cover" />
+                <img src={ticketEvent.artworkPath || ticketEvent.posterPath} alt="" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
               </div>
             )}
             <CardContent className="p-6">

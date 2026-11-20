@@ -144,7 +144,10 @@ const Tickets = () => {
     { icon: MapPin, label: t('tickets.venue'), value: `${ticketEvent.venue.name}, ${ticketEvent.venue.address}`, extra: ticketEvent.venue.landmark?.[lang] },
   ];
 
-  if (!ticketEvent.enabled) {
+  // ?preview shows the full page while it's still hidden; the API keeps refusing sign-ups.
+  const preview = new URLSearchParams(window.location.search).has('preview');
+
+  if (!ticketEvent.enabled && !preview) {
     return (
       <Layout>
         <section className="py-28 md:py-40 hero-gradient text-white">
@@ -175,6 +178,7 @@ const Tickets = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.7, ease: EASE_OUT }}
                 className="w-full max-w-sm mx-auto rounded-2xl shadow-2xl"
+                onError={(e) => { e.currentTarget.style.display = 'none'; }}
               />
             )}
             <div>
