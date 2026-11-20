@@ -11,7 +11,7 @@ export interface AdminTicket {
   name: string;
   email: string | null;
   phone: string | null;
-  guests: 1 | 2;
+  guests: number;
   guest_name: string | null;
   newsletter_consent: boolean;
   lang: 'en' | 'gr';
@@ -80,7 +80,7 @@ export function useTicketsAdmin() {
 }
 
 export const holderLine = (t: Pick<AdminTicket, 'name' | 'guests' | 'guest_name'>) =>
-  t.guests === 2 ? `${t.name} + 1${t.guest_name ? ` (${t.guest_name})` : ''}` : t.name;
+  t.guests > 1 ? `${t.name} + ${t.guests - 1}${t.guest_name ? ` (${t.guest_name})` : ''}` : t.name;
 
 export const timeOf = (iso: string) =>
   new Date(iso).toLocaleTimeString('el-GR', { hour: '2-digit', minute: '2-digit', hour12: false });

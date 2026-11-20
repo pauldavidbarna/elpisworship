@@ -5,7 +5,7 @@ import fontkit from '@pdf-lib/fontkit';
 import { ticketEvent } from '../../../src/config/ticketEvent.js';
 import type { TicketRow } from './db.js';
 import { qrPng } from './qr.js';
-import { T, formatDate, holderLine, siteUrl, timeRange, ticketUrls } from './text.js';
+import { T, formatDate, siteUrl, timeRange, ticketUrls } from './text.js';
 
 // pdf-lib instead of headless Chromium: pure JS, so it runs in a plain Vercel function
 // without a 50 MB browser binary or a cold start. Noto Sans covers Greek and Latin.
@@ -85,9 +85,16 @@ export async function ticketPdf(ticket: TicketRow): Promise<Uint8Array> {
 
   // Holder
   let y = H - bandH - 44;
-  const holder = holderLine(ticket);
+  // Holder and group size on the big line; companions' names wrap underneath.
+  const holder = ticket.guests > 1 ? `${ticket.name} + ${ticket.guests - 1}` : ticket.name;
   const holderSize = fitText(holder, bold, 24, W - 2 * M);
   page.drawText(holder, { x: M, y, size: holderSize, font: bold, color: ink });
+  if (ticket.guest_name) {
+    y -= 16;
+    page.drawText(ticket.guest_name, { x: M, y, size: 10, font: regular, color: muted, maxWidth: W - 2 * M, lineHeight: 13 });
+    const lines = Math.ceil(regular.widthOfTextAtSize(ticket.guest_name, 10) / (W - 2 * M));
+    y -= 13 * (Math.min(lines, 3) - 1);
+  }
   y -= 20;
   page.drawText(t.admits(ticket.guests), { x: M, y, size: 11, font: regular, color: accent });
 

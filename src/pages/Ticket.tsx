@@ -11,7 +11,7 @@ import { eventLang, formatEventDate, formatEventTime, googleCalendarUrl } from '
 interface TicketData {
   code: string;
   name: string;
-  guests: 1 | 2;
+  guests: number;
   guestName: string | null;
   checkedInAt: string | null;
   qr: string;
@@ -73,7 +73,7 @@ const Ticket = () => {
     );
   }
 
-  const holder = ticket.guests === 2 ? `${ticket.name} + 1${ticket.guestName ? ` (${ticket.guestName})` : ''}` : ticket.name;
+  const holder = ticket.guests > 1 ? `${ticket.name} + ${ticket.guests - 1}` : ticket.name;
 
   return (
     <Layout>
@@ -88,7 +88,8 @@ const Ticket = () => {
             <CardContent className="p-6">
               <p className="text-xs font-bold uppercase tracking-wider text-primary">{ticketEvent.title[lang]}</p>
               <h1 className="font-display text-2xl md:text-3xl font-bold mt-1 break-words">{holder}</h1>
-              <p className="text-sm text-muted-foreground mt-1">{t(ticket.guests === 2 ? 'tickets.ticket_admits_2' : 'tickets.ticket_admits_1')}</p>
+              {ticket.guestName && <p className="text-sm text-muted-foreground mt-1 break-words">{ticket.guestName}</p>}
+              <p className="text-sm text-primary font-medium mt-1">{t('tickets.ticket_admits', { count: ticket.guests })}</p>
 
               {ticket.checkedInAt && (
                 <div className="mt-4 flex items-center gap-2 rounded-lg bg-primary/10 text-foreground px-3 py-2 text-sm font-medium">

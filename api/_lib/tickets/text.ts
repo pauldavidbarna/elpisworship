@@ -10,7 +10,7 @@ export const T = {
     greeting: (name: string) => `Hi ${name},`,
     confirmed: 'Your place is reserved. Show this QR code at the entrance.',
     reminder: 'See you tomorrow! Keep this QR code handy for the entrance.',
-    admits: (n: number) => (n === 2 ? 'Admits 2 people' : 'Admits 1 person'),
+    admits: (n: number) => (n === 1 ? 'Admits 1 person' : `Admits ${n} people`),
     date: 'Date',
     time: 'Time',
     venue: 'Venue',
@@ -29,7 +29,7 @@ export const T = {
     greeting: (name: string) => `Γεια σου ${name},`,
     confirmed: 'Η θέση σου είναι κλεισμένη. Δείξε αυτόν τον κωδικό QR στην είσοδο.',
     reminder: 'Τα λέμε αύριο! Έχε έτοιμο τον κωδικό QR για την είσοδο.',
-    admits: (n: number) => (n === 2 ? 'Ισχύει για 2 άτομα' : 'Ισχύει για 1 άτομο'),
+    admits: (n: number) => (n === 1 ? 'Ισχύει για 1 άτομο' : `Ισχύει για ${n} άτομα`),
     date: 'Ημερομηνία',
     time: 'Ώρα',
     venue: 'Τοποθεσία',
@@ -60,10 +60,10 @@ export function timeRange(lang: Lang): string {
   return `${formatTime(ticketEvent.startsAt, lang)} – ${formatTime(ticketEvent.endsAt, lang)}`;
 }
 
-/** "Maria Popescu + 1 (Andrei)" */
+/** "Maria Popescu + 3 (Andrei, Ioana, Mihai)" */
 export function holderLine(t: Pick<TicketRow, 'name' | 'guests' | 'guest_name'>): string {
-  if (t.guests !== 2) return t.name;
-  return t.guest_name ? `${t.name} + 1 (${t.guest_name})` : `${t.name} + 1`;
+  if (t.guests <= 1) return t.name;
+  return t.guest_name ? `${t.name} + ${t.guests - 1} (${t.guest_name})` : `${t.name} + ${t.guests - 1}`;
 }
 
 export function siteUrl(): string {

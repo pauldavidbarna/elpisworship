@@ -27,9 +27,11 @@ export interface TicketEventConfig {
     landmark: Localized | null;
     mapsUrl: string;
   };
-  /** Number of tickets. Each ticket admits 1 person or 1 + a guest. */
+  /** Number of seats (people). A ticket admits a group of 1 to maxGroupSize people. */
   capacity: number;
-  /** Below this many claimed tickets the page shows "Limited seats · N tickets" instead of the live count. 0 always shows the count. */
+  /** Largest group one ticket can admit, the holder included. */
+  maxGroupSize: number;
+  /** Below this many taken seats the page shows "Limited seats · N seats" instead of the live count. 0 always shows the count. */
   showCountAfter: number;
   /** Full poster, shown on the page and used as the Open Graph image. Path under /public. */
   posterPath: string;
@@ -59,7 +61,8 @@ export const ticketEvent: TicketEventConfig = {
     landmark: null, // e.g. { en: 'Entrance from the side street', gr: 'Είσοδος από τον πλαϊνό δρόμο' }
     mapsUrl: 'https://maps.google.com/?q=Athens', // TODO
   },
-  capacity: 100, // TODO
+  capacity: 100, // TODO: seats (people), not tickets
+  maxGroupSize: 10,
   showCountAfter: 20,
   posterPath: '/events/worship-night/poster.jpg', // TODO: add the file under public/
   artworkPath: '/events/worship-night/artwork.jpg', // TODO: poster image without its text

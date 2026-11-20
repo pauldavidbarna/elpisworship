@@ -4,7 +4,7 @@ import { claimWithFreshCode, countTickets, db, findTicketByCode, type TicketRow 
 import { sendTicketEmail } from './_lib/tickets/email.js';
 import { syncTicketHolder } from './_lib/tickets/marketing.js';
 import { checkAdminPassword, createAdminSession, extractToken, generateCode, verifyAdminSession, verifyTicketToken } from './_lib/tickets/token.js';
-import { cleanText, isEmail, normalizeEmail, normalizePhone, rateLimited } from './_lib/tickets/validate.js';
+import { cleanText, isEmail, normalizeEmail, normalizePhone, parseGroupSize, rateLimited } from './_lib/tickets/validate.js';
 
 // Admin ticket actions. Every action except login verifies the signed admin session
 // here on the server; the admin UI being hidden is not the protection.
@@ -68,7 +68,8 @@ async function addManual(b: Body) {
   if (name.length < 2) return { status: 'invalid', field: 'name' };
   if (email && !isEmail(email)) return { status: 'invalid', field: 'email' };
   if (typeof b.phone === 'string' && b.phone.trim() && !phone) return { status: 'invalid', field: 'phone' };
-  const guests = b.plusOne === true ? 2 : 1;
+  const guests = parseGroupSize(b.guests, ticketEvent.maxGroupSize);
+  if (!guests) return { status: 'invalid', field: 'guests' };
   const result = await claimWithFreshCode(
     {
       slug: ticketEvent.slug,
@@ -77,14 +78,14 @@ async function addManual(b: Body) {
       email,
       phone,
       guests,
-      guestName: guests === 2 ? cleanText(b.guestName) || null : null,
+      guestName: guests > 1 ? cleanText(b.guestName, 300) || null : null,
       newsletter: false,
       lang: b.lang === 'en' ? 'en' : 'gr',
       source: 'manual',
     },
     generateCode,
   );
-  if (!result.ok) return { status: result.reason };
+  if (!result.ok) return { status: result.reason, remaining: result.reason === 'not_enough' ? result.remaining : undefined };
   let emailSent = false;
   if (email && b.sendEmail === true) {
     try {

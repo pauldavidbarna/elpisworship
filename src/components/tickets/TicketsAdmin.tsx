@@ -29,20 +29,20 @@ function AddGuestDialog({ open, onOpenChange, onAdd }: {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
-  const [plusOne, setPlusOne] = useState(false);
+  const [guests, setGuests] = useState(1);
   const [guestName, setGuestName] = useState('');
   const [sendEmail, setSendEmail] = useState(true);
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
-    if (open) { setName(''); setEmail(''); setPhone(''); setPlusOne(false); setGuestName(''); setSendEmail(true); setError(''); }
+    if (open) { setName(''); setEmail(''); setPhone(''); setGuests(1); setGuestName(''); setSendEmail(true); setError(''); }
   }, [open]);
 
   const save = async () => {
     setBusy(true);
     setError('');
-    const err = await onAdd({ name, email, phone, plusOne, guestName, sendEmail });
+    const err = await onAdd({ name, email, phone, guests, guestName, sendEmail });
     setBusy(false);
     if (err) setError(err);
     else onOpenChange(false);
@@ -52,13 +52,16 @@ function AddGuestDialog({ open, onOpenChange, onAdd }: {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-md">
         <DialogHeader><DialogTitle>Add guest manually</DialogTitle></DialogHeader>
-        <p className="text-sm text-muted-foreground -mt-2">For artists, press, sponsors. Uses a real seat from the capacity.</p>
+        <p className="text-sm text-muted-foreground -mt-2">For artists, press, sponsors. Uses real seats from the capacity.</p>
         <div className="space-y-3 py-2">
           <div className="space-y-1"><Label>Name *</Label><Input value={name} onChange={(e) => setName(e.target.value)} /></div>
           <div className="space-y-1"><Label>Email</Label><Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} /></div>
           <div className="space-y-1"><Label>Phone</Label><Input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} /></div>
-          <label className="flex items-center gap-2 text-sm"><Checkbox checked={plusOne} onCheckedChange={(v) => setPlusOne(v === true)} /> + 1 guest</label>
-          {plusOne && <div className="space-y-1"><Label>Guest name</Label><Input value={guestName} onChange={(e) => setGuestName(e.target.value)} /></div>}
+          <div className="space-y-1">
+            <Label>People, including them</Label>
+            <Input type="number" min={1} max={ticketEvent.maxGroupSize} value={guests} onChange={(e) => setGuests(Math.min(ticketEvent.maxGroupSize, Math.max(1, Number(e.target.value) || 1)))} />
+          </div>
+          {guests > 1 && <div className="space-y-1"><Label>Names of the others</Label><Input value={guestName} onChange={(e) => setGuestName(e.target.value)} /></div>}
           {email && <label className="flex items-center gap-2 text-sm"><Checkbox checked={sendEmail} onCheckedChange={(v) => setSendEmail(v === true)} /> Email them the ticket</label>}
           {error && <p className="text-sm text-destructive">{error}</p>}
         </div>
@@ -117,8 +120,9 @@ export default function TicketsAdmin() {
 
   const add = async (payload: Record<string, unknown>): Promise<string | null> => {
     try {
-      const res = await call<{ status: string; field?: string; emailSent?: boolean }>('add', payload);
+      const res = await call<{ status: string; field?: string; emailSent?: boolean; remaining?: number }>('add', payload);
       if (res.status === 'full') return 'All seats are taken. Delete a ticket first, or raise the capacity in the config.';
+      if (res.status === 'not_enough') return `Only ${res.remaining} seat(s) left.`;
       if (res.status === 'duplicate') return 'This email already has a ticket.';
       if (res.status === 'invalid') return `Invalid ${res.field}.`;
       await load();
@@ -131,8 +135,8 @@ export default function TicketsAdmin() {
   const s = data?.stats;
   const statCards = s
     ? [
-        { label: 'Tickets', value: `${s.tickets} / ${s.capacity}` },
-        { label: 'People expected', value: s.people },
+        { label: 'Seats taken', value: `${s.people} / ${s.capacity}` },
+        { label: 'Tickets (groups)', value: s.tickets },
         { label: 'Checked in', value: `${s.checkedIn} / ${s.people}` },
         { label: 'Newsletter', value: s.newsletter },
       ]

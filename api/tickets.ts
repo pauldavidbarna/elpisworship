@@ -7,7 +7,7 @@ import { ticketPdf } from './_lib/tickets/pdf.js';
 import { qrPng } from './_lib/tickets/qr.js';
 import { ticketUrls } from './_lib/tickets/text.js';
 import { generateCode, verifyTicketToken } from './_lib/tickets/token.js';
-import { cleanText, isEmail, normalizeEmail, normalizePhone, passesRecaptcha, rateLimited } from './_lib/tickets/validate.js';
+import { cleanText, isEmail, normalizeEmail, normalizePhone, parseGroupSize, passesRecaptcha, rateLimited } from './_lib/tickets/validate.js';
 
 // Public ticket endpoints, one function to stay well inside the Hobby function limit:
 //   GET  ?action=stats            live seat counter
@@ -29,13 +29,15 @@ async function ticketFromToken(req: VercelRequest): Promise<TicketRow | null> {
 async function stats(res: VercelResponse) {
   res.setHeader('Cache-Control', 'no-store');
   if (!ticketEvent.enabled) return res.json({ enabled: false });
-  const { tickets } = await countTickets(ticketEvent.slug);
+  // Capacity counts people, so a group ticket takes as many seats as it admits.
+  const { people } = await countTickets(ticketEvent.slug);
   return res.json({
     enabled: true,
     capacity: ticketEvent.capacity,
-    claimed: tickets,
-    remaining: Math.max(0, ticketEvent.capacity - tickets),
-    showCount: tickets >= ticketEvent.showCountAfter,
+    claimed: people,
+    remaining: Math.max(0, ticketEvent.capacity - people),
+    maxGroupSize: ticketEvent.maxGroupSize,
+    showCount: people >= ticketEvent.showCountAfter,
   });
 }
 
@@ -53,13 +55,14 @@ async function claim(req: VercelRequest, res: VercelResponse) {
   const name = cleanText(body.name);
   const email = normalizeEmail(body.email);
   const phone = normalizePhone(body.phone);
-  const guests = body.plusOne === true ? 2 : 1;
-  const guestName = guests === 2 ? cleanText(body.guestName) || null : null;
+  const guests = parseGroupSize(body.guests, ticketEvent.maxGroupSize);
+  const guestName = guests && guests > 1 ? cleanText(body.guestName, 300) || null : null;
   const lang = body.lang === 'en' ? 'en' : 'gr';
 
   if (name.length < 2) return res.status(400).json({ status: 'invalid', field: 'name' });
   if (!isEmail(email)) return res.status(400).json({ status: 'invalid', field: 'email' });
   if (!phone) return res.status(400).json({ status: 'invalid', field: 'phone' });
+  if (!guests) return res.status(400).json({ status: 'invalid', field: 'guests' });
   if (body.gdpr !== true) return res.status(400).json({ status: 'invalid', field: 'gdpr' });
   if (!(await passesRecaptcha(body.recaptcha, ip))) return res.status(400).json({ status: 'invalid', field: 'recaptcha' });
 
@@ -69,6 +72,7 @@ async function claim(req: VercelRequest, res: VercelResponse) {
   );
 
   if (!result.ok && result.reason === 'full') return res.json({ status: 'full' });
+  if (!result.ok && result.reason === 'not_enough') return res.json({ status: 'not_enough', remaining: result.remaining });
 
   if (!result.ok) {
     // Already signed up: send the existing ticket again rather than erroring. The

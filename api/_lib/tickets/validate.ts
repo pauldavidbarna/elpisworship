@@ -4,6 +4,12 @@ export const normalizeEmail = (email: unknown) => (typeof email === 'string' ? e
 export const isEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email) && email.length <= 254;
 export const cleanText = (v: unknown, max = 80) => (typeof v === 'string' ? v.replace(/\s+/g, ' ').trim().slice(0, max) : '');
 
+/** Group size including the holder, or null if it isn't a whole number in 1..max. */
+export function parseGroupSize(v: unknown, max: number): number | null {
+  const n = typeof v === 'string' ? Number(v) : v;
+  return typeof n === 'number' && Number.isInteger(n) && n >= 1 && n <= max ? n : null;
+}
+
 /** Returns E.164 or null. Numbers without a country code are read as Greek. */
 export function normalizePhone(input: unknown): string | null {
   if (typeof input !== 'string' || !input.trim()) return null;

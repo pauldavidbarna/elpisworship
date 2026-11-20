@@ -92,7 +92,7 @@ function Verdict({ scan, busy, onConfirm, onUndo, onClose }: {
           <p className="text-3xl md:text-4xl font-bold mb-2 break-words max-w-full">
             {scan.result === 'ok' && scan.confirmed ? '✓ ' : ''}{holderLine(scan.ticket)}
           </p>
-          <p className="text-xl font-semibold opacity-90">{scan.ticket.guests === 2 ? '2 people' : '1 person'} · {scan.ticket.code}</p>
+          <p className="text-xl font-semibold opacity-90">{scan.ticket.guests === 1 ? '1 person' : `${scan.ticket.guests} people`} · {scan.ticket.code}</p>
           {scan.result === 'used' && scan.ticket.checked_in_at && (
             <p className="text-2xl font-bold mt-4">
               Already in at {timeOf(scan.ticket.checked_in_at)}{scan.ticket.checked_in_by ? ` (${scan.ticket.checked_in_by})` : ''}

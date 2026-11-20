@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Trans, useTranslation } from 'react-i18next';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Calendar, CalendarPlus, Clock, Instagram, MapPin, MailCheck, Ticket as TicketIcon, Users } from 'lucide-react';
+import { Calendar, CalendarPlus, Clock, Instagram, MapPin, MailCheck, Minus, Plus, Ticket as TicketIcon, Users } from 'lucide-react';
 import { Layout } from '@/components/layout';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -12,13 +12,12 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { PopIn, RevealText } from '@/components/motion';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { ticketEvent } from '@/config/ticketEvent';
-import { cn } from '@/lib/utils';
 import { EASE_OUT } from '@/lib/motion';
 import {
   eventLang, formatEventDate, formatEventTime, googleCalendarUrl, loadRecaptcha, recaptchaToken, useTicketStats,
 } from '@/lib/tickets';
 
-type Field = 'name' | 'email' | 'phone' | 'gdpr' | 'recaptcha';
+type Field = 'name' | 'email' | 'phone' | 'guests' | 'gdpr' | 'recaptcha';
 type Outcome =
   | { kind: 'ok' | 'resent'; email: string; emailSent: boolean }
   | { kind: 'full' | 'closed' };
@@ -78,7 +77,7 @@ const Tickets = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
-  const [plusOne, setPlusOne] = useState(false);
+  const [guests, setGuests] = useState(1);
   const [guestName, setGuestName] = useState('');
   const [gdpr, setGdpr] = useState(false);
   const [newsletter, setNewsletter] = useState(false);
@@ -93,6 +92,11 @@ const Tickets = () => {
   }, []);
 
   const soldOut = stats?.enabled && stats.remaining === 0;
+  // The stepper never offers more people than there are seats left.
+  const maxGroup = Math.max(1, Math.min(ticketEvent.maxGroupSize, stats?.remaining ?? ticketEvent.maxGroupSize));
+  useEffect(() => {
+    if (guests > maxGroup) setGuests(maxGroup);
+  }, [guests, maxGroup]);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -105,22 +109,26 @@ const Tickets = () => {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          name, email, phone, plusOne, guestName, gdpr, newsletter, website, lang,
+          name, email, phone, guests, guestName, gdpr, newsletter, website, lang,
           recaptcha: await recaptchaToken(),
         }),
       });
-      const body = (await res.json().catch(() => ({}))) as { status?: string; field?: Field; emailSent?: boolean };
+      const body = (await res.json().catch(() => ({}))) as { status?: string; field?: Field; emailSent?: boolean; remaining?: number };
       if (body.status === 'invalid' && body.field) return setFieldError(body.field);
       if (res.status === 429) return setFormError(t('tickets.err_rate'));
       if (body.status === 'ok' || body.status === 'resent') {
         setOutcome({ kind: body.status, email: email.trim().toLowerCase(), emailSent: body.emailSent !== false });
-        if (body.status === 'ok' && stats?.remaining) setStats({ ...stats, claimed: (stats.claimed ?? 0) + 1, remaining: stats.remaining - 1 });
+        if (body.status === 'ok' && stats?.remaining) setStats({ ...stats, claimed: (stats.claimed ?? 0) + guests, remaining: Math.max(0, stats.remaining - guests) });
         return;
       }
       if (body.status === 'full') {
         setOutcome({ kind: 'full' });
         if (stats) setStats({ ...stats, remaining: 0 });
         return;
+      }
+      if (body.status === 'not_enough' && body.remaining != null) {
+        if (stats) setStats({ ...stats, remaining: body.remaining });
+        return setFormError(`${t('tickets.not_enough_title')}. ${t('tickets.not_enough_text', { count: body.remaining })}`);
       }
       if (body.status === 'closed') return setOutcome({ kind: 'closed' });
       setFormError(t('tickets.err_generic'));
@@ -132,7 +140,7 @@ const Tickets = () => {
   };
 
   const reset = () => {
-    setName(''); setEmail(''); setPhone(''); setPlusOne(false); setGuestName('');
+    setName(''); setEmail(''); setPhone(''); setGuests(1); setGuestName('');
     setGdpr(false); setNewsletter(false); setOutcome(null);
   };
 
@@ -247,7 +255,7 @@ const Tickets = () => {
                 <form onSubmit={submit} noValidate className="space-y-5">
                   <div>
                     <h2 className="font-display text-2xl font-semibold mb-1">{t('tickets.form_title')}</h2>
-                    <p className="text-sm text-muted-foreground">{t('tickets.form_subtitle')}</p>
+                    <p className="text-sm text-muted-foreground">{t('tickets.form_subtitle', { max: ticketEvent.maxGroupSize })}</p>
                   </div>
 
                   {/* Honeypot: hidden from people and assistive tech, irresistible to bots. */}
@@ -271,30 +279,27 @@ const Tickets = () => {
                     {errorText('phone') ?? <p className="text-xs text-muted-foreground">{t('tickets.phone_hint')}</p>}
                   </div>
 
-                  <fieldset className="space-y-2">
+                  <fieldset>
                     <legend className="text-sm font-medium mb-2">{t('tickets.who')}</legend>
-                    <div className="grid grid-cols-2 gap-2">
-                      {[false, true].map((v) => (
-                        <button
-                          key={String(v)}
-                          type="button"
-                          aria-pressed={plusOne === v}
-                          onClick={() => setPlusOne(v)}
-                          className={cn(
-                            'flex items-center justify-center gap-2 rounded-lg border px-3 py-3 text-sm font-medium transition-colors',
-                            plusOne === v ? 'border-primary bg-primary/10 text-foreground' : 'border-input text-muted-foreground hover:border-primary/50',
-                          )}
-                        >
-                          <Users className="h-4 w-4" />
-                          {t(v ? 'tickets.me_plus_one' : 'tickets.just_me')}
-                        </button>
-                      ))}
+                    <div className="flex items-center gap-2">
+                      <Button type="button" variant="outline" size="icon" className="h-12 w-12 shrink-0" onClick={() => setGuests((g) => Math.max(1, g - 1))} disabled={guests <= 1} aria-label="−1">
+                        <Minus className="h-4 w-4" />
+                      </Button>
+                      <div className="flex-1 h-12 flex items-center justify-center gap-2 rounded-md border border-primary bg-primary/10 font-medium tabular-nums" aria-live="polite">
+                        <Users className="h-4 w-4" />
+                        {t('tickets.people', { count: guests })}
+                      </div>
+                      <Button type="button" variant="outline" size="icon" className="h-12 w-12 shrink-0" onClick={() => setGuests((g) => Math.min(maxGroup, g + 1))} disabled={guests >= maxGroup} aria-label="+1">
+                        <Plus className="h-4 w-4" />
+                      </Button>
                     </div>
+                    {errorText('guests')}
                   </fieldset>
-                  {plusOne && (
+                  {guests > 1 && (
                     <div className="space-y-1.5">
                       <Label htmlFor="t-guest">{t('tickets.guest_name')}</Label>
-                      <Input id="t-guest" value={guestName} onChange={(e) => setGuestName(e.target.value)} />
+                      <Input id="t-guest" value={guestName} onChange={(e) => setGuestName(e.target.value)} maxLength={300} />
+                      <p className="text-xs text-muted-foreground">{t('tickets.guest_name_hint')}</p>
                     </div>
                   )}
 

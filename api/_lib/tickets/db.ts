@@ -7,7 +7,7 @@ export interface TicketRow {
   name: string;
   email: string | null;
   phone: string | null;
-  guests: 1 | 2;
+  guests: number;
   guest_name: string | null;
   newsletter_consent: boolean;
   lang: 'en' | 'gr';
@@ -63,14 +63,17 @@ export type ClaimInput = {
   name: string;
   email: string | null;
   phone: string | null;
-  guests: 1 | 2;
+  guests: number;
   guestName: string | null;
   newsletter: boolean;
   lang: 'en' | 'gr';
   source: 'public' | 'manual';
 };
 
-export type ClaimResult = { ok: true; ticket: TicketRow } | { ok: false; reason: 'duplicate' | 'full' };
+export type ClaimResult =
+  | { ok: true; ticket: TicketRow }
+  | { ok: false; reason: 'duplicate' | 'full' }
+  | { ok: false; reason: 'not_enough'; remaining: number };
 
 export async function claimTicket(input: ClaimInput): Promise<ClaimResult> {
   const { data, error } = await db().rpc('claim_ticket', {
@@ -88,6 +91,8 @@ export async function claimTicket(input: ClaimInput): Promise<ClaimResult> {
   } as never);
   if (error) {
     if (error.message === 'duplicate' || error.message === 'full') return { ok: false, reason: error.message };
+    const notEnough = error.message.match(/^not_enough:(\d+)$/);
+    if (notEnough) return { ok: false, reason: 'not_enough', remaining: Number(notEnough[1]) };
     // The unique index is the backstop if two claims slip past the function's check.
     if (error.code === '23505' && /email/.test(error.message)) return { ok: false, reason: 'duplicate' };
     throw new Error(error.message);
