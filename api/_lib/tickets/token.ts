@@ -60,8 +60,10 @@ export function extractToken(input: string): string {
 
 const ADMIN_SESSION_MS = 16 * 60 * 60 * 1000;
 
+// TICKETS_DOOR_PASSWORD wins when set, so the password can be replaced by adding a
+// new variable, without revealing or editing the old one in Vercel.
 export function checkAdminPassword(password: string): boolean {
-  const expected = process.env.TICKETS_ADMIN_PASSWORD;
+  const expected = process.env.TICKETS_DOOR_PASSWORD || process.env.TICKETS_ADMIN_PASSWORD;
   if (!expected) return false;
   return safeEqual(hmac(`pw:${password}`), hmac(`pw:${expected}`));
 }
