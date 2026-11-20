@@ -1,0 +1,16 @@
+// Twilio, optional: TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_FROM (a number or an
+// alphanumeric sender ID such as "ElpisWorship"). Without them, SMS reminders are skipped.
+export const smsEnabled = () => !!(process.env.TWILIO_ACCOUNT_SID && process.env.TWILIO_AUTH_TOKEN && process.env.TWILIO_FROM);
+
+export async function sendSms(to: string, body: string): Promise<void> {
+  const sid = process.env.TWILIO_ACCOUNT_SID!;
+  const res = await fetch(`https://api.twilio.com/2010-04-01/Accounts/${sid}/Messages.json`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Basic ${Buffer.from(`${sid}:${process.env.TWILIO_AUTH_TOKEN}`).toString('base64')}`,
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: new URLSearchParams({ To: to, From: process.env.TWILIO_FROM!, Body: body }),
+  });
+  if (!res.ok) throw new Error(`Twilio ${res.status}`);
+}

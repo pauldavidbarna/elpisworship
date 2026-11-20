@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
-import { Image, Video, Calendar, Megaphone, LogOut, Plus, Pencil, Trash2, Lock, X, Upload, Film, Users, LayoutTemplate, Music, BarChart2, Link2, Check } from 'lucide-react';
+import { Image, Video, Calendar, Megaphone, LogOut, Plus, Pencil, Trash2, Lock, X, Upload, Film, Users, LayoutTemplate, Music, BarChart2, Link2, Check, Ticket } from 'lucide-react';
+import TicketsAdmin from '@/components/tickets/TicketsAdmin';
 import { saveVideo, deleteVideo } from '@/lib/videoDB';
 import { uploadPdf, deletePdf } from '@/lib/pdfStorage';
 import { uploadPhoto, deletePhoto } from '@/lib/photoStorage';
@@ -1425,6 +1426,7 @@ const Admin = () => {
     { value: 'photos',        label: 'Photos',        icon: Image },
     { value: 'videos',        label: 'Videos',        icon: Video },
     { value: 'events',        label: 'Events',        icon: Calendar },
+    { value: 'tickets',       label: 'Tickets',       icon: Ticket },
     { value: 'announcements', label: 'Announcements', icon: Megaphone },
     { value: 'songs',         label: 'Lyrics',        icon: Music },
   ];
@@ -1438,6 +1440,7 @@ const Admin = () => {
       case 'photos':        return <PhotosAdmin data={data} onChange={setData} />;
       case 'videos':        return <VideosAdmin data={data} onChange={setData} />;
       case 'events':        return <EventsAdmin data={data} onChange={setData} />;
+      case 'tickets':       return <TicketsAdmin />;
       case 'announcements': return <AnnouncementsAdmin data={data} onChange={setData} />;
       case 'songs':         return <SongsAdmin data={data} onChange={setData} />;
       default:              return null;

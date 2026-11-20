@@ -1,15 +1,36 @@
 {
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
+  "functions": {
+    "api/tickets.ts": { "includeFiles": "api/_lib/tickets/fonts/**" },
+    "api/tickets-admin.ts": { "includeFiles": "api/_lib/tickets/fonts/**" },
+    "api/tickets-cron.ts": { "includeFiles": "api/_lib/tickets/fonts/**" }
+  },
+  "crons": [
+    { "path": "/api/tickets-cron", "schedule": "0 8 * * *" }
+  ],
   "headers": [
     {
       "source": "/",
       "headers": [
         { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" }
       ]
+    },
+    {
+      "source": "/tickets",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" }
+      ]
+    },
+    {
+      "source": "/(ticket/.*|admin.*)",
+      "headers": [
+        { "key": "X-Robots-Tag", "value": "noindex, nofollow" }
+      ]
     }
   ],
   "rewrites": [
+    { "source": "/tickets", "destination": "/tickets.html" },
     { "source": "/((?!api/).*)", "destination": "/index.html" }
   ]
 }
