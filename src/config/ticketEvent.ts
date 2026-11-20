@@ -64,8 +64,8 @@ export const ticketEvent: TicketEventConfig = {
   capacity: 100, // TODO: seats (people), not tickets
   maxGroupSize: 10,
   showCountAfter: 20,
-  posterPath: '/events/worship-night/poster.jpg', // TODO: add the file under public/
-  artworkPath: '/events/worship-night/artwork.jpg', // TODO: poster image without its text
+  posterPath: '/events/worship-night/poster.jpg', // TODO: replace the logo placeholder in public/ with the real poster
+  artworkPath: '/events/worship-night/artwork.jpg', // TODO: replace the placeholder with the poster image without its text
   replyTo: 'worshipelpis@gmail.com',
 };
 
